@@ -6,6 +6,29 @@ blog.index:
   path: /blog
   controller: App\Controller\BlogController::index
 
+blog.show:
+  path: /blog/{slug}-{id}
+  controller: App\Controller\BlogController::show
+  requirements:
+    slug:  '[a-z0-9\-]*'
+
+# Administration
+admin.home:
+  path: /dashboard
+  controller: App\Controller\DashboardHomeController::index
+
+admin.blog:
+  path: /dashboard/blog
+  controller: App\Controller\DashboardBlogController::index
+
+admin.blog.manage.post:
+  path: /dashboard/blog/manage/post
+  controller: App\Controller\DashboardManageBlogPost::index
+
+admin.blog.manage.categories:
+  path: /dashboard/blog/manage/categories
+  controller: App\Controller\DashboardManageBlogCategories::index
+
 
 #index:
 #    path: /

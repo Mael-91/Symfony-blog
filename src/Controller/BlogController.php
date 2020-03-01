@@ -25,6 +25,7 @@ class BlogController extends AbstractController {
         $post = $this->blogRepository->findLatest();
         return $this->render('pages/blog/blog.index.html.twig', [
             'current_menu' => 'blog',
+            'is_dashboard' => 'false',
             'posts' => $post
         ]);
     }
@@ -44,6 +45,7 @@ class BlogController extends AbstractController {
         }
         return $this->render('pages/blog/blog.show.html.twig', [
             'current_menu' => 'blog',
+            'is_dashboard' => 'false',
             'post' => $post
         ]);
     }

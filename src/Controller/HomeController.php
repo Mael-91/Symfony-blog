@@ -12,7 +12,8 @@ class HomeController extends AbstractController {
      */
     public function index(): Response {
         return $this->render('pages/home.html.twig', [
-            'current_menu' => 'home'
+            'current_menu' => 'home',
+            'is_dashboard' => 'false'
         ]);
     }
 }

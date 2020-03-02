@@ -10,10 +10,15 @@
         <div class="card mt-5">
             <div class="card-body">
                 <h5 class="card-title text-center">{{ post.title }}</h5>
-                <div class="datetime mt-3"><span class="text-left text-muted mb-1">13h45 - 01/03/2020</span></div>
+                <div class="datetime mt-3">{{ post.createdAt | ago('text-black-50') }}</div>
                 <p class="card-text mt-3">{{ post.content | nl2br }}</p>
                 <span class="blockquote-footer text-right">{{ post.author }}</span>
             </div>
         </div>
     </div>
+    <script src="{{ asset('js/timeago.min.js') }}"></script>
+    <script src="{{ asset('js/timeago.locales.min.js') }}"></script>
+    <script>
+        timeago().render(document.querySelectorAll('.timeago'), 'fr')
+    </script>
 {% endblock %}

@@ -97,7 +97,9 @@ class Blog
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-
+        /**
+         * Créer le slug automatiquement lors de l'enregistrement en BDD
+         */
         return $this;
     }
 
@@ -142,9 +144,11 @@ class Blog
         return $this->edited_at;
     }
 
-    public function setEditedAt(?\DateTimeInterface $edited_at)
+    public function setEditedAt(?\DateTimeInterface $edited_at): self
     {
         $this->edited_at = $edited_at;
+
+        return $this;
     }
 
     public function getActive(): ?bool

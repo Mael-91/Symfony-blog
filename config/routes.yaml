@@ -15,21 +15,31 @@ blog.show:
 # Administration
 admin.home:
   path: /dashboard
-  controller: App\Controller\DashboardHomeController::index
+  controller: App\Controller\Dashboard\DashboardController::dashboard
 
 admin.blog:
   path: /dashboard/blog
-  controller: App\Controller\DashboardBlogController::index
+  controller: App\Controller\Dashboard\DashboardBlogController::index
 
 admin.blog.manage.post:
   path: /dashboard/blog/manage/post
-  controller: App\Controller\DashboardManageBlogPost::index
+  controller: App\Controller\Dashboard\DashboardManageBlogPost::index
+
+admin.blog.post.create:
+  path: /dashboard/blog/manage/post/create
+  controller: App\Controller\Dashboard\DashboardManageBlogPost::create
+  methods: [GET|POST]
+
+admin.blog.post.edit:
+  path: /dashboard/blog/manage/post/edit/{id}
+  controller: App\Controller\Dashboard\DashboardManageBlogPost::edit
+  methods: [GET|POST]
+
+admin.blog.post.delete:
+  path: /dashboard/blog/manage/post/{id}
+  controller: App\Controller\Dashboard\DashboardManageBlogPost::delete
+  methods: [DELETE]
 
 admin.blog.manage.categories:
   path: /dashboard/blog/manage/categories
-  controller: App\Controller\DashboardManageBlogCategories::index
-
-
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+  controller: App\Controller\Dashboard\DashboardManageBlogCategories::index

@@ -48,7 +48,7 @@ class Blog
     private $created_at;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", columnDefinition="DATETIME on update CURRENT_TIMESTAMP", nullable=true)
      */
     private $edited_at;
 
@@ -142,11 +142,9 @@ class Blog
         return $this->edited_at;
     }
 
-    public function setEditedAt(?\DateTimeInterface $edited_at): self
+    public function setEditedAt(?\DateTimeInterface $edited_at)
     {
         $this->edited_at = $edited_at;
-
-        return $this;
     }
 
     public function getActive(): ?bool

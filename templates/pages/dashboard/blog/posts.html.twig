@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block title 'Gestion des articles' %}
+{% block body %}
+    <div class="container">
+        <h4 class="text-center mt-3">Gestion des articles</h4>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <a href="{{ path('admin.blog.post.create') }}" class="btn btn-primary float-right mb-1">Publier</a>
+        <table class="table table-stripped mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom de l'article</th>
+                    <th scope="col">Catégorie</th>
+                    <th scope="col">Creation</th>
+                    <th scope="col">Modification</th>
+                    <th scope="col">Outils</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for post in posts %}
+                <tr>
+                    <th scope="row">{{ post.id }}</th>
+                    <td>{{ post.title }}</td>
+                    <td>Categorie</td>
+                    <td>{{ post.createdAt | date("H:i m/d/Y") }}</td>
+                    <td>{{ post.editedAt | date("H:i m/d/Y") }}</td>
+                    <td><a href="{{ path('admin.blog.post.edit', {id: post.id}) }}" class="btn btn-primary">Éditer</a>
+                        <form method="post" action="{{ path('admin.blog.post.delete', {id: post.id}) }}" class="d-inline-block">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                            <button class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

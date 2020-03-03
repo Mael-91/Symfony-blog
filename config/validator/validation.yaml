@@ -1,0 +1,18 @@
+App\Entity\Blog:
+  constraints:
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: title
+  properties:
+    title:
+      - NotBlank: ~
+      - Length:
+          min: 5
+          max: 255
+    image:
+      - Image:
+          minWidth: 162
+          maxWidth: 162
+          minHeight: 162
+          maxHeight: 162
+          mimeTypes: ['image/jpeg', 'image/png']
+    author:
+      - NotBlank: ~

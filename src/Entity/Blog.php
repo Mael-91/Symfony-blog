@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
 
@@ -28,6 +29,7 @@ class Blog
     private $content;
 
     /**
+     * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
@@ -97,9 +99,7 @@ class Blog
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-        /**
-         * Créer le slug automatiquement lors de l'enregistrement en BDD
-         */
+
         return $this;
     }
 

@@ -17,6 +17,10 @@ admin.home:
   path: /dashboard
   controller: App\Controller\Dashboard\DashboardController::dashboard
 
+admin.users:
+  path: /dashboard/users
+  controller: App\Controller\Dashboard\DashboardUsersController::index
+
 admin.blog:
   path: /dashboard/blog
   controller: App\Controller\Dashboard\DashboardBlogController::index
@@ -43,3 +47,12 @@ admin.blog.post.delete:
 admin.blog.manage.categories:
   path: /dashboard/blog/manage/categories
   controller: App\Controller\Dashboard\DashboardManageBlogCategories::index
+
+  # Login
+login:
+  path: /login
+  controller: App\Controller\SecurityController::login
+  methods: [GET|POST]
+
+logout:
+  path: /logout

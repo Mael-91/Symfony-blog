@@ -45,7 +45,7 @@ class DashboardManageBlogPost extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $this->objectManager->persist($blog);
             $this->objectManager->flush();
-            $this->addFlash('success', 'La publication est un succès !');
+            $this->addFlash('success-blog', 'La publication est un succès !');
             return $this->redirectToRoute('admin.blog.manage.post');
         }
         return $this->render('pages/dashboard/blog/crud_posts/create.html.twig', [
@@ -66,7 +66,7 @@ class DashboardManageBlogPost extends AbstractController {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->objectManager->flush();
-            $this->addFlash('success', 'La modification est un succès !');
+            $this->addFlash('success-blog', 'La modification est un succès !');
             return $this->redirectToRoute('admin.blog.manage.post');
         }
         return $this->render('pages/dashboard/blog/crud_posts/edit.html.twig', [
@@ -81,7 +81,7 @@ class DashboardManageBlogPost extends AbstractController {
         if ($this->isCsrfTokenValid('delete' . $blog->getId(), $request->get('_token'))) {
             $this->objectManager->remove($blog);
             $this->objectManager->flush();
-            $this->addFlash('success', 'La suppression est un succès !');
+            $this->addFlash('success-blog', 'La suppression est un succès !');
         }
         return $this->redirectToRoute('admin.blog.manage.post');
     }

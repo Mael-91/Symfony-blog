@@ -3,7 +3,7 @@
 {% block body %}
     <div class="container">
         <h4 class="text-center mt-3">Gestion des articles</h4>
-        {% for message in app.flashes('success') %}
+        {% for message in app.flashes('success-blog') %}
             <div class="alert alert-success">
                 {{ message }}
             </div>

@@ -17,9 +17,7 @@ admin.home:
   path: /dashboard
   controller: App\Controller\Dashboard\DashboardController::dashboard
 
-admin.users:
-  path: /dashboard/users
-  controller: App\Controller\Dashboard\DashboardUsersController::index
+# Manage Blog
 
 admin.blog:
   path: /dashboard/blog
@@ -48,7 +46,27 @@ admin.blog.manage.categories:
   path: /dashboard/blog/manage/categories
   controller: App\Controller\Dashboard\DashboardManageBlogCategories::index
 
-  # Login
+# Manage users
+admin.users:
+  path: /dashboard/users
+  controller: App\Controller\Dashboard\DashboardUsersController::index
+
+admin.user.create:
+  path: /dashboard/users/create
+  controller: App\Controller\Dashboard\DashboardUsersController::create
+  methods: [GET|POST]
+
+admin.user.edit:
+  path: /dashboard/users/edit/{id}
+  controller: App\Controller\Dashboard\DashboardUsersController::edit
+  methods: [GET|POST]
+
+admin.user.delete:
+  path: /dashboard/users/{id}
+  controller: App\Controller\Dashboard\DashboardUsersController::delete
+  methods: [DELETE]
+
+# Login
 login:
   path: /login
   controller: App\Controller\SecurityController::login
@@ -56,3 +74,8 @@ login:
 
 logout:
   path: /logout
+
+register:
+  path: /register
+  controller: App\Controller\SecurityController::register
+  methods: [GET|POST]

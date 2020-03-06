@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\Types\DateType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class User extends Fixture
@@ -29,7 +28,8 @@ class User extends Fixture
         $user->setLastName('Constantin');
         $user->setBirthday(new \DateTime('now'));
         $user->setSexe(1);
-        $user->setRoles('ROLE_ADMIN');
+        $user->setRoles((array)'ROLE_ADMIN');
+        $user->setCreatedAt(new \DateTime('now'));
         $user->setPassword($this->encoder->encodePassword($user, 'admin'));
         $manager->persist($user);
         $manager->flush();

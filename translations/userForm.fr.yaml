@@ -1,0 +1,12 @@
+Username: Nom d'utilisateur
+Email: Adresse mail
+First name: Prénom
+Last name: Nom
+Birthday: Date de naissance
+Password: Mot de passe
+Repeat Password: Comfirmation du mot de passe
+Roles: Rôles
+example@example.com: exemple@exemple.com
+The password fields must match : Le mot de passe doit être le même
+Man: Homme
+Woman: Femme

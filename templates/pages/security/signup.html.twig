@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title 'S\'inscire' %}
+{% block body %}
+    <div class="container">
+        {{ form_start(registration) }}
+            <div class="col-md-4">{{ form_row(registration.username) }}</div>
+            <div class="col-md-4">{{ form_row(registration.password) }}</div>
+            <div class="col-md-4">{{ form_row(registration.email) }}</div>
+            <div class="col-md-4">{{ form_row(registration.first_name) }}</div>
+            <div class="col-md-4">{{ form_row(registration.last_name) }}</div>
+            <div class="col-md-4">{{ form_row(registration.birthday) }}</div>
+            <div class="col-md-4">{{ form_row(registration.sexe) }}</div>
+            <button class="btn btn-primary" type="submit">S'inscire</button>
+        {{ form_end(registration) }}
+    </div>
+{% endblock %}

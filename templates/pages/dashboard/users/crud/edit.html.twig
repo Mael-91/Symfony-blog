@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+{% block title 'Modification de l\'utilisateur' %}
+{% block body %}
+    <div class="container">
+        {{  include ('pages/dashboard/users/crud/_form.html.twig', {form: form, button: 'Éditer l\'utilisateur'}) }}
+    </div>
+{% endblock %}

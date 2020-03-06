@@ -2,13 +2,85 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\LoginType;
+use App\Form\RegistrationType;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController {
 
-    public function login(AuthenticationUtils $authenticationUtils) {
+    /**
+     * @var AuthenticationUtils
+     */
+    private $authenticationUtils;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $manager;
+
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils) {
+        $this->authenticationUtils = $authenticationUtils;
+        $this->userRepository = $userRepository;
+        $this->manager = $manager;
+    }
+
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->createAccessDeniedException();
+        }
+
+        $user = new User();
+        $form = $this->createForm(RegistrationType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($password);
+            $user->setRoles(['ROLE_ADMIN']);
+            $user->setCreatedAt(new \DateTime('now'));
+            $this->manager->persist($user);
+            $this->manager->flush();
+            $this->addFlash('success', 'Bravo, votre compte a été crée !');
+            return $this->redirectToRoute('home', [], 301);
+        }
+
+        return $this->render('pages/security/signup.html.twig', [
+            'current_menu' => 'sign-up',
+            'is_dashboard' => 'false',
+            'user' => $user,
+            'registration' => $form->createView()
+        ]);
+    }
+
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+         if ($this->getUser()) {
+             return $this->redirectToRoute('home');
+         }
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('pages/security/login.html.twig', [
+            'current_menu' => 'login',
+            'is_dashboard' => 'false',
+            'last_username' => $lastUsername,
+            'error' => $error
+        ]);
+    }
+
+    /*public function login(AuthenticationUtils $authenticationUtils) {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new \Exception('', 403);
         }
@@ -17,9 +89,12 @@ class SecurityController extends AbstractController {
         return $this->render('pages/security/login.html.twig', [
             'current_menu' => 'login',
             'is_dashboard' => 'false',
-            'las_username' => $lastUsername,
-            'error' => $error
+            'error' => $error,
+            'las_username' => $lastUsername
         ]);
-    }
+    }*/
 
+    /*public function changePassword() {
+
+    }*/
 }

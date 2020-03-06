@@ -3,6 +3,11 @@
 {% block body %}
     <div class="container">
         <h4 class="text-center mt-3">Gestion des utilisateurs</h4>
+        {% for message in app.flashes('success-user') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
         <a href="{{ path('admin.user.create') }}" class="btn btn-primary float-right mb-1">Créer un profile</a>
         <table class="table table-stripped mt-3">
             <thead>

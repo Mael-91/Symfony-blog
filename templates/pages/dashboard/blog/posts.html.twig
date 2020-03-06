@@ -27,7 +27,7 @@
                     <td>{{ post.title }}</td>
                     <td>Categorie</td>
                     <td>{{ post.createdAt | date("H:i m/d/Y") }}</td>
-                    <td>{{ post.editedAt | date("H:i m/d/Y") }}</td>
+                    <td>{% if post.editedAt is null %} aucune modification {% else %} {{ post.editedAt | date("H:i m/d/Y") }} {% endif %}</td>
                     <td><a href="{{ path('admin.blog.post.edit', {id: post.id}) }}" class="btn btn-primary">Éditer</a>
                         <form method="post" action="{{ path('admin.blog.post.delete', {id: post.id}) }}" class="d-inline-block">
                             <input type="hidden" name="_method" value="DELETE">

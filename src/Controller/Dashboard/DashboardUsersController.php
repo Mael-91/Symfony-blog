@@ -57,7 +57,7 @@ class DashboardUsersController extends AbstractController
             $user->setCreatedAt(new \DateTime('now'));
             $this->manager->persist($user);
             $this->manager->flush();
-            $this->addFlash('success', 'L\'utilisateur a bien été modifié');
+            $this->addFlash('success-user', 'L\'utilisateur a bien été modifié');
             return $this->redirectToRoute('admin.users', [], 301);
         }
         return $this->render('pages/dashboard/users/crud/create.html.twig', [
@@ -74,7 +74,7 @@ class DashboardUsersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setEditedAt(new \DateTime('now'));
             $this->manager->flush();
-            $this->addFlash('success', 'L\'utilisateur a bien été modifié');
+            $this->addFlash('success-user', 'L\'utilisateur a bien été modifié');
             return $this->redirectToRoute('admin.users', [], 301);
         }
         return $this->render('pages/dashboard/users/crud/edit.html.twig', [
@@ -89,7 +89,7 @@ class DashboardUsersController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->get('_token'))) {
             $this->manager->remove($user);
             $this->manager->flush();
-            $this->addFlash('succes-user', 'La suppression de l\'utilisateur est un succès');
+            $this->addFlash('success-user', 'La suppression de l\'utilisateur est un succès');
         }
         return $this->redirectToRoute('admin.users', [], 301);
     }

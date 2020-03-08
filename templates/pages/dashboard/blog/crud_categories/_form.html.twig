@@ -1,0 +1,6 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-4">{{ form_row(form.name) }}</div>
+        <button class="btn btn-primary col-md-4 mx-auto mt-5" type="submit">{{ button|default('Créer la catégorie') }}</button>
+    </div>
+{{ form_end(form) }}

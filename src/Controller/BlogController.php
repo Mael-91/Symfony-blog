@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Blog;
+use App\Entity\BlogCategory;
 use App\Repository\BlogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,6 +48,20 @@ class BlogController extends AbstractController {
             'current_menu' => 'blog',
             'is_dashboard' => 'false',
             'post' => $post
+        ]);
+    }
+
+    public function categoryIndex(BlogCategory $category, string $slug): Response {
+        $getSlug = $category->getSlug();
+        if ($getSlug !== $slug) {
+            return $this->redirectToRoute('blog.category', [
+                'slug' => $getSlug
+            ], 301);
+        }
+        return $this->render('pages/blog/category.html.twig', [
+            'current_menu' => 'blog',
+            'is_dashboard' => 'false',
+            'category' => $category
         ]);
     }
 }

@@ -3,5 +3,32 @@
 {% block body %}
     <div class="container">
         <h4 class="text-center">Gestion des categories</h4>
+        <a href="{{ path('admin.blog.categories.create') }}" class="btn btn-primary float-right mb-1">Publier</a>
+        <table class="table table-stripped mt-3">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom de la catégorie</th>
+                <th scope="col">Lien</th>
+                <th scope="col">Outils</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <th scope="row">{{ category.id }}</th>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.slug }}</td>
+                    <td><a href="{{ path('admin.blog.categories.edit', {id: category.id}) }}" class="btn btn-primary">Éditer</a>
+                        <form method="post" action="{{ path('admin.blog.categories.delete', {id: category.id}) }}" class="d-inline-block">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                            <button class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

@@ -12,6 +12,12 @@ blog.show:
   requirements:
     slug:  '[a-z0-9\-]*'
 
+blog.category:
+  path: /blog/category/{slug}
+  controller: App\Controller\BlogController::categoryIndex
+  requirements:
+    slug: '[a-z\-]*'
+
 # Administration
 admin.home:
   path: /dashboard
@@ -44,7 +50,20 @@ admin.blog.post.delete:
 
 admin.blog.manage.categories:
   path: /dashboard/blog/manage/categories
-  controller: App\Controller\Dashboard\DashboardManageBlogCategories::index
+  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::index
+
+admin.blog.categories.create:
+  path: /dashboard/blog/manage/categories/create
+  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::create
+
+admin.blog.categories.edit:
+  path: /dashboard/blog/manage/categories/edit/{id}
+  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::edit
+
+admin.blog.categories.delete:
+  path: /dashboard/blog/manage/categories/{id}
+  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::delete
+
 
 # Manage users
 admin.users:

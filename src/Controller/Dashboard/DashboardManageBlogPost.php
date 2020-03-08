@@ -19,11 +19,11 @@ class DashboardManageBlogPost extends AbstractController {
     /**
      * @var ObjectManager
      */
-    private $objectManager;
+    private $manager;
 
-    public function __construct(BlogRepository $blogRepository, EntityManagerInterface $objectManager) {
+    public function __construct(BlogRepository $blogRepository, EntityManagerInterface $manager) {
         $this->blogRepository = $blogRepository;
-        $this->objectManager = $objectManager;
+        $this->manager = $manager;
     }
 
     /**
@@ -43,8 +43,8 @@ class DashboardManageBlogPost extends AbstractController {
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->objectManager->persist($blog);
-            $this->objectManager->flush();
+            $this->manager->persist($blog);
+            $this->manager->flush();
             $this->addFlash('success-blog', 'La publication est un succès !');
             return $this->redirectToRoute('admin.blog.manage.post');
         }
@@ -65,7 +65,7 @@ class DashboardManageBlogPost extends AbstractController {
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->objectManager->flush();
+            $this->manager->flush();
             $this->addFlash('success-blog', 'La modification est un succès !');
             return $this->redirectToRoute('admin.blog.manage.post');
         }
@@ -79,8 +79,8 @@ class DashboardManageBlogPost extends AbstractController {
 
     public function delete(Blog $blog, Request $request): Response {
         if ($this->isCsrfTokenValid('delete' . $blog->getId(), $request->get('_token'))) {
-            $this->objectManager->remove($blog);
-            $this->objectManager->flush();
+            $this->manager->remove($blog);
+            $this->manager->flush();
             $this->addFlash('success-blog', 'La suppression est un succès !');
         }
         return $this->redirectToRoute('admin.blog.manage.post');

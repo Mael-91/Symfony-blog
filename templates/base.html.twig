@@ -26,7 +26,7 @@
                     <ul class="nav navbar-nav">
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <li class="nav-item">
-                                <a href="" class="nav-link">Profil</a>
+                                <a href="" class="nav-link {% if current_menu is defined and current_menu == 'profile' %}active{% endif %}">Profil</a>
                             </li>
                         {% endif %}
                         {% if is_granted('ROLE_SUPPORT') or is_granted('ROLE_MODERATEUR') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}

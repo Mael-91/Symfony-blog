@@ -36,8 +36,9 @@ class SecurityController extends AbstractController {
     }
 
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response {
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->createAccessDeniedException();
+        if ($this->getUser()) {
+            $error = $this->addFlash('error-is-connected', 'Your are already connected');
+            return $this->redirectToRoute('home', [ 'error-is-connected' => $error ], 301);
         }
 
         $user = new User();
@@ -46,7 +47,7 @@ class SecurityController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
-            $user->setRoles(['ROLE_ADMIN']);
+            $user->setRoles(['ROLE_USER']);
             $user->setCreatedAt(new \DateTime('now'));
             $this->manager->persist($user);
             $this->manager->flush();
@@ -65,7 +66,8 @@ class SecurityController extends AbstractController {
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
          if ($this->getUser()) {
-             return $this->redirectToRoute('home');
+             $error = $this->addFlash('error-is-connected', 'Your are already connected');
+             return $this->redirectToRoute('home', [ 'error-login' => $error ], 301);
          }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

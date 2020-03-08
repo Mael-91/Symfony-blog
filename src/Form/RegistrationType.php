@@ -3,9 +3,10 @@
 namespace App\Form;
 
 use App\Entity\User;
-use Doctrine\DBAL\Types\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -38,7 +39,14 @@ class RegistrationType extends AbstractType
             ->add('last_name', null, [
                 'required' => true
             ])
-            ->add('birthday')
+            ->add('birthday', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => [
+                    'placeholder' => 'Select a date',
+                    'class' => 'flatpickr'
+                ]
+            ])
             ->add('sexe', ChoiceType::class, [
                 'choices' => $this->getChoices(),
                 'translation_domain' => 'userForm'

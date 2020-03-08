@@ -40,7 +40,12 @@ class UserCreateType extends AbstractType
             ->add('first_name')
             ->add('last_name')
             ->add('birthday', DateType::class, [
-
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => [
+                    'placeholder' => 'Select a date',
+                    'class' => 'flatpickr'
+                ]
             ])
             ->add('sexe', ChoiceType::class, [
                 'choices' => $this->getChoices(),

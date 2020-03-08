@@ -1,16 +1,36 @@
 {% extends 'base.html.twig' %}
 {% block title 'S\'inscire' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/flatpickr_dark.css') }}">
+{% endblock %}
 {% block body %}
-    <div class="container">
+    <div class="container mt-3">
         {{ form_start(registration) }}
-            <div class="col-md-4">{{ form_row(registration.username) }}</div>
-            <div class="col-md-4">{{ form_row(registration.password) }}</div>
-            <div class="col-md-4">{{ form_row(registration.email) }}</div>
-            <div class="col-md-4">{{ form_row(registration.first_name) }}</div>
-            <div class="col-md-4">{{ form_row(registration.last_name) }}</div>
-            <div class="col-md-4">{{ form_row(registration.birthday) }}</div>
-            <div class="col-md-4">{{ form_row(registration.sexe) }}</div>
-            <button class="btn btn-primary" type="submit">S'inscire</button>
+            <div class="col-md-4 mx-auto">
+                <div>{{ form_row(registration.username) }}</div>
+                <div>{{ form_row(registration.first_name) }}</div>
+                <div>{{ form_row(registration.last_name) }}</div>
+                <div>{{ form_row(registration.email) }}</div>
+                <div>{{ form_row(registration.password) }}</div>
+                <div>{{ form_row(registration.birthday) }}</div>
+                <div>{{ form_row(registration.sexe) }}</div>
+                <button class="btn btn-primary" type="submit">S'inscire</button>
+            </div>
         {{ form_end(registration) }}
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/flatpickr.min.js') }}"></script>
+    <script src="{{ asset('js/fr.js') }}"></script>
+    <script>
+        flatpickr(".flatpickr", {
+            altInput: true,
+            altFormat: "d/m/Y",
+            dateFormat: "Y-m-d",
+            locale: "fr"
+        })
+    </script>
 {% endblock %}

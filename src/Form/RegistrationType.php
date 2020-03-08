@@ -38,7 +38,7 @@ class RegistrationType extends AbstractType
             ->add('last_name', null, [
                 'required' => true
             ])
-            ->add('birthday', DateType::class)
+            ->add('birthday')
             ->add('sexe', ChoiceType::class, [
                 'choices' => $this->getChoices(),
                 'translation_domain' => 'userForm'

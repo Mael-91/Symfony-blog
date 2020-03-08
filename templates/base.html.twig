@@ -22,15 +22,33 @@
                         <li class="nav-item">
                             <a class="nav-link {% if current_menu is defined and current_menu == 'blog' %}active{% endif %}" href="{{ path('blog.index') }}">Blog</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('admin.home') }}">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('login') }}">Connexion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('logout') }}">Deconnexion</a>
-                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li class="nav-item">
+                                <a href="" class="nav-link">Profil</a>
+                            </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_SUPPORT') or is_granted('ROLE_MODERATEUR') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('admin.home') }}">Dashboard</a>
+                            </li>
+                        {% endif %}
+                        {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('login') }}">Connexion</a>
+                            </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_USER') %}
+                            <li class="nav-item ml-auto">
+                                <a class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
+                            </li>
+                        {% endif %}
+                        {% if not is_granted('ROLE_USER') %}
+                            <li class="nav-item">
+                                <a href="{{ path('register') }}" class="nav-link">Inscription</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>

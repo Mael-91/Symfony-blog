@@ -59,6 +59,11 @@ class Blog
      */
     private $active;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\BlogCategory", inversedBy="posts")
+     */
+    private $category;
+
     public function __construct() {
         $this->created_at = new \DateTime();
     }
@@ -159,6 +164,18 @@ class Blog
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getCategory(): ?BlogCategory
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?BlogCategory $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

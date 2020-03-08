@@ -16,12 +16,9 @@ class BlogType extends AbstractType
             ->add('content')
             ->add('image')
             ->add('author')
+            ->add('category')
             ->add('active')
         ;
-        /**
-         * Si champs avec un choix et constante défini utiliser la méthode getchoices
-         * exemple : $builder->add('categories', ChoicesTypes::class, ['choices' => $this->getChoices())
-         */
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -31,14 +28,4 @@ class BlogType extends AbstractType
             'translation_domain' => 'formsBlog'
         ]);
     }
-
-    /**private function getChoices() {
-        $choices = Blog::CONSTANTE A DEFINIR;
-        $output = [];
-        foreach ($choices as $k => $v) {
-            $output[$v] => $k;
-        }
-        return $output;
-    }
-    */
 }

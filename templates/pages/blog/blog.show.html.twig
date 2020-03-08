@@ -8,12 +8,14 @@
             </div>
         </div>
         <div class="card mt-5">
+            {% for info in category %}
             <div class="card-body">
                 <h5 class="card-title text-center">{{ post.title }}</h5>
-                <div class="datetime mt-3">{{ post.createdAt | ago('text-black-50') }}</div>
+                <div class="datetime mt-3">{{ post.createdAt | ago('text-black-50') }} {% if info.category_name %}- <a href="{{ path('blog.category', {slug: info.category_slug}) }}" class="text-decoration-none text-muted">{{ info.category_name }}</a>{% endif %}</div>
                 <p class="card-text mt-3">{{ post.content | nl2br }}</p>
                 <span class="blockquote-footer text-right">{{ post.author }}</span>
             </div>
+            {% endfor %}
         </div>
     </div>
     <script src="{{ asset('js/timeago.min.js') }}"></script>

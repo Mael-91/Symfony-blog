@@ -3,15 +3,24 @@
 {% block body %}
     <div class="container">
         <h2 class="text-center mt-5">Les dernier articles</h2>
+        <div class="col-md-4">
         {% for post in posts %}
-        <div class="card mt-5" style="width: 18rem;">
-            <img src="" class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title"><a href="{{ path('blog.show', {slug: post.slug, id: post.id}) }}">{{ post.title }}</a></h5>
-                <p class="card-text">{{ post.content | truncate }}</p>
-                <span class="blockquote-footer">{{ post.author }}</span>
+            <div class="card mt-5" style="width: 18rem;">
+                <img src="" class="card-img-top" alt="">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{{ path('blog.show', {slug: post.slug, id: post.id}) }}">{{ post.title }}</a></h5>
+                    <p class="card-text">{{ post.content | truncate }}</p>
+                    <span class="blockquote-footer">{{ post.author }}</span>
+                </div>
             </div>
-        </div>
         {% endfor %}
+        </div>
+        <div class="category col-md-4 float-right">
+            <ul class="list-group">
+                {% for category in categories %}
+                <li class="list-group-item"><a href="{{ path('blog.category', {slug: category.slug}) }}" class="text-decoration-none text-info">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 {% endblock %}

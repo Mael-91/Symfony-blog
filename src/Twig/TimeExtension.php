@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Component\Twig;
+namespace App\Twig;
 
 
 use Twig\Extension\AbstractExtension;

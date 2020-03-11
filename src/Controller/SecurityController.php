@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Component\Mail\MailerComponent;
 use App\Entity\User;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
@@ -27,11 +28,16 @@ class SecurityController extends AbstractController {
      * @var EntityManagerInterface
      */
     private $manager;
+    /**
+     * @var MailerComponent
+     */
+    private $mailerComponent;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils) {
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, MailerComponent $mailerComponent) {
         $this->authenticationUtils = $authenticationUtils;
         $this->userRepository = $userRepository;
         $this->manager = $manager;
+        $this->mailerComponent = $mailerComponent;
     }
 
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response {
@@ -50,8 +56,9 @@ class SecurityController extends AbstractController {
             $user->setCreatedAt(new \DateTime('now'));
             $this->manager->persist($user);
             $this->manager->flush();
-            $this->addFlash('success', 'Bravo, votre compte a été crée !');
-            return $this->redirectToRoute('home', [], 301);
+            $this->mailerComponent->sendRegisterMail($user->getUsername(), $user->getEmail());
+            $success = $this->addFlash('success-register', 'Bravo, votre compte a été crée !');
+            return $this->redirectToRoute('home', [ 'success' => $success ], 301);
         }
 
         return $this->render('pages/security/signup.html.twig', [

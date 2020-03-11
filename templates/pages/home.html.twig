@@ -2,10 +2,15 @@
 {% block title 'Accueil' %}
 {% block body %}
     <div class="container ">
-        {% for message in app.flashes('error-is-connected') %}
+        {% for error in app.flashes('error-is-connected') %}
         <div class="alert alert-danger">
-            {{ message }}
+            {{ error }}
         </div>
+        {% endfor %}
+        {% for success in app.flashes('success-register') %}
+            <div class="alert alert-success">
+                {{ success }}
+            </div>
         {% endfor %}
         <div class="jumbotron mt-4">
             <h1 class="display-4">Bienvenue sur le blog</h1>

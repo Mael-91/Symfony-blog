@@ -26,6 +26,13 @@ class UserCreateType extends AbstractType
                 'choices' => User::Role,
                 'required' => true
             ])
+            ->add('enabled', ChoiceType::class, [
+                'expanded' => true,
+                'choices' => [
+                    'Yes' => true,
+                    'No' => false,
+                ],
+            ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match',

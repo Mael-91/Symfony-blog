@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,6 +22,13 @@ class UserEditType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => User::Role
+            ])
+            ->add('enabled', ChoiceType::class, [
+                'expanded' => true,
+                'choices' => [
+                    'Yes' => true,
+                    'No' => false,
+                ],
             ])
             ->add('email', EmailType::class, [
                 'required' => true,

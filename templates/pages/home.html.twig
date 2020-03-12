@@ -12,6 +12,11 @@
                 {{ success }}
             </div>
         {% endfor %}
+        {% for success in app.flashes('success-confirm-account') %}
+            <div class="alert alert-success">
+                {{ success }}
+            </div>
+        {% endfor %}
         <div class="jumbotron mt-4">
             <h1 class="display-4">Bienvenue sur le blog</h1>
             <p class="lead">Bienvenue sur le blog parlant des nouvelles technologies !</p>

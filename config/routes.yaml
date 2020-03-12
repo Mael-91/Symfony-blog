@@ -98,3 +98,8 @@ register:
   path: /register
   controller: App\Controller\SecurityController::register
   methods: [GET|POST]
+
+confirmation_account:
+  path: /confirm-account/{token}-{id}
+  controller: App\Controller\SecurityController::confirmAccount
+  methods : [GET]

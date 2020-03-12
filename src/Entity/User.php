@@ -84,6 +84,21 @@ class User implements UserInterface, \Serializable
      */
     private $edited_at;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $confirmation_token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $requested_token_at;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -287,5 +302,41 @@ class User implements UserInterface, \Serializable
             $this->sexe,
             $this->created_at,
             $this->edited_at) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmation_token;
+    }
+
+    public function setConfirmationToken(?string $confirmation_token): self
+    {
+        $this->confirmation_token = $confirmation_token;
+
+        return $this;
+    }
+
+    public function getRequestedTokenAt(): ?\DateTimeInterface
+    {
+        return $this->requested_token_at;
+    }
+
+    public function setRequestedTokenAt(?\DateTimeInterface $requested_token_at): self
+    {
+        $this->requested_token_at = $requested_token_at;
+
+        return $this;
+    }
+
+    public function getEnabled(): ?int
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(int $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 }

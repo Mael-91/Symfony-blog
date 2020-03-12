@@ -16,8 +16,13 @@ class MailerComponent extends AbstractController {
         $this->mailer = $mailer;
     }
 
+    /**
+     * Envoi un mail lorsqu'un personne se connecte au compte
+     * @param $time
+     * @param $ip
+     */
     public function sendLoginMail($time, $ip) {
-        $mail = (new \Swift_Message())
+        $message = (new \Swift_Message())
             ->setFrom('mael.constantin@laposte.net')
             ->setTo('mael.constantin@gmail.com')
             ->setSubject('Test envoi email')
@@ -25,22 +30,44 @@ class MailerComponent extends AbstractController {
                 'ip' => $ip,
                 'time' => $time
             ]), 'text/html');
-        $this->mailer->send($mail);
+        $this->mailer->send($message);
     }
 
-    public function sendRegisterMail($user, $email) {
-        $mail = (new \Swift_Message())
+    /**
+     * Envoi le mail de confirmation lors de l'inscription
+     * @param $user
+     * @param $email
+     * @param $id
+     * @param $token
+     */
+    public function sendRegisterMail($user, $email, $id, $token) {
+        $message = (new \Swift_Message())
             ->setFrom('mael.constantin@gmail.com')
             ->setTo($email)
-            ->setSubject('Bienvenue sur le site !')
+            ->setSubject('Confirm account')
             ->setBody($this->renderView('mail/register_mail.html.twig', [
                 'email' => $email,
-                'user' => $user
+                'user' => $user,
+                'id' => $id,
+                'token' => $token
             ]), 'text/html');
-        $this->mailer->send($mail);
+        $this->mailer->send($message);
     }
 
-    /*public function sendResetPasswordMail() {
-
-    }*/
+    /**
+     * Envoi le mail permettant de changer de mot de passe
+     * @param $user
+     * @param $token
+     */
+    public function sendResetPasswordMail($user, $token) {
+        $message = (new \Swift_Message())
+            ->setFrom('mael.constantin@laposte.net')
+            ->setTo('mael.constantin@gmail.com')
+            ->setSubject('Reset password')
+            ->setBody($this->renderView('mail/reset_password.html.twig', [
+                'user' => $user,
+                'token' => $token
+            ]), 'text/html');
+        $this->mailer->send($message);
+    }
 }

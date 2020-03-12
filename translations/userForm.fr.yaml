@@ -10,3 +10,5 @@ example@example.com: exemple@exemple.com
 The password fields must match : Le mot de passe doit être le même
 Man: Homme
 Woman: Femme
+Yes: Oui
+No: Non

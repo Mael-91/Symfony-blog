@@ -1,6 +1,7 @@
 ## IDE
 /.idea/*
 ###> symfony/framework-bundle ###
+/src/Migrations/*.php
 /.env.local
 /.env.local.php
 /.env.*.local

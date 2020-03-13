@@ -101,12 +101,6 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             return new RedirectResponse($targetPath);
         }
 
-        //$user =
-        $time = new \DateTime('now');
-        $ip = $request->getClientIp();
-        //$localization = geoip_country_name_by_name($ip);
-        $this->mailerComponent->sendLoginMail($time, $ip);
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }
 

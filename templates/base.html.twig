@@ -36,7 +36,7 @@
                         {% endif %}
                         {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('login') }}">Connexion</a>
+                                <a class="nav-link {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" href="{{ path('login') }}">Connexion</a>
                             </li>
                         {% endif %}
                         {% if is_granted('ROLE_USER') %}
@@ -46,7 +46,7 @@
                         {% endif %}
                         {% if not is_granted('ROLE_USER') %}
                             <li class="nav-item">
-                                <a href="{{ path('register') }}" class="nav-link">Inscription</a>
+                                <a href="{{ path('register') }}" class="nav-link {% if current_menu is defined and current_menu == 'register' %}active{% endif %}">Inscription</a>
                             </li>
                         {% endif %}
                     </ul>

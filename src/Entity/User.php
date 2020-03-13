@@ -99,6 +99,16 @@ class User implements UserInterface, \Serializable
      */
     private $enabled;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $password_token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $requested_pw_token_at;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -239,6 +249,66 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmation_token;
+    }
+
+    public function setConfirmationToken(?string $confirmation_token): self
+    {
+        $this->confirmation_token = $confirmation_token;
+
+        return $this;
+    }
+
+    public function getRequestedTokenAt(): ?\DateTimeInterface
+    {
+        return $this->requested_token_at;
+    }
+
+    public function setRequestedTokenAt(?\DateTimeInterface $requested_token_at): self
+    {
+        $this->requested_token_at = $requested_token_at;
+
+        return $this;
+    }
+
+    public function getEnabled(): ?int
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(int $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getPasswordToken(): ?string
+    {
+        return $this->password_token;
+    }
+
+    public function setPasswordToken(?string $password_token): self
+    {
+        $this->password_token = $password_token;
+
+        return $this;
+    }
+
+    public function getRequestedPwTokenAt(): ?\DateTimeInterface
+    {
+        return $this->requested_pw_token_at;
+    }
+
+    public function setRequestedPwTokenAt(?\DateTimeInterface $requested_pw_token_at): self
+    {
+        $this->requested_pw_token_at = $requested_pw_token_at;
+
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
@@ -275,7 +345,11 @@ class User implements UserInterface, \Serializable
             $this->last_name,
             $this->sexe,
             $this->created_at,
-            $this->edited_at
+            $this->edited_at,
+            $this->confirmation_token,
+            $this->requested_token_at,
+            $this->enabled,
+            $this->password_token
         ]);
     }
 
@@ -301,42 +375,10 @@ class User implements UserInterface, \Serializable
             $this->last_name,
             $this->sexe,
             $this->created_at,
-            $this->edited_at) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-    public function getConfirmationToken(): ?string
-    {
-        return $this->confirmation_token;
-    }
-
-    public function setConfirmationToken(?string $confirmation_token): self
-    {
-        $this->confirmation_token = $confirmation_token;
-
-        return $this;
-    }
-
-    public function getRequestedTokenAt(): ?\DateTimeInterface
-    {
-        return $this->requested_token_at;
-    }
-
-    public function setRequestedTokenAt(?\DateTimeInterface $requested_token_at): self
-    {
-        $this->requested_token_at = $requested_token_at;
-
-        return $this;
-    }
-
-    public function getEnabled(): ?int
-    {
-        return $this->enabled;
-    }
-
-    public function setEnabled(int $enabled): self
-    {
-        $this->enabled = $enabled;
-
-        return $this;
+            $this->edited_at,
+            $this->confirmation_token,
+            $this->requested_token_at,
+            $this->enabled,
+            $this->password_token) = unserialize($serialized, ['allowed_classes' => false]);
     }
 }

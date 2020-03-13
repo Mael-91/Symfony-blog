@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Component\Mail\MailerComponent;
 use App\Entity\User;
 use App\Exceptions\AccountTokenExpiredException;
+use App\Form\ForgotPasswordType;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
+use App\Form\ResettingPasswordType;
 use App\Repository\UserRepository;
 use App\Security\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,24 +41,28 @@ class SecurityController extends AbstractController {
      * @var TokenGenerator
      */
     private $tokenGenerator;
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, MailerComponent $mailerComponent, TokenGenerator $tokenGenerator) {
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, UserPasswordEncoderInterface $passwordEncoder, MailerComponent $mailerComponent, TokenGenerator $tokenGenerator) {
         $this->authenticationUtils = $authenticationUtils;
         $this->userRepository = $userRepository;
         $this->manager = $manager;
         $this->mailerComponent = $mailerComponent;
         $this->tokenGenerator = $tokenGenerator;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     /**
      * Permet de s'inscrire
      *
      * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
      * @return Response
      * @throws \Exception
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response {
+    public function register(Request $request): Response {
         if ($this->getUser()) {
             $error = $this->addFlash('error-is-connected', 'Your are already connected');
             return $this->redirectToRoute('home', [ 'error-is-connected' => $error ], 301);
@@ -66,7 +72,7 @@ class SecurityController extends AbstractController {
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $password = $this->passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles(['ROLE_USER']);
             $user->setConfirmationToken($this->tokenGenerator->generateToken());
@@ -85,7 +91,7 @@ class SecurityController extends AbstractController {
         }
 
         return $this->render('pages/security/signup.html.twig', [
-            'current_menu' => 'sign-up',
+            'current_menu' => 'register',
             'is_dashboard' => 'false',
             'user' => $user,
             'registration' => $form->createView()
@@ -120,8 +126,8 @@ class SecurityController extends AbstractController {
     /**
      * Permet de confirmer le compte
      *
-     * @param $token
-     * @param $id
+     * @param string $token
+     * @param int $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
@@ -139,9 +145,77 @@ class SecurityController extends AbstractController {
         }
     }
 
-    /*public function changePassword() {
+    /**
+     * Permet d'emettre une demande de changement du mot de passe
+     *
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function forgotPasswordRequest(Request $request): Response {
+        if ($this->getUser()) {
+            throw new AccessDeniedHttpException('Vous n\'avez pas le droit d\'acceder à cette page lorsque vous êtes connecter');
+        }
 
-    }*/
+        $form = $this->createForm(ForgotPasswordType::class);
+        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $email = $form->getData();
+            $findUser = $this->userRepository->findOneBy(['email' => $email->getEmail()]);
+            if (is_null($findUser)) {
+                $emailNotExist = $this->addFlash('error-email-not-exist', 'L\'email spécifié n\'existe pas');
+                return $this->redirectToRoute('forgot_password_request', ['error-email-exist' => $emailNotExist], 301);
+            } elseif ($form->isSubmitted() && $form->isValid() && $findUser !== null) {
+                $findUser->setPasswordToken($this->tokenGenerator->generateToken(10));
+                $findUser->setRequestedPwTokenAt(new \DateTime('now'));
+                $this->manager->flush();
+
+                $token = $findUser->getPasswordToken();
+                $this->mailerComponent->sendResetPasswordMail($findUser->getUsername(), $findUser->getEmail(), $token);
+                $successSendMail = $this->addFlash('success-send-mail-fopw', 'Le mail a bien été envoyé');
+
+                return $this->redirectToRoute('login', ['success-mail-fopw' => $successSendMail], 301);
+            }
+        }
+        return $this->render('pages/security/forgot_password.html.twig', [
+            'is_dashboard' => 'false',
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Permet d'effectuer le changement de mot de passe
+     *
+     * @param Request $request
+     * @param string $token
+     * @return Response
+     * @throws \Exception
+     */
+    public function forgotPasswordPost(Request $request, $token): Response {
+        $user = $this->userRepository->findOneBy(['password_token' => $token]);
+        $form = $this->createForm(ResettingPasswordType::class);
+        $form->handleRequest($request);
+        if (is_null($user->getPasswordToken()) || $token !== $user->getPasswordToken() || !$this->isRequestInTime($user->getRequestedPwTokenAt())) {
+            throw new AccessDeniedHttpException('Un problème est survenu lors de la demande de changement du mot de passe, veuillez réitérer la demande');
+        } else {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $data = $form->getData();
+                $password = $this->passwordEncoder->encodePassword($user, $data->getPassword());
+                $user->setPassword($password);
+                $user->setPasswordToken(null);
+                $user->setRequestedPwTokenAt(null);
+                $this->manager->flush();
+                $this->mailerComponent->sendPasswordChangeConf($user->getUsername(), $user->getEmail(), new \DateTime('now'));
+                $successChangePW = $this->addFlash('success-change-password', 'Le mot de passe a bien été modifié');
+                return $this->redirectToRoute('login', ['success-change-pw' => $successChangePW], 301);
+            }
+        }
+
+        return $this->render('pages/security/change_password.html.twig', [
+            'is_dashboard' => 'false',
+            'form' => $form->createView()
+        ]);
+    }
 
     /**
      * Permet de vérifier le temps depuis la génération du token

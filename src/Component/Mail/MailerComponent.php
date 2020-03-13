@@ -2,6 +2,7 @@
 
 namespace App\Component\Mail;
 
+use App\Entity\User;
 use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -17,28 +18,12 @@ class MailerComponent extends AbstractController {
     }
 
     /**
-     * Envoi un mail lorsqu'un personne se connecte au compte
-     * @param $time
-     * @param $ip
-     */
-    public function sendLoginMail($time, $ip) {
-        $message = (new \Swift_Message())
-            ->setFrom('mael.constantin@laposte.net')
-            ->setTo('mael.constantin@gmail.com')
-            ->setSubject('Test envoi email')
-            ->setBody($this->renderView('mail/login_mail.html.twig', [
-                'ip' => $ip,
-                'time' => $time
-            ]), 'text/html');
-        $this->mailer->send($message);
-    }
-
-    /**
      * Envoi le mail de confirmation lors de l'inscription
-     * @param $user
-     * @param $email
-     * @param $id
-     * @param $token
+     *
+     * @param User|string $user
+     * @param User|string $email
+     * @param User|int id
+     * @param string $token
      */
     public function sendRegisterMail($user, $email, $id, $token) {
         $message = (new \Swift_Message())
@@ -56,17 +41,40 @@ class MailerComponent extends AbstractController {
 
     /**
      * Envoi le mail permettant de changer de mot de passe
-     * @param $user
-     * @param $token
+     *
+     * @param User|string $user
+     * @param User|string $email
+     * @param string $token
      */
-    public function sendResetPasswordMail($user, $token) {
+    public function sendResetPasswordMail($user, $email, string $token) {
         $message = (new \Swift_Message())
             ->setFrom('mael.constantin@laposte.net')
-            ->setTo('mael.constantin@gmail.com')
+            ->setTo($email)
             ->setSubject('Reset password')
             ->setBody($this->renderView('mail/reset_password.html.twig', [
                 'user' => $user,
+                'email' => $email,
                 'token' => $token
+            ]), 'text/html');
+        $this->mailer->send($message);
+    }
+
+    /**
+     * Notifie de la modification avec succès du changement du mot de passe
+     *
+     * @param User|string $user
+     * @param User|string $email
+     * @param \DateTime $dateTime
+     */
+    public function sendPasswordChangeConf($user, $email, \DateTime $dateTime) {
+        $message = (new \Swift_Message())
+            ->setFrom('mael.constantin@laposte.net')
+            ->setTo($email)
+            ->setSubject('Success change password notification')
+            ->setBody($this->renderView('mail/reset_password_success.html.twig', [
+                'user' => $user,
+                'email' => $email,
+                'datetime' => $dateTime
             ]), 'text/html');
         $this->mailer->send($message);
     }

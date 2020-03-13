@@ -7,6 +7,16 @@
                 {{ error.messageKey | trans(error.messageData, 'security') }}
             </div>
         {% endif %}
+        {% for success in app.flashes('success-send-mail-fopw') %}
+            <div class="alert alert-success">
+                {{ success }}
+            </div>
+        {% endfor %}
+        {% for success in app.flashes('success-change-password') %}
+            <div class="alert alert-success">
+                {{ success }}
+            </div>
+        {% endfor %}
         <form action="{{ path('login') }}" method="post" class="col-md-4 mx-auto">
             <div class="form-group">
                 <label for="username">Nom d'utilisateur</label>
@@ -19,6 +29,7 @@
             <div class="form-group text-center">
                 <input type="checkbox" id="remember_me" name="_remember_me">
                 <label for="remember_me">Se souvenir</label>
+                <a href="{{ path('forgot_password_request') }}">Mot de passe oublié</a>
             </div>
             <div class="form-group text-center">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

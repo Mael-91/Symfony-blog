@@ -2,6 +2,7 @@ home:
   path: /
   controller: App\Controller\HomeController::index
 
+# Blog
 blog.index:
   path: /blog
   controller: App\Controller\BlogController::index
@@ -24,7 +25,6 @@ admin.home:
   controller: App\Controller\Dashboard\DashboardController::dashboard
 
 # Manage Blog
-
 admin.blog:
   path: /dashboard/blog
   controller: App\Controller\Dashboard\DashboardBlogController::index
@@ -64,7 +64,6 @@ admin.blog.categories.delete:
   path: /dashboard/blog/manage/categories/{id}
   controller: App\Controller\Dashboard\DashboardBlogCategoriesController::delete
 
-
 # Manage users
 admin.users:
   path: /dashboard/users
@@ -85,7 +84,7 @@ admin.user.delete:
   controller: App\Controller\Dashboard\DashboardUsersController::delete
   methods: [DELETE]
 
-# Login
+# Security
 login:
   path: /login
   controller: App\Controller\SecurityController::login
@@ -103,3 +102,13 @@ confirmation_account:
   path: /confirm-account/{token}-{id}
   controller: App\Controller\SecurityController::confirmAccount
   methods : [GET]
+
+forgot_password_request:
+  path: /forgot-password
+  controller: App\Controller\SecurityController::forgotPasswordRequest
+  methods: [GET|POST]
+
+change_password_post:
+  path: /forgot-password/{token}
+  controller: App\Controller\SecurityController::forgotPasswordPost
+  methods: [GET|POST]

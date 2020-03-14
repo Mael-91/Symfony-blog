@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DashboardManageBlogPost extends AbstractController {
+class DashboardManageBlogPostController extends AbstractController {
 
     /**
      * @var BlogRepository

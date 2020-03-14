@@ -31,21 +31,21 @@ admin.blog:
 
 admin.blog.manage.post:
   path: /dashboard/blog/manage/post
-  controller: App\Controller\Dashboard\DashboardManageBlogPost::index
+  controller: App\Controller\Dashboard\DashboardManageBlogPostController::index
 
 admin.blog.post.create:
   path: /dashboard/blog/manage/post/create
-  controller: App\Controller\Dashboard\DashboardManageBlogPost::create
+  controller: App\Controller\Dashboard\DashboardManageBlogPostController::create
   methods: [GET|POST]
 
 admin.blog.post.edit:
   path: /dashboard/blog/manage/post/edit/{id}
-  controller: App\Controller\Dashboard\DashboardManageBlogPost::edit
+  controller: App\Controller\Dashboard\DashboardManageBlogPostController::edit
   methods: [GET|POST]
 
 admin.blog.post.delete:
   path: /dashboard/blog/manage/post/{id}
-  controller: App\Controller\Dashboard\DashboardManageBlogPost::delete
+  controller: App\Controller\Dashboard\DashboardManageBlogPostController::delete
   methods: [DELETE]
 
 admin.blog.manage.categories:

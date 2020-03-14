@@ -3,6 +3,21 @@
 {% block body %}
     <div class="container">
         <h4 class="text-center">Gestion des categories</h4>
+        {% for message in app.flashes('success-create-category') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success-edit-category') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success-delete-category') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
         <a href="{{ path('admin.blog.categories.create') }}" class="btn btn-primary float-right mb-1">Publier</a>
         <table class="table table-stripped mt-3">
             <thead>

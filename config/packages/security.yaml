@@ -30,6 +30,8 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginAuthenticator
+                    - App\Security\GithubAuthenticator
+                entry_point: App\Security\LoginAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

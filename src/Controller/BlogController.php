@@ -70,7 +70,7 @@ class BlogController extends AbstractController {
                 'slug' => $getSlug
             ], 301);
         }
-        $comments = $this->commentRepository->findCommentForPost($post->getId());
+        $comments = $this->commentRepository->findAllActive($post->getId());
         $nbrCommentInPost = $this->commentRepository->countCommentInPost($post->getId());
 
         $comment = new BlogComment();

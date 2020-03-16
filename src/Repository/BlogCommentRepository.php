@@ -20,6 +20,13 @@ class BlogCommentRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogComment::class);
     }
 
+    public function findAllActive() {
+        return $this->findActiveQuery()
+            ->orderBy('c.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findCommentForPost($postId) {
         return $this->findActiveQuery()
             ->where('c.post = :post_id')

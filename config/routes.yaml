@@ -27,42 +27,45 @@ admin.home:
 # Manage Blog
 admin.blog:
   path: /dashboard/blog
-  controller: App\Controller\Dashboard\Blog\DashboardBlogController::index
+  controller: App\Controller\Dashboard\Blog\BlogController::index
 
 admin.blog.manage.post:
   path: /dashboard/blog/manage/post
-  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::index
+  controller: App\Controller\Dashboard\Blog\BlogController::managePost
 
 admin.blog.post.create:
   path: /dashboard/blog/manage/post/create
-  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::create
+  controller: App\Controller\Dashboard\Blog\BlogController::create
   methods: [GET|POST]
 
 admin.blog.post.edit:
   path: /dashboard/blog/manage/post/edit/{id}
-  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::edit
+  controller: App\Controller\Dashboard\Blog\BlogController::edit
   methods: [GET|POST]
 
 admin.blog.post.delete:
   path: /dashboard/blog/manage/post/{id}
-  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::delete
+  controller: App\Controller\Dashboard\Blog\BlogController::delete
   methods: [DELETE]
 
 admin.blog.manage.categories:
   path: /dashboard/blog/manage/categories
-  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::index
+  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::index
 
 admin.blog.categories.create:
   path: /dashboard/blog/manage/categories/create
-  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::create
+  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::create
+  methods: [GET|POST]
 
 admin.blog.categories.edit:
   path: /dashboard/blog/manage/categories/edit/{id}
-  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::edit
+  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::edit
+  methods: [GET|POST]
 
 admin.blog.categories.delete:
   path: /dashboard/blog/manage/categories/{id}
-  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::delete
+  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::delete
+  methods: [GET|POST]
 
 admin.blog.manage.comment:
   path: /dashboard/blog/manage/comments

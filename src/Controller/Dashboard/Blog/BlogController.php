@@ -2,35 +2,48 @@
 
 namespace App\Controller\Dashboard\Blog;
 
-use App\Controller\Dashboard\ObjectManager;
 use App\Entity\Blog;
 use App\Form\BlogType;
+use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DashboardManageBlogPostController extends AbstractController {
+class BlogController extends AbstractController {
 
     /**
      * @var BlogRepository
      */
     private $blogRepository;
     /**
-     * @var ObjectManager
+     * @var BlogCategoryRepository
      */
-    private $manager;
+    private $categoryRepository;
 
-    public function __construct(BlogRepository $blogRepository, EntityManagerInterface $manager) {
+    public function __construct(BlogRepository $blogRepository, BlogCategoryRepository $categoryRepository) {
         $this->blogRepository = $blogRepository;
-        $this->manager = $manager;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
      * @return Response
      */
     public function index(): Response {
+        $numPost = $this->blogRepository->countPost();
+        $numCategory = $this->categoryRepository->countCategory();
+        return $this->render('pages/dashboard/blog/dashboard_blog.html.twig', [
+            'current_menu' => 'dashboard-blog',
+            'is_dashboard' => 'true',
+            'numbersPost' => $numPost,
+            'numbersCategory' => $numCategory
+        ]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function managePost(): Response {
         $posts = $this->blogRepository->findAll();
         return $this->render('pages/dashboard/blog/posts.html.twig', [
             'current_menu' => 'blog-posts-manage',
@@ -39,6 +52,10 @@ class DashboardManageBlogPostController extends AbstractController {
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function create(Request $request): Response {
         $blog = new Blog();
         $form = $this->createForm(BlogType::class, $blog);
@@ -78,6 +95,11 @@ class DashboardManageBlogPostController extends AbstractController {
         ]);
     }
 
+    /**
+     * @param Blog $blog
+     * @param Request $request
+     * @return Response
+     */
     public function delete(Blog $blog, Request $request): Response {
         if ($this->isCsrfTokenValid('delete' . $blog->getId(), $request->get('_token'))) {
             $this->manager->remove($blog);

@@ -22,7 +22,7 @@ blog.category:
 # Administration
 admin.home:
   path: /dashboard
-  controller: App\Controller\Dashboard\Blog\DashboardController::dashboard
+  controller: App\Controller\Dashboard\DashboardController::dashboard
 
 # Manage Blog
 admin.blog:
@@ -71,21 +71,21 @@ admin.blog.manage.comments:
 # Manage users
 admin.users:
   path: /dashboard/users
-  controller: App\Controller\Dashboard\DashboardUsersController::index
+  controller: App\Controller\Dashboard\Users\DashboardUsersController::index
 
 admin.user.create:
   path: /dashboard/users/create
-  controller: App\Controller\Dashboard\DashboardUsersController::create
+  controller: App\Controller\Dashboard\Users\DashboardUsersController::create
   methods: [GET|POST]
 
 admin.user.edit:
   path: /dashboard/users/edit/{id}
-  controller: App\Controller\Dashboard\DashboardUsersController::edit
+  controller: App\Controller\Dashboard\Users\DashboardUsersController::edit
   methods: [GET|POST]
 
 admin.user.delete:
   path: /dashboard/users/{id}
-  controller: App\Controller\Dashboard\DashboardUsersController::delete
+  controller: App\Controller\Dashboard\Users\DashboardUsersController::delete
   methods: [DELETE]
 
 # Security

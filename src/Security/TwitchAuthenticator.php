@@ -67,7 +67,7 @@ class TwitchAuthenticator extends AbstractGuardAuthenticator {
         $loadUser = $this->provider->loadUserFormTwitch($credentials['code']);
         $user = $this->manager->getRepository(User::class)->findOneBy(['email' => $loadUser['email']]);
         if (!$user) {
-            $user = $this->generateAccount($loadUser['username'], $loadUser['email']);
+            $user = $this->controller->generateAccount($loadUser['username'], $loadUser['email']);
             return $user;
         }
 

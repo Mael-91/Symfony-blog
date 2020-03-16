@@ -64,9 +64,20 @@ admin.blog.categories.delete:
   path: /dashboard/blog/manage/categories/{id}
   controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::delete
 
-admin.blog.manage.comments:
+admin.blog.manage.comment:
   path: /dashboard/blog/manage/comments
-  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::comments
+  controller: App\Controller\Dashboard\Blog\BlogCommentsController::comments
+  methods: [GET|POST]
+
+admin.blog.comment.edit:
+  path: /dashboard/blog/manage/comments/edit/{id}
+  controller: App\Controller\Dashboard\Blog\BlogCommentsController::edit
+  methods: [GET|POST]
+
+admin.blog.comment.delete:
+  path: /dashboard/blog/manage/comments/{id}
+  controller: App\Controller\Dashboard\Blog\BlogCommentsController::delete
+  methods: [DELETE]
 
 # Manage users
 admin.users:

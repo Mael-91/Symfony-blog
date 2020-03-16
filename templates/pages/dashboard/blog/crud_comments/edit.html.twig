@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title 'Edition du commentaire' %}
+{% block body %}
+    <div class="container">
+        {{ form_start(commentForm) }}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(commentForm.content) }}</div>
+            <div class="col-md-6">{{ form_row(commentForm.visible) }}</div>
+            <button class="btn btn-primary  col-md-4 mx-auto mt-5" type="submit">Éditer</button>
+        </div>
+        {{ form_end(commentForm) }}
+    </div>
+{% endblock %}

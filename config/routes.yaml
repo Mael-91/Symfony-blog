@@ -120,3 +120,7 @@ github_connect:
 google_connect:
   path: /auth/google
   controller: App\Controller\Auth\GoogleAuthController::connect
+
+twitch_connect:
+  path: /auth/twitch
+  controller: App\Controller\Auth\TwitchAuthController::connect

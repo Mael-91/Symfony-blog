@@ -20,7 +20,7 @@
                 {{ success }}
             </div>
         {% endfor %}
-        <form action="{{ path('login') }}" method="post" class="col-md-4 mx-auto">
+        <form action="{{ path('login') }}" method="post" class="col-md-4 float-left">
             <div class="form-group">
                 <label for="username">Nom d'utilisateur</label>
                 <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}">
@@ -39,14 +39,18 @@
                 <button type="submit" class="btn btn-primary">Se connecter</button>
             </div>
         </form>
-        <div class="oauth-authentication">
-            <button type="button" class="btn btn-primary">
+        <div class="float-right col-md-6 mt-4">
+            <button type="button" class="btn btn-primary d-block">
                 <i class="fab fa-github"></i>
                 <span><a href="{{ path('github_connect') }}" class="text-decoration-none text-white">Se connecter via Github</a></span>
             </button>
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary d-block mt-2">
                 <i class="fab fa-google"></i>
                 <span><a href="{{ path('google_connect') }}" class="text-decoration-none text-white">Se connecter via Google</a></span>
+            </button>
+            <button type="button" class="btn btn-primary d-block mt-2">
+                <i class="fab fa-twitch"></i>
+                <span><a href="{{ path('twitch_connect') }}" class="text-decoration-none text-white">Se connecter via Twitch</a></span>
             </button>
         </div>
     </div>

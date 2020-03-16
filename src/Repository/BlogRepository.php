@@ -60,6 +60,13 @@ class BlogRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function countPost() {
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     private function findActiveQuery(): QueryBuilder {
         return $this->createQueryBuilder('p')
             ->where('p.active = true');

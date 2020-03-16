@@ -19,6 +19,13 @@ class BlogCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogCategory::class);
     }
 
+    public function countCategory() {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     // /**
     //  * @return BlogCategory[] Returns an array of BlogCategory objects
     //  */

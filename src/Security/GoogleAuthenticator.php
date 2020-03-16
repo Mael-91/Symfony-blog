@@ -66,7 +66,7 @@ class GoogleAuthenticator extends AbstractGuardAuthenticator {
         $loadUser = $this->provider->loadUserFromGoogle($credentials['code']);
         $user = $this->manager->getRepository(User::class)->findOneBy(['email' => $loadUser['email']]);
         if (!$user) {
-            $user = $this->controller->generateAccount($loadUser['username'], $loadUser['first_name'], $loadUser['last_name'], $loadUser['email']);
+            $user = $this->controller->generateAccount($loadUser['username'], $loadUser['email'], $loadUser['first_name'], $loadUser['last_name']);
             return $user;
         }
 

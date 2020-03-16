@@ -3,5 +3,26 @@
 {% block body %}
     <div class="container">
         <h4 class="text-center">Gestion du blog</h4>
+        <div class="card col-md-4" style="width: 18rem">
+            <div class="card-body">
+                <h5 class="card-title">Nombre de postes</h5>
+                <span>{{ numbersPost }} {% if numbersPost > 1 %} postes {% else %} poste {% endif %}</span><br>
+                <a href="{{ path('admin.blog.manage.post') }}" class="card-link mt-2">Gérer les postes</a>
+            </div>
+        </div>
+        <div class="card col-md-4" style="width: 18rem">
+            <div class="card-body">
+                <h5 class="card-title">Nombre de catégories</h5>
+                <span>{{ numbersCategory }} {% if numbersCategory > 1 %} catégories {% else %} catégorie {% endif %}</span><br>
+                <a href="{{ path('admin.blog.manage.post') }}" class="card-link mt-2">Gérer les postes</a>
+            </div>
+        </div>
+        <div class="card col-md-4" style="width: 18rem">
+            <div class="card-body">
+                <h5 class="card-title">Nombre de commentaires</h5>
+                <span>{{ numbersComment }} {% if numbersComment > 1 %} commentaires {% else %} commentaire {% endif %}</span><br>
+                <a href="{{ path('admin.blog.manage.post') }}" class="card-link mt-2">Gérer les postes</a>
+            </div>
+        </div>
     </div>
 {% endblock %}

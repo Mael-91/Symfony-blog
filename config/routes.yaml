@@ -22,47 +22,51 @@ blog.category:
 # Administration
 admin.home:
   path: /dashboard
-  controller: App\Controller\Dashboard\DashboardController::dashboard
+  controller: App\Controller\Dashboard\Blog\DashboardController::dashboard
 
 # Manage Blog
 admin.blog:
   path: /dashboard/blog
-  controller: App\Controller\Dashboard\DashboardBlogController::index
+  controller: App\Controller\Dashboard\Blog\DashboardBlogController::index
 
 admin.blog.manage.post:
   path: /dashboard/blog/manage/post
-  controller: App\Controller\Dashboard\DashboardManageBlogPostController::index
+  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::index
 
 admin.blog.post.create:
   path: /dashboard/blog/manage/post/create
-  controller: App\Controller\Dashboard\DashboardManageBlogPostController::create
+  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::create
   methods: [GET|POST]
 
 admin.blog.post.edit:
   path: /dashboard/blog/manage/post/edit/{id}
-  controller: App\Controller\Dashboard\DashboardManageBlogPostController::edit
+  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::edit
   methods: [GET|POST]
 
 admin.blog.post.delete:
   path: /dashboard/blog/manage/post/{id}
-  controller: App\Controller\Dashboard\DashboardManageBlogPostController::delete
+  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::delete
   methods: [DELETE]
 
 admin.blog.manage.categories:
   path: /dashboard/blog/manage/categories
-  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::index
+  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::index
 
 admin.blog.categories.create:
   path: /dashboard/blog/manage/categories/create
-  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::create
+  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::create
 
 admin.blog.categories.edit:
   path: /dashboard/blog/manage/categories/edit/{id}
-  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::edit
+  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::edit
 
 admin.blog.categories.delete:
   path: /dashboard/blog/manage/categories/{id}
-  controller: App\Controller\Dashboard\DashboardBlogCategoriesController::delete
+  controller: App\Controller\Dashboard\Blog\DashboardBlogCategoriesController::delete
+
+admin.blog.manage.comments:
+  path: /dashboard/blog/manage/comments
+  controller: App\Controller\Dashboard\Blog\DashboardManageBlogPostController::comments
 
 # Manage users
 admin.users:

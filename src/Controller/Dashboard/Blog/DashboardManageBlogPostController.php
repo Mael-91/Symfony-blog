@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller\Dashboard;
+namespace App\Controller\Dashboard\Blog;
 
+use App\Controller\Dashboard\ObjectManager;
 use App\Entity\Blog;
 use App\Form\BlogType;
 use App\Repository\BlogRepository;

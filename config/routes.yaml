@@ -85,21 +85,21 @@ admin.blog.comment.delete:
 # Manage users
 admin.users:
   path: /dashboard/users
-  controller: App\Controller\Dashboard\Users\DashboardUsersController::index
+  controller: App\Controller\Dashboard\Users\UsersController::index
 
 admin.user.create:
   path: /dashboard/users/create
-  controller: App\Controller\Dashboard\Users\DashboardUsersController::create
+  controller: App\Controller\Dashboard\Users\UsersController::create
   methods: [GET|POST]
 
 admin.user.edit:
   path: /dashboard/users/edit/{id}
-  controller: App\Controller\Dashboard\Users\DashboardUsersController::edit
+  controller: App\Controller\Dashboard\Users\UsersController::edit
   methods: [GET|POST]
 
 admin.user.delete:
   path: /dashboard/users/{id}
-  controller: App\Controller\Dashboard\Users\DashboardUsersController::delete
+  controller: App\Controller\Dashboard\Users\UsersController::delete
   methods: [DELETE]
 
 # Security

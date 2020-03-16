@@ -68,6 +68,7 @@ class GoogleAuthController extends AbstractController {
         $user->setPassword($password);
         $user->setEnabled(false);
         $user->setConfirmationToken($this->tokenGenerator->generateToken());
+        $user->setRequestedTokenAt(new \DateTime());
         $user->setCreatedAt(new \DateTime());
         $this->manager->persist($user);
         $this->manager->flush();

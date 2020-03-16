@@ -56,7 +56,7 @@ class GithubAuthController extends AbstractController {
      * @inheritDoc
      */
     public function connect(): Response {
-        $url = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->urlGenerator->generate('github_connect', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $state = $this->session->set('oauth-github-state', base64_encode(random_bytes(50)));
         return new RedirectResponse("https://github.com/login/oauth/authorize?client_id=$this->githubId&redirect_uri=$url&state=$state");
     }

@@ -53,7 +53,7 @@ class TwitchAuthController extends AbstractController {
     }
 
     public function connect() {
-        $url = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->urlGenerator->generate('twitch_connect', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $state = $this->session->set('oauth-twitch-state', random_bytes(20));
         $claims = '{"id_token":{"email":null,"email_verified":null},"userinfo":{"picture":null}}';
         return new RedirectResponse("https://id.twitch.tv/oauth2/authorize?client_id=$this->twitchId&redirect_uri=$url&response_type=code&scope=user:read:email&claims=$claims");

@@ -53,7 +53,7 @@ class GoogleAuthController extends AbstractController {
     }
 
     public function connect(): Response {
-        $url = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->urlGenerator->generate('google_connect', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $state = $this->session->set('oauth-google-state', base64_encode(random_bytes(30)));
         return new RedirectResponse("https://accounts.google.com/o/oauth2/v2/auth?scope=openid%20profile%20email&access_type=online&response_type=code&state=$state&redirect_uri=$url&client_id=$this->googleId");
     }

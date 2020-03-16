@@ -33,7 +33,7 @@ class TwitchProvider {
     }
 
     public function loadUserFormTwitch(string $code) {
-        $url = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->urlGenerator->generate('twitch_connect', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $host = sprintf('https://id.twitch.tv/oauth2/token?client_id=%s&client_secret=%s&code=%s&grant_type=authorization_code&redirect_uri=%s',
                 $this->twitchId, $this->twitchSecret, $code, $url);
 

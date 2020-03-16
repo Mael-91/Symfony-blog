@@ -52,7 +52,9 @@ class GithubAuthenticator extends AbstractGuardAuthenticator {
 
     public function supports(Request $request)
     {
-        return $request->query->get('code');
+        if ($request->get('_route') === 'github_connect') {
+            return $request->query->get('code');
+        }
     }
 
     public function getCredentials(Request $request)

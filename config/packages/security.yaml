@@ -30,8 +30,8 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginAuthenticator
-                    #- App\Security\GithubAuthenticator
-                    #- App\Security\GoogleAuthenticator
+                    - App\Security\GithubAuthenticator
+                    - App\Security\GoogleAuthenticator
                     - App\Security\TwitchAuthenticator
                 entry_point: App\Security\LoginAuthenticator
 

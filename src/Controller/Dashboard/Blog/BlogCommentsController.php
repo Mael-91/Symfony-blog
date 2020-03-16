@@ -2,6 +2,7 @@
 
 namespace App\Controller\Dashboard\Blog;
 
+use App\Entity\Blog;
 use App\Entity\BlogComment;
 use App\Form\BlogCommentEditType;
 use App\Repository\BlogCommentRepository;

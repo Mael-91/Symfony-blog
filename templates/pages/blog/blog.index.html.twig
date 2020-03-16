@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title"><a href="{{ path('blog.show', {slug: post.slug, id: post.id}) }}">{{ post.title }}</a></h5>
                     <p class="card-text">{{ post.content | truncate }}</p>
-                    <span class="blockquote-footer">{{ post.author }}<span class="float-right">{{ post.nbrComments }} {% if post.nbrComments is not null %} {% if post.nbrComments > 1 %} Commentaires {% else %} Commentaire {% endif %} {% endif %}</span></span>
+                    <span class="blockquote-footer">{{ post.author }}</span>
                 </div>
             </div>
         {% endfor %}

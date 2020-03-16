@@ -71,11 +71,6 @@ class Blog
      */
     private $comments;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $nbr_comments;
-
     public function __construct() {
         $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
@@ -220,18 +215,6 @@ class Blog
                 $comment->setPost(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getNbrComments(): ?int
-    {
-        return $this->nbr_comments;
-    }
-
-    public function setNbrComments(?int $nbr_comments): self
-    {
-        $this->nbr_comments = $nbr_comments;
 
         return $this;
     }

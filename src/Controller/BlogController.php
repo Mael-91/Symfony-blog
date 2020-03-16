@@ -82,8 +82,6 @@ class BlogController extends AbstractController {
                 $comment->setAuthor($this->getUser()->getUsername());
                 $comment->setCreatedAt(new \DateTime());
                 $comment->setVisible(true);
-                $addCommentInPost = $post->getNbrComments();
-                $post->setNbrComments($addCommentInPost + 1);
                 $this->manager->persist($comment);
                 $this->manager->flush();
                 $success = $this->addFlash('success-send-comment', 'Bravo ! Votre commentaire a été envoyé');

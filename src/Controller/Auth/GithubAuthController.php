@@ -8,6 +8,7 @@ use App\Security\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -16,22 +17,6 @@ class GithubAuthController extends AbstractController {
 
     private $githubId;
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $passwordEncoder;
-    /**
-     * @var TokenGenerator
-     */
-    private $tokenGenerator;
-    /**
-     * @var MailerComponent
-     */
-    private $mailerComponent;
-    /**
      * @var EntityManagerInterface
      */
     private $manager;
@@ -39,24 +24,47 @@ class GithubAuthController extends AbstractController {
      * @var SessionInterface
      */
     private $session;
+    /**
+     * @var TokenGenerator
+     */
+    private $tokenGenerator;
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+    /**
+     * @var MailerComponent
+     */
+    private $mailerComponent;
 
-    public function __construct($githubId, UrlGeneratorInterface $urlGenerator, UserPasswordEncoderInterface $passwordEncoder, TokenGenerator $tokenGenerator, MailerComponent $mailerComponent, EntityManagerInterface $manager, SessionInterface $session) {
-        $this->githubId = $githubId;
-        $this->urlGenerator = $urlGenerator;
-        $this->passwordEncoder = $passwordEncoder;
-        $this->tokenGenerator = $tokenGenerator;
-        $this->mailerComponent = $mailerComponent;
+    public function __construct($githubId, EntityManagerInterface $manager, SessionInterface $session, TokenGenerator $tokenGenerator, UserPasswordEncoderInterface $passwordEncoder, UrlGeneratorInterface $urlGenerator, MailerComponent $mailerComponent)
+    {
         $this->manager = $manager;
         $this->session = $session;
+        $this->tokenGenerator = $tokenGenerator;
+        $this->passwordEncoder = $passwordEncoder;
+        $this->urlGenerator = $urlGenerator;
+        $this->mailerComponent = $mailerComponent;
+        $this->githubId = $githubId;
     }
 
-    public function connect() {
+    /**
+     * @inheritDoc
+     */
+    public function connect(): Response {
         $url = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $state = $this->session->set('oauth', base64_encode(random_bytes(50)));
         return new RedirectResponse("https://github.com/login/oauth/authorize?client_id=$this->githubId&redirect_uri=$url&state=$state");
     }
 
-    public function generateAccount($username, $email) {
+    /**
+     * @inheritDoc
+     */
+    public function generateAccount(string $username, string $email) {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);

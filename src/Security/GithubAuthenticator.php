@@ -24,7 +24,7 @@ class GithubAuthenticator extends AbstractGuardAuthenticator {
     /**
      * @var GithubProvider
      */
-    private $githubProvider;
+    private $provider;
     /**
      * @var EntityManagerInterface
      */
@@ -42,8 +42,8 @@ class GithubAuthenticator extends AbstractGuardAuthenticator {
      */
     private $translator;
 
-    public function __construct(GithubProvider $githubProvider, EntityManagerInterface $manager, GithubAuthController $controller, UrlGeneratorInterface $urlGenerator, TranslatorInterface $translator) {
-        $this->githubProvider = $githubProvider;
+    public function __construct(GithubProvider $provider, EntityManagerInterface $manager, GithubAuthController $controller, UrlGeneratorInterface $urlGenerator, TranslatorInterface $translator) {
+        $this->provider = $provider;
         $this->manager = $manager;
         $this->controller = $controller;
         $this->urlGenerator = $urlGenerator;
@@ -64,7 +64,7 @@ class GithubAuthenticator extends AbstractGuardAuthenticator {
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $loadUser = $this->githubProvider->loadUserFromGithub($credentials['code']);
+        $loadUser = $this->provider->loadUserFromGithub($credentials['code']);
         $user = $this->manager->getRepository(User::class)->findOneBy(['email' => $loadUser['email']]);
         if (!$user) {
             $user = $this->controller->generateAccount($loadUser['username'], $loadUser['email']);

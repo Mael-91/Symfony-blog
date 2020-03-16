@@ -26,7 +26,7 @@ class GithubProvider {
     }
 
     public function loadUserFromGithub(string $code) {
-        $state = $this->session->get('oauth');
+        $state = $this->session->get('oauth-github-state');
         $url = sprintf('https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s&state=%s',
             $this->githubId, $this->githubClient, $code, $state);
 
@@ -45,7 +45,8 @@ class GithubProvider {
         ]);
 
         $data = $response->toArray();
-        $this->session->remove('oauth');
+        $this->session->remove('oauth-github-state');
+        $this->session->set('oauth-github-token', $token);
 
         return [
             'username' => $data['login'],

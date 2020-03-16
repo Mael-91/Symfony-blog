@@ -35,7 +35,7 @@ class GoogleProvider {
     }
 
     public function loadUserFromGoogle(string $code) {
-        $state = $this->session->get('oauth-google');
+        $state = $this->session->get('oauth-google-state');
         $url = $this->urlGenerator->generate('home', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $host = sprintf('https://oauth2.googleapis.com/token?client_id=%s&client_secret=%s&code=%s&grant_type=authorization_code&redirect_uri=%s&state=%s',
@@ -56,7 +56,7 @@ class GoogleProvider {
         ]);
 
         $data = $response->toArray();
-        $this->session->remove('oauth-google');
+        $this->session->remove('oauth-google-state');
 
         return [
             'username' => $data['name'],

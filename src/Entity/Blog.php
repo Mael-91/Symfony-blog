@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
@@ -64,8 +66,19 @@ class Blog
      */
     private $category;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogComment", mappedBy="post")
+     */
+    private $comments;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nbr_comments;
+
     public function __construct() {
         $this->created_at = new \DateTime();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -176,6 +189,49 @@ class Blog
     public function setCategory(?BlogCategory $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogComment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(BlogComment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(BlogComment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getPost() === $this) {
+                $comment->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNbrComments(): ?int
+    {
+        return $this->nbr_comments;
+    }
+
+    public function setNbrComments(?int $nbr_comments): self
+    {
+        $this->nbr_comments = $nbr_comments;
 
         return $this;
     }

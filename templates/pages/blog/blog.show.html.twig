@@ -7,7 +7,7 @@
                 <img src="https://www.pompiersparis.fr/images/page_fixe/banniere/banniere-recrutement-engagez-vous.png" alt="" class="card-img-top">
             </div>
         </div>
-        <div class="card mt-5">
+        <div class="card mt-5 mb-3">
             {% for info in category %}
             <div class="card-body">
                 <h5 class="card-title text-center">{{ post.title }}</h5>
@@ -17,6 +17,33 @@
             </div>
             {% endfor %}
         </div>
+    </div>
+    <div class="container">
+        <span class="text-dark mt-3" style="font-size: 20px">{{ nbrComment }} {% if nbrComment > 1 %} Commentaires {% else %} Commentaire {% endif %}</span>
+        <div class="border-top my-3"></div>
+        {% for message in app.flashes('success-send-comment') %}
+        <div class="alert alert-success mt-3">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {{ form_start(commentForm) }}
+        <div class="send-comment mt-3">
+            <div>
+                <div class="">{{ form_row(commentForm.content) }}</div>
+                <button class="btn btn-success" type="submit">Envoyer</button>
+            </div>
+        </div>
+        {{ form_end(commentForm) }}
+        {% for comment in comment %}
+            <div class="comment" style="margin-top: 20px;" id="{{ comment.id }}">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="card-title"><a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ comment.author }}</a> - <abbr class="datetime" style="color: #9e9e9e; font-size: .7rem">{{ comment.createdAt | ago('text-black-50') }}</abbr> - <span class="reply text-muted" style="font-size: .7rem; text-decoration:  underline;">Répondre</span></span>
+                        <p class="card-text mt-2">{{ comment.content | nl2br }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
     <script src="{{ asset('js/timeago.min.js') }}"></script>
     <script src="{{ asset('js/timeago.locales.min.js') }}"></script>

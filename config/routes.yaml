@@ -116,3 +116,7 @@ change_password_post:
 github_connect:
   path: /auth/github
   controller: App\Controller\Auth\GithubAuthController::connect
+
+google_connect:
+  path: /auth/google
+  controller: App\Controller\Auth\GoogleAuthController::connect

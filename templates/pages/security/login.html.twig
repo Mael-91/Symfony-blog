@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block title 'Se connecter' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+{% endblock %}
 {% block body %}
     <div class="container mt-4">
         {% if error %}
@@ -36,5 +39,18 @@
                 <button type="submit" class="btn btn-primary">Se connecter</button>
             </div>
         </form>
+        <div class="oauth-authentication">
+            <button type="button" class="btn btn-primary">
+                <i class="fab fa-github"></i>
+                <span><a href="{{ path('github_connect') }}" class="text-decoration-none text-white">Se connecter via Github</a></span>
+            </button>
+            <button type="button" class="btn btn-primary">
+                <i class="fab fa-google"></i>
+                <span><a href="{{ path('google_connect') }}" class="text-decoration-none text-white">Se connecter via Google</a></span>
+            </button>
+        </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/all.min.js') }}"></script>
 {% endblock %}

@@ -31,6 +31,7 @@ security:
                 authenticators:
                     - App\Security\LoginAuthenticator
                     - App\Security\GithubAuthenticator
+                    - App\Security\GoogleAuthenticator
                 entry_point: App\Security\LoginAuthenticator
 
             # activate different ways to authenticate

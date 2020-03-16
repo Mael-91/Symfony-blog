@@ -57,6 +57,7 @@ class GoogleProvider {
 
         $data = $response->toArray();
         $this->session->remove('oauth-google-state');
+        $this->session->set('oauth-google-token', $token);
 
         return [
             'username' => $data['name'],

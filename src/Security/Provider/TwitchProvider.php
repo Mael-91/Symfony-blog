@@ -51,6 +51,7 @@ class TwitchProvider {
            ]
         ]);
 
+        $this->session->set('oauth-twitch-token', $token);
         $data = json_decode($response->getContent());
         $username = $data->data[0]->display_name;
         $email = $data->data[0]->email;

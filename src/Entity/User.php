@@ -109,6 +109,11 @@ class User implements UserInterface, \Serializable
      */
     private $requested_pw_token_at;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $last_login;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -305,6 +310,18 @@ class User implements UserInterface, \Serializable
     public function setRequestedPwTokenAt(?\DateTimeInterface $requested_pw_token_at): self
     {
         $this->requested_pw_token_at = $requested_pw_token_at;
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->last_login;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $last_login): self
+    {
+        $this->last_login = $last_login;
 
         return $this;
     }

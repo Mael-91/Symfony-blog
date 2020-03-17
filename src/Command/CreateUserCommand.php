@@ -47,7 +47,7 @@ class CreateUserCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Create a new user with super admin role')
+            ->setDescription('Create a new user')
         ;
     }
 
@@ -124,8 +124,10 @@ class CreateUserCommand extends Command
             'Roles : ' . implode(', ', $user->getRoles())
         ]);
 
-        $io->confirm('I want to create this user.', true);
+        $io->confirm('Yes, I want create this user.', true);
 
+        $user->setCreatedAt(new \DateTime());
+        $user->setEnabled(true);
         $this->manager->persist($user);
         $this->manager->flush();
         $io->success('Success ! The user successfully added in database.');

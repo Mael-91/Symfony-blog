@@ -133,7 +133,7 @@ class SecurityController extends AbstractController {
      */
     public function confirmAccount($token, $id): Response {
         $user = $this->userRepository->findOneBy(['id' => $id]);
-        if (is_null($user->getConfirmationToken()) || $token !== $user->getConfirmationToken() || !$this->isRequestInTime($user->getRequestedTokenAt())) {
+        if (is_null($user->getConfirmationToken()) || $token !== $user->getConfirmationToken() || !$this->tokenGenerator->isRequestInTime($user->getRequestedTokenAt())) {
             throw new AccessDeniedHttpException('Un problème est survenu lors de la demande de vérification du compte, veuillez rééssayer');
         } else {
             $user->setConfirmationToken(null);
@@ -195,7 +195,7 @@ class SecurityController extends AbstractController {
         $user = $this->userRepository->findOneBy(['password_token' => $token]);
         $form = $this->createForm(ResettingPasswordType::class);
         $form->handleRequest($request);
-        if (is_null($user->getPasswordToken()) || $token !== $user->getPasswordToken() || !$this->isRequestInTime($user->getRequestedPwTokenAt())) {
+        if (is_null($user->getPasswordToken()) || $token !== $user->getPasswordToken() || !$this->tokenGenerator->isRequestInTime($user->getRequestedPwTokenAt())) {
             throw new AccessDeniedHttpException('Un problème est survenu lors de la demande de changement du mot de passe, veuillez réitérer la demande');
         } else {
             if ($form->isSubmitted() && $form->isValid()) {
@@ -215,24 +215,5 @@ class SecurityController extends AbstractController {
             'is_dashboard' => 'false',
             'form' => $form->createView()
         ]);
-    }
-
-    /**
-     * Permet de vérifier le temps depuis la génération du token
-     *
-     * @param \DateTime|null $requestedAt
-     * @return bool
-     * @throws \Exception
-     */
-    private function isRequestInTime(\DateTime $requestedAt = null): bool {
-        if (is_null($requestedAt)) {
-            throw new AccountTokenExpiredException();
-        }
-
-        $now = new \DateTime('now');
-        $interval = $now->getTimestamp() - $requestedAt->getTimestamp();
-        $validTime = 60 * 15;
-        $isValid = $interval > $validTime ? false : $isValid = true;
-        return $isValid;
     }
 }

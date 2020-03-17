@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title 'Gestion des commentaires' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+{% endblock %}
 {% block body %}
     <div class="container">
         <h4 class="text-center mt-3">Gestion des commentaires</h4>
@@ -32,11 +36,11 @@
                     <td>{{ comment.post }}</td>
                     <td>{{ comment.author }}</td>
                     <td>{{ comment.createdAt | date("H:i d/m/Y") }}</td>
-                    <td><a href="{{ path('admin.blog.comment.edit', {id: comment.id}) }}" class="btn btn-primary">Éditer</a>
+                    <td><a href="{{ path('admin.blog.comment.edit', {id: comment.id}) }}" id="edit"><i class="far fa-edit"></i></a>
                         <form method="post" action="{{ path('admin.blog.comment.delete', {id: comment.id}) }}) }}" class="d-inline-block">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                            <button class="btn btn-danger">Supprimer</button>
+                            <button id="delete"><i class="far fa-trash-alt"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -44,4 +48,7 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/all.min.js') }}"></script>
 {% endblock %}

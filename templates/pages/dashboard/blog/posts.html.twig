@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title 'Gestion des articles' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+ {% endblock %}
 {% block body %}
     <div class="container">
         <h4 class="text-center mt-3">Gestion des articles</h4>
@@ -28,11 +32,11 @@
                     <td>{% if post.category is null %} Aucune catégorie {% else %} {{ post.category }} {% endif %}</td>
                     <td>{{ post.createdAt | date("H:i m/d/Y") }}</td>
                     <td>{% if post.editedAt is null %} Aucune modification {% else %} {{ post.editedAt | date("H:i m/d/Y") }} {% endif %}</td>
-                    <td><a href="{{ path('admin.blog.post.edit', {id: post.id}) }}" class="btn btn-primary">Éditer</a>
+                    <td><a href="{{ path('admin.blog.post.edit', {id: post.id}) }}" id="edit"><i class="far fa-edit"></i></a>
                         <form method="post" action="{{ path('admin.blog.post.delete', {id: post.id}) }}" class="d-inline-block">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                            <button class="btn btn-danger">Supprimer</button>
+                            <button id="delete"><i class="far fa-trash-alt"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -40,4 +44,7 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/all.min.js') }}"></script>
 {% endblock %}

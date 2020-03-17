@@ -1,0 +1,14 @@
+a#edit {
+    color: #000000;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+button#delete {
+    font-size: 1.1rem;
+    background-color: transparent;
+    background-repeat:no-repeat;
+    outline: none;
+    border: none;
+    margin-left: 2px;
+}

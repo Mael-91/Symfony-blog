@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Component\Mail\MailerComponent;
 use App\Entity\User;
-use App\Exceptions\AccountTokenExpiredException;
 use App\Form\ForgotPasswordType;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
@@ -45,6 +44,10 @@ class SecurityController extends AbstractController {
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
+    /**
+     * @var GuardAuthenticatorHandler
+     */
+    private $handler;
 
     public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, UserPasswordEncoderInterface $passwordEncoder, MailerComponent $mailerComponent, TokenGenerator $tokenGenerator) {
         $this->authenticationUtils = $authenticationUtils;
@@ -84,8 +87,8 @@ class SecurityController extends AbstractController {
             $token = $user->getConfirmationToken();
             $email = $user->getEmail();
             $id = $user->getId();
-            $user = $user->getUsername();
-            $this->mailerComponent->sendRegisterMail($user, $email, $id, $token, 'confirmation_account');
+            $username = $user->getUsername();
+            $this->mailerComponent->sendRegisterMail($username, $email, $id, $token, 'confirmation_account');
             $success = $this->addFlash('success-register', 'Bravo, votre compte a été crée !');
             return $this->redirectToRoute('home', [ 'success' => $success ], 301);
         }

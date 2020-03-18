@@ -2,8 +2,8 @@
 
 namespace App\Controller\Auth;
 
-use App\Component\Mail\MailerComponent;
 use App\Entity\User;
+use App\Event\SecurityRegistrationEvent;
 use App\Security\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class GoogleAuthController extends AbstractController {
 
@@ -33,22 +34,17 @@ class GoogleAuthController extends AbstractController {
      */
     private $manager;
     /**
-     * @var MailerComponent
-     */
-    private $mailerComponent;
-    /**
      * @var TokenGenerator
      */
     private $tokenGenerator;
 
-    public function __construct($googleId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, MailerComponent $mailerComponent, TokenGenerator $tokenGenerator) {
+    public function __construct($googleId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, TokenGenerator $tokenGenerator) {
 
         $this->googleId = $googleId;
         $this->urlGenerator = $urlGenerator;
         $this->session = $session;
         $this->passwordEncoder = $passwordEncoder;
         $this->manager = $manager;
-        $this->mailerComponent = $mailerComponent;
         $this->tokenGenerator = $tokenGenerator;
     }
 
@@ -58,7 +54,7 @@ class GoogleAuthController extends AbstractController {
         return new RedirectResponse("https://accounts.google.com/o/oauth2/v2/auth?scope=openid%20profile%20email&access_type=online&response_type=code&state=$state&redirect_uri=$url&client_id=$this->googleId");
     }
 
-    public function generateAccount(string $username, string $email, string $firstName, string $familyName) {
+    public function generateAccount(string $username, string $email, string $firstName, string $familyName, EventDispatcherInterface $dispatcher) {
         $user = new User();
         $user->setUsername($username);
         $user->setFirstName($firstName);
@@ -72,9 +68,8 @@ class GoogleAuthController extends AbstractController {
         $user->setCreatedAt(new \DateTime());
         $this->manager->persist($user);
         $this->manager->flush();
-        $id = $user->getId();
-        $token = $user->getConfirmationToken();
-        $this->mailerComponent->sendRegisterMail($username, $email, $id, $token);
+        $registerMail = new SecurityRegistrationEvent($user);
+        $dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
 
         return $user;
     }

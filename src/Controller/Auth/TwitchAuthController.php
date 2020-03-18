@@ -2,8 +2,8 @@
 
 namespace App\Controller\Auth;
 
-use App\Component\Mail\MailerComponent;
 use App\Entity\User;
+use App\Event\SecurityRegistrationEvent;
 use App\Security\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TwitchAuthController extends AbstractController {
 
@@ -33,22 +34,17 @@ class TwitchAuthController extends AbstractController {
      */
     private $manager;
     /**
-     * @var MailerComponent
-     */
-    private $mailerComponent;
-    /**
      * @var TokenGenerator
      */
     private $tokenGenerator;
 
-    public function __construct($twitchId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, MailerComponent $mailerComponent, TokenGenerator $tokenGenerator) {
+    public function __construct($twitchId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, TokenGenerator $tokenGenerator) {
 
         $this->twitchId = $twitchId;
         $this->urlGenerator = $urlGenerator;
         $this->session = $session;
         $this->passwordEncoder = $passwordEncoder;
         $this->manager = $manager;
-        $this->mailerComponent = $mailerComponent;
         $this->tokenGenerator = $tokenGenerator;
     }
 
@@ -59,7 +55,7 @@ class TwitchAuthController extends AbstractController {
         return new RedirectResponse("https://id.twitch.tv/oauth2/authorize?client_id=$this->twitchId&redirect_uri=$url&response_type=code&scope=user:read:email&claims=$claims");
     }
 
-    public function generateAccount(string $username, string $email) {
+    public function generateAccount(string $username, string $email, EventDispatcherInterface $dispatcher) {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
@@ -71,9 +67,8 @@ class TwitchAuthController extends AbstractController {
         $user->setCreatedAt(new \DateTime());
         $this->manager->persist($user);
         $this->manager->flush();
-        $id = $user->getId();
-        $token = $user->getConfirmationToken();
-        $this->mailerComponent->sendRegisterMail($username, $email, $id, $token);
+        $registerMail = new SecurityRegistrationEvent($user);
+        $dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
 
         return $user;
     }

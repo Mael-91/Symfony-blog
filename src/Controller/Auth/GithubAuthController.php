@@ -2,8 +2,8 @@
 
 namespace App\Controller\Auth;
 
-use App\Component\Mail\MailerComponent;
 use App\Entity\User;
+use App\Event\SecurityRegistrationEvent;
 use App\Security\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class GithubAuthController extends AbstractController {
 
@@ -36,19 +37,14 @@ class GithubAuthController extends AbstractController {
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
-    /**
-     * @var MailerComponent
-     */
-    private $mailerComponent;
 
-    public function __construct($githubId, EntityManagerInterface $manager, SessionInterface $session, TokenGenerator $tokenGenerator, UserPasswordEncoderInterface $passwordEncoder, UrlGeneratorInterface $urlGenerator, MailerComponent $mailerComponent)
+    public function __construct($githubId, EntityManagerInterface $manager, SessionInterface $session, TokenGenerator $tokenGenerator, UserPasswordEncoderInterface $passwordEncoder, UrlGeneratorInterface $urlGenerator)
     {
         $this->manager = $manager;
         $this->session = $session;
         $this->tokenGenerator = $tokenGenerator;
         $this->passwordEncoder = $passwordEncoder;
         $this->urlGenerator = $urlGenerator;
-        $this->mailerComponent = $mailerComponent;
         $this->githubId = $githubId;
     }
 
@@ -64,7 +60,7 @@ class GithubAuthController extends AbstractController {
     /**
      * @inheritDoc
      */
-    public function generateAccount(string $username, string $email) {
+    public function generateAccount(string $username, string $email, EventDispatcherInterface $dispatcher) {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
@@ -77,12 +73,8 @@ class GithubAuthController extends AbstractController {
         $user->setEnabled(false);
         $this->manager->persist($user);
         $this->manager->flush();
-        $username = $user->getUsername();
-        $id = $user->getId();
-        $email = $user->getEmail();
-        $token = $user->getConfirmationToken();
-        $this->mailerComponent->sendRegisterMail($username, $email, $id, $token, 'confirmation_account');
-
+        $registerMail = new SecurityRegistrationEvent($user);
+        $dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
         return $user;
     }
 }

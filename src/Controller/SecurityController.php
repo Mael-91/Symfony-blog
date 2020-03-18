@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
-use App\Component\Mail\MailerComponent;
 use App\Entity\User;
+use App\Event\SecurityForgotPasswordRequestEvent;
+use App\Event\SecurityLoginEvent;
+use App\Event\SecurityPasswordInformationEvent;
 use App\Event\SecurityRegistrationEvent;
+use App\EventSubscriber\MailSubscriber;
 use App\Form\ForgotPasswordType;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
@@ -36,10 +39,6 @@ class SecurityController extends AbstractController {
      */
     private $manager;
     /**
-     * @var MailerComponent
-     */
-    private $mailerComponent;
-    /**
      * @var TokenGenerator
      */
     private $tokenGenerator;
@@ -47,16 +46,11 @@ class SecurityController extends AbstractController {
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
-    /**
-     * @var GuardAuthenticatorHandler
-     */
-    private $handler;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, UserPasswordEncoderInterface $passwordEncoder, MailerComponent $mailerComponent, TokenGenerator $tokenGenerator) {
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, UserPasswordEncoderInterface $passwordEncoder, TokenGenerator $tokenGenerator) {
         $this->authenticationUtils = $authenticationUtils;
         $this->userRepository = $userRepository;
         $this->manager = $manager;
-        $this->mailerComponent = $mailerComponent;
         $this->tokenGenerator = $tokenGenerator;
         $this->passwordEncoder = $passwordEncoder;
     }
@@ -65,6 +59,7 @@ class SecurityController extends AbstractController {
      * Permet de s'inscrire
      *
      * @param Request $request
+     * @param EventDispatcherInterface $dispatcher
      * @return Response
      * @throws \Exception
      */
@@ -117,9 +112,7 @@ class SecurityController extends AbstractController {
              $error = $this->addFlash('error-is-connected', 'Your are already connected');
              return $this->redirectToRoute('home', [ 'error-login' => $error ], 301);
          }
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('pages/security/login.html.twig', [
@@ -156,10 +149,11 @@ class SecurityController extends AbstractController {
      * Permet d'emettre une demande de changement du mot de passe
      *
      * @param Request $request
+     * @param EventDispatcherInterface $dispatcher
      * @return Response
      * @throws \Exception
      */
-    public function forgotPasswordRequest(Request $request): Response {
+    public function forgotPasswordRequest(Request $request, EventDispatcherInterface $dispatcher): Response {
         if ($this->getUser()) {
             throw new AccessDeniedHttpException('Vous n\'avez pas le droit d\'acceder à cette page lorsque vous êtes connecter');
         }
@@ -176,14 +170,14 @@ class SecurityController extends AbstractController {
                 $findUser->setPasswordToken($this->tokenGenerator->generateToken(10));
                 $findUser->setRequestedPwTokenAt(new \DateTime('now'));
                 $this->manager->flush();
-
-                $token = $findUser->getPasswordToken();
-                $this->mailerComponent->sendResetPasswordMail($findUser->getUsername(), $findUser->getEmail(), $token);
+                $passwordEvent = new SecurityForgotPasswordRequestEvent($findUser);
+                $dispatcher->dispatch($passwordEvent, SecurityForgotPasswordRequestEvent::NAME);
                 $successSendMail = $this->addFlash('success-send-mail-fopw', 'Le mail a bien été envoyé');
 
                 return $this->redirectToRoute('login', ['success-mail-fopw' => $successSendMail], 301);
             }
         }
+
         return $this->render('pages/security/forgot_password.html.twig', [
             'is_dashboard' => 'false',
             'form' => $form->createView()
@@ -195,10 +189,11 @@ class SecurityController extends AbstractController {
      *
      * @param Request $request
      * @param string $token
+     * @param EventDispatcherInterface $dispatcher
      * @return Response
      * @throws \Exception
      */
-    public function forgotPasswordPost(Request $request, $token): Response {
+    public function forgotPasswordPost(Request $request, $token, EventDispatcherInterface $dispatcher): Response {
         $user = $this->userRepository->findOneBy(['password_token' => $token]);
         $form = $this->createForm(ResettingPasswordType::class);
         $form->handleRequest($request);
@@ -212,7 +207,8 @@ class SecurityController extends AbstractController {
                 $user->setPasswordToken(null);
                 $user->setRequestedPwTokenAt(null);
                 $this->manager->flush();
-                $this->mailerComponent->sendPasswordChangeConf($user->getUsername(), $user->getEmail(), new \DateTime('now'));
+                $resetConfirmation = new SecurityPasswordInformationEvent($user);
+                $dispatcher->dispatch($resetConfirmation, SecurityPasswordInformationEvent::NAME);
                 $successChangePW = $this->addFlash('success-change-password', 'Le mot de passe a bien été modifié');
                 return $this->redirectToRoute('login', ['success-change-pw' => $successChangePW], 301);
             }

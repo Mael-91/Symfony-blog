@@ -18,28 +18,6 @@ class MailerComponent extends AbstractController {
     }
 
     /**
-     * Envoi le mail de confirmation lors de l'inscription
-     *
-     * @param User|string $user
-     * @param User|string $email
-     * @param User|int id
-     * @param string $token
-     */
-    public function sendRegisterMail($user, $email, $id, $token) {
-        $message = (new \Swift_Message())
-            ->setFrom('mael.constantin@gmail.com')
-            ->setTo($email)
-            ->setSubject('Confirm account')
-            ->setBody($this->renderView('mail/register_mail.html.twig', [
-                'email' => $email,
-                'user' => $user,
-                'id' => $id,
-                'token' => $token
-            ]), 'text/html');
-        $this->mailer->send($message);
-    }
-
-    /**
      * Envoi le mail permettant de changer de mot de passe
      *
      * @param User|string $user

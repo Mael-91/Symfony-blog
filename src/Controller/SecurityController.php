@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Component\Mail\MailerComponent;
 use App\Entity\User;
+use App\Event\SecurityRegistrationEvent;
 use App\Form\ForgotPasswordType;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
@@ -15,8 +16,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SecurityController extends AbstractController {
 
@@ -65,7 +68,7 @@ class SecurityController extends AbstractController {
      * @return Response
      * @throws \Exception
      */
-    public function register(Request $request): Response {
+    public function register(Request $request, EventDispatcherInterface $dispatcher): Response {
         if ($this->getUser()) {
             $error = $this->addFlash('error-is-connected', 'Your are already connected');
             return $this->redirectToRoute('home', [ 'error-is-connected' => $error ], 301);
@@ -84,12 +87,13 @@ class SecurityController extends AbstractController {
             $user->setCreatedAt(new \DateTime('now'));
             $this->manager->persist($user);
             $this->manager->flush();
-            $token = $user->getConfirmationToken();
-            $email = $user->getEmail();
-            $id = $user->getId();
-            $username = $user->getUsername();
-            $this->mailerComponent->sendRegisterMail($username, $email, $id, $token, 'confirmation_account');
             $success = $this->addFlash('success-register', 'Bravo, votre compte a été crée !');
+            $registrationEvent = new SecurityRegistrationEvent($user);
+            $dispatcher->dispatch($registrationEvent, SecurityRegistrationEvent::NAME);
+            // Login user after registration
+            $loginAfter = new UsernamePasswordToken($user->getUsername(), $user->getPassword(), 'security.user.provider.concrete.from_database', $user->getRoles());
+            $this->get('security.token_storage')->setToken($loginAfter);
+            $this->get('session')->set('_security_main', serialize($loginAfter));
             return $this->redirectToRoute('home', [ 'success' => $success ], 301);
         }
 

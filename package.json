@@ -20,6 +20,6 @@
         "flatpickr": "^4.6.3",
         "jquery": "^3.4.1",
         "popper.js": "^1.16.1",
-        "timeago": "^1.6.7"
+        "timeago.js": "^4.0.2"
     }
 }

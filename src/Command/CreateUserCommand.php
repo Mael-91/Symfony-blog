@@ -19,7 +19,7 @@ class CreateUserCommand extends Command
 {
     use LockableTrait;
 
-    protected static $defaultName = 'app:create-user';
+    protected static $defaultName = 'user:create-user';
     /**
      * @var bool
      */
@@ -56,7 +56,7 @@ class CreateUserCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $user = new User();
         $helper = $this->getHelper('question');
-        $io->section('Create your user.');
+        $io->title('Create your user.');
 
         $question = new Question('Enter the username : ', 'Admin');
         $username = $helper->ask($input, $output, $question);

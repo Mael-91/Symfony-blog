@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title 'Gestion des commentaires' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    {{ encore_entry_link_tags('admin') }}
 {% endblock %}
 {% block body %}
     <div class="container">
@@ -48,7 +47,4 @@
             </tbody>
         </table>
     </div>
-{% endblock %}
-{% block javascripts %}
-    <script src="{{ asset('js/font-awesome.min.js') }}"></script>
 {% endblock %}

@@ -45,6 +45,10 @@
             </div>
         {% endfor %}
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('textareaResize') }}
     <script src="{{ asset('js/timeago.min.js') }}"></script>
     <script src="{{ asset('js/timeago.locales.min.js') }}"></script>
     <script>

@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title 'Gestion des utilisateurs'%}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    {{ encore_entry_link_tags('admin') }}
 {% endblock %}
 {% block body %}
     <div class="container">
@@ -32,11 +31,11 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.createdAt | date("H:i d/m/Y") }}</td>
                     <td>{% if user.editedAt is null %} aucune modification {% else %} {{ user.editedAt | date("H:i d/m/Y") }} {% endif %}</td>
-                    <td><a href="{{ path('admin.user.edit', {id: user.id}) }}" id="edit"><i class="far fa-edit"></i></a>
+                    <td><a href="{{ path('admin.user.edit', {id: user.id}) }}" id="edit" data-toggle="tooltip" data-placement="top" title="Éditer"><i class="far fa-edit"></i></a>
                         <form method="post" action="{{ path('admin.user.delete', {id: user.id}) }}" class="d-inline-block">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                            <button id="delete"><i class="far fa-trash-alt"></i></button>
+                            <button id="delete" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="far fa-trash-alt"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -44,7 +43,4 @@
             </tbody>
         </table>
     </div>
-{% endblock %}
-{% block javascripts %}
-    <script src="{{ asset('js/all.min.js') }}"></script>
 {% endblock %}

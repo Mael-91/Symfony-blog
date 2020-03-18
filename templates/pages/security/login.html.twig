@@ -1,8 +1,5 @@
 {% extends 'base.html.twig' %}
 {% block title 'Se connecter' %}
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
-{% endblock %}
 {% block body %}
     <div class="container mt-4">
         {% if error %}
@@ -54,7 +51,4 @@
             </button>
         </div>
     </div>
-{% endblock %}
-{% block javascripts %}
-    <script src="{{ asset('js/all.min.js') }}"></script>
 {% endblock %}

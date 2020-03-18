@@ -11,6 +11,8 @@
 /public/webfonts/
 /var/
 /vendor/
+/assets/js/timeago.locales.min.js
+/assets/js/timeago.min.js
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

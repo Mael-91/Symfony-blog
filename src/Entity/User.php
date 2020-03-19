@@ -35,7 +35,6 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank()
      */
     private $username;
 
@@ -48,14 +47,12 @@ class User implements UserInterface, \Serializable
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Assert\NotCompromisedPassword()
-     * @Assert\NotBlank()
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\Email(message="The email '{{ value }}' is not valid email.")
-     * @Assert\NotBlank()
      */
     private $email;
 
@@ -446,6 +443,6 @@ class User implements UserInterface, \Serializable
     }
 
     public function __toString() {
-        return $this->username;
+        return (string)$this->username;
     }
 }

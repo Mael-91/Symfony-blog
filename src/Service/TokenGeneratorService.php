@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Security;
+namespace App\Service;
 
 use App\Exceptions\AccountTokenExpiredException;
 
-class TokenGenerator {
+class TokenGeneratorService {
 
     /**
      * Permet de générer un chaine de caractère aléatoire
@@ -25,7 +25,7 @@ class TokenGenerator {
      * @return bool
      * @throws \Exception
      */
-    public function isRequestInTime(\DateTime $requestedAt = null): bool {
+    public function isExpired(\DateTime $requestedAt = null): bool {
         if (is_null($requestedAt)) {
             throw new AccountTokenExpiredException();
         }

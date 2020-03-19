@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Service;
 
-use App\Security\TokenGenerator;
+use App\Service\TokenGeneratorService;
 use PHPUnit\Framework\TestCase;
 
-class TokenGeneratorTest extends TestCase
+class TokenGeneratorServiceTest extends TestCase
 {
 
     public function testCreateToken()
     {
-        $tokenGenerator = new TokenGenerator();
+        $tokenGenerator = new TokenGeneratorService();
         $token = $tokenGenerator->generateToken();
         $getToken = $token;
 

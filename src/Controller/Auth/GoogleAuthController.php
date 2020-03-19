@@ -4,7 +4,7 @@ namespace App\Controller\Auth;
 
 use App\Entity\User;
 use App\Event\SecurityRegistrationEvent;
-use App\Security\TokenGenerator;
+use App\Service\TokenGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,11 +34,15 @@ class GoogleAuthController extends AbstractController {
      */
     private $manager;
     /**
-     * @var TokenGenerator
+     * @var TokenGeneratorService
      */
     private $tokenGenerator;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
-    public function __construct($googleId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, TokenGenerator $tokenGenerator) {
+    public function __construct($googleId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, TokenGeneratorService $tokenGenerator, EventDispatcherInterface $dispatcher) {
 
         $this->googleId = $googleId;
         $this->urlGenerator = $urlGenerator;
@@ -46,6 +50,7 @@ class GoogleAuthController extends AbstractController {
         $this->passwordEncoder = $passwordEncoder;
         $this->manager = $manager;
         $this->tokenGenerator = $tokenGenerator;
+        $this->dispatcher = $dispatcher;
     }
 
     public function connect(): Response {
@@ -54,7 +59,7 @@ class GoogleAuthController extends AbstractController {
         return new RedirectResponse("https://accounts.google.com/o/oauth2/v2/auth?scope=openid%20profile%20email&access_type=online&response_type=code&state=$state&redirect_uri=$url&client_id=$this->googleId");
     }
 
-    public function generateAccount(string $username, string $email, string $firstName, string $familyName, EventDispatcherInterface $dispatcher) {
+    public function generateAccount(string $username, string $email, string $firstName, string $familyName) {
         $user = new User();
         $user->setUsername($username);
         $user->setFirstName($firstName);
@@ -69,7 +74,7 @@ class GoogleAuthController extends AbstractController {
         $this->manager->persist($user);
         $this->manager->flush();
         $registerMail = new SecurityRegistrationEvent($user);
-        $dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
+        $this->dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
 
         return $user;
     }

@@ -4,7 +4,7 @@ namespace App\Controller\Auth;
 
 use App\Entity\User;
 use App\Event\SecurityRegistrationEvent;
-use App\Security\TokenGenerator;
+use App\Service\TokenGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,7 +26,7 @@ class GithubAuthController extends AbstractController {
      */
     private $session;
     /**
-     * @var TokenGenerator
+     * @var TokenGeneratorService
      */
     private $tokenGenerator;
     /**
@@ -37,8 +37,12 @@ class GithubAuthController extends AbstractController {
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
-    public function __construct($githubId, EntityManagerInterface $manager, SessionInterface $session, TokenGenerator $tokenGenerator, UserPasswordEncoderInterface $passwordEncoder, UrlGeneratorInterface $urlGenerator)
+    public function __construct($githubId, EntityManagerInterface $manager, SessionInterface $session, TokenGeneratorService $tokenGenerator, UserPasswordEncoderInterface $passwordEncoder, UrlGeneratorInterface $urlGenerator, EventDispatcherInterface $dispatcher)
     {
         $this->manager = $manager;
         $this->session = $session;
@@ -46,6 +50,7 @@ class GithubAuthController extends AbstractController {
         $this->passwordEncoder = $passwordEncoder;
         $this->urlGenerator = $urlGenerator;
         $this->githubId = $githubId;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -60,7 +65,7 @@ class GithubAuthController extends AbstractController {
     /**
      * @inheritDoc
      */
-    public function generateAccount(string $username, string $email, EventDispatcherInterface $dispatcher) {
+    public function generateAccount(string $username, string $email) {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
@@ -74,7 +79,7 @@ class GithubAuthController extends AbstractController {
         $this->manager->persist($user);
         $this->manager->flush();
         $registerMail = new SecurityRegistrationEvent($user);
-        $dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
+        $this->dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
         return $user;
     }
 }

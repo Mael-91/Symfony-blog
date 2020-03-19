@@ -13,7 +13,7 @@ use App\Form\LoginType;
 use App\Form\RegistrationType;
 use App\Form\ResettingPasswordType;
 use App\Repository\UserRepository;
-use App\Security\TokenGenerator;
+use App\Service\TokenGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +39,7 @@ class SecurityController extends AbstractController {
      */
     private $manager;
     /**
-     * @var TokenGenerator
+     * @var TokenGeneratorService
      */
     private $tokenGenerator;
     /**
@@ -47,7 +47,7 @@ class SecurityController extends AbstractController {
      */
     private $passwordEncoder;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, UserPasswordEncoderInterface $passwordEncoder, TokenGenerator $tokenGenerator) {
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, UserPasswordEncoderInterface $passwordEncoder, TokenGeneratorService $tokenGenerator) {
         $this->authenticationUtils = $authenticationUtils;
         $this->userRepository = $userRepository;
         $this->manager = $manager;
@@ -133,7 +133,7 @@ class SecurityController extends AbstractController {
      */
     public function confirmAccount($token, $id): Response {
         $user = $this->userRepository->findOneBy(['id' => $id]);
-        if (is_null($user->getConfirmationToken()) || $token !== $user->getConfirmationToken() || !$this->tokenGenerator->isRequestInTime($user->getRequestedTokenAt())) {
+        if (is_null($user->getConfirmationToken()) || $token !== $user->getConfirmationToken() || !$this->tokenGenerator->isExpired($user->getRequestedTokenAt())) {
             throw new AccessDeniedHttpException('Un problème est survenu lors de la demande de vérification du compte, veuillez rééssayer');
         } else {
             $user->setConfirmationToken(null);
@@ -197,7 +197,7 @@ class SecurityController extends AbstractController {
         $user = $this->userRepository->findOneBy(['password_token' => $token]);
         $form = $this->createForm(ResettingPasswordType::class);
         $form->handleRequest($request);
-        if (is_null($user->getPasswordToken()) || $token !== $user->getPasswordToken() || !$this->tokenGenerator->isRequestInTime($user->getRequestedPwTokenAt())) {
+        if (is_null($user->getPasswordToken()) || $token !== $user->getPasswordToken() || !$this->tokenGenerator->isExpired($user->getRequestedPwTokenAt())) {
             throw new AccessDeniedHttpException('Un problème est survenu lors de la demande de changement du mot de passe, veuillez réitérer la demande');
         } else {
             if ($form->isSubmitted() && $form->isValid()) {

@@ -66,7 +66,7 @@ class Blog
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BlogComment", mappedBy="post")
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogComment", mappedBy="post", cascade={"remove"})
      */
     private $comments;
 

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogRepository")
@@ -22,11 +23,13 @@ class Blog
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $content;
 
@@ -38,6 +41,7 @@ class Blog
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Image(minWidth="162", maxWidth="162", minHeight="162", maxHeight="162")
      */
     private $image;
 

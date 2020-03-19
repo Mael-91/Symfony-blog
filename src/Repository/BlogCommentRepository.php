@@ -50,6 +50,14 @@ class BlogCommentRepository extends ServiceEntityRepository
             ->where('c.visible = true');
     }
 
+    public function countComment()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     // /**
     //  * @return BlogComment[] Returns an array of BlogComment objects
     //  */

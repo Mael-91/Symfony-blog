@@ -3,9 +3,9 @@
 namespace App\Controller\Dashboard\Blog;
 
 use App\Entity\Blog;
-use App\Entity\User;
 use App\Form\BlogType;
 use App\Repository\BlogCategoryRepository;
+use App\Repository\BlogCommentRepository;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,11 +26,16 @@ class BlogController extends AbstractController {
      * @var EntityManagerInterface
      */
     private $manager;
+    /**
+     * @var BlogCommentRepository
+     */
+    private $commentRepository;
 
-    public function __construct(BlogRepository $blogRepository, BlogCategoryRepository $categoryRepository, EntityManagerInterface $manager) {
+    public function __construct(BlogRepository $blogRepository, BlogCategoryRepository $categoryRepository, BlogCommentRepository $commentRepository, EntityManagerInterface $manager) {
         $this->blogRepository = $blogRepository;
         $this->categoryRepository = $categoryRepository;
         $this->manager = $manager;
+        $this->commentRepository = $commentRepository;
     }
 
     /**
@@ -39,11 +44,13 @@ class BlogController extends AbstractController {
     public function index(): Response {
         $numPost = $this->blogRepository->countPost();
         $numCategory = $this->categoryRepository->countCategory();
+        $numComment = $this->commentRepository->countComment();
         return $this->render('pages/dashboard/blog/dashboard_blog.html.twig', [
             'current_menu' => 'dashboard-blog',
             'is_dashboard' => 'true',
             'numbersPost' => $numPost,
-            'numbersCategory' => $numCategory
+            'numbersCategory' => $numCategory,
+            'numbersComment' => $numComment
         ]);
     }
 

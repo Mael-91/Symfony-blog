@@ -65,7 +65,7 @@ admin.blog.categories.edit:
 admin.blog.categories.delete:
   path: /dashboard/blog/manage/categories/{id}
   controller: App\Controller\Dashboard\Blog\BlogCategoriesController::delete
-  methods: [GET|POST]
+  methods: [DELETE]
 
 admin.blog.manage.comment:
   path: /dashboard/blog/manage/comments

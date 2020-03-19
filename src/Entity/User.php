@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -113,6 +115,16 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $last_login;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Blog", mappedBy="author")
+     */
+    private $author;
+
+    public function __construct()
+    {
+        $this->author = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -327,6 +339,37 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * @return Collection|Blog[]
+     */
+    public function getAuthor(): Collection
+    {
+        return $this->author;
+    }
+
+    public function addAuthor(Blog $author): self
+    {
+        if (!$this->author->contains($author)) {
+            $this->author[] = $author;
+            $author->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthor(Blog $author): self
+    {
+        if ($this->author->contains($author)) {
+            $this->author->removeElement($author);
+            // set the owning side to null (unless already changed)
+            if ($author->getAuthor() === $this) {
+                $author->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @see UserInterface
      */
     public function getSalt()
@@ -397,5 +440,9 @@ class User implements UserInterface, \Serializable
             $this->requested_token_at,
             $this->enabled,
             $this->password_token) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    public function __toString() {
+        return $this->username;
     }
 }

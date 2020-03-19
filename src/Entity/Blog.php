@@ -42,11 +42,6 @@ class Blog
     private $image;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $author;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -71,6 +66,12 @@ class Blog
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="author")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
     public function __construct() {
         $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
@@ -89,6 +90,18 @@ class Blog
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }
@@ -124,18 +137,6 @@ class Blog
     public function setImage(?string $image): self
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(string $author): self
-    {
-        $this->author = $author;
 
         return $this;
     }

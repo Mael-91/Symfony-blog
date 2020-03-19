@@ -3,9 +3,11 @@
 namespace App\Controller\Dashboard\Blog;
 
 use App\Entity\Blog;
+use App\Entity\User;
 use App\Form\BlogType;
 use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,10 +22,15 @@ class BlogController extends AbstractController {
      * @var BlogCategoryRepository
      */
     private $categoryRepository;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $manager;
 
-    public function __construct(BlogRepository $blogRepository, BlogCategoryRepository $categoryRepository) {
+    public function __construct(BlogRepository $blogRepository, BlogCategoryRepository $categoryRepository, EntityManagerInterface $manager) {
         $this->blogRepository = $blogRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->manager = $manager;
     }
 
     /**
@@ -61,6 +68,7 @@ class BlogController extends AbstractController {
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $blog->setAuthor($this->getUser());
             $this->manager->persist($blog);
             $this->manager->flush();
             $this->addFlash('success-blog', 'La publication est un succès !');

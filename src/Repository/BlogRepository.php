@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Blog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -21,12 +22,11 @@ class BlogRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Blog[] array
+     * @return Query
      */
-    public function findAllActive(): array {
+    public function findAllActiveQuery(): Query {
         return $this->findActiveQuery()
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
     }
 
     /**

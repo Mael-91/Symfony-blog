@@ -12,6 +12,7 @@ use App\Repository\BlogCommentRepository;
 use App\Repository\BlogLikeRepository;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,10 +44,12 @@ class BlogController extends AbstractController {
     }
 
     /**
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function index(): Response {
-        $post = $this->postRepository->findLatest();
+    public function index(PaginatorInterface $paginator, Request $request): Response {
+        $post = $paginator->paginate($this->postRepository->findAllActiveQuery(),
+            $request->query->getInt('page', 1), 12);
         $category = $this->categoryRepository->findAll();
         return $this->render('pages/blog/blog.index.html.twig', [
             'current_menu' => 'blog',

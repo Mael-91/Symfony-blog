@@ -59,14 +59,14 @@ class AppFixtures extends Fixture
             $users[] = $user;
         }
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $category = new BlogCategory();
             $category->setName($faker->sentence);
             $manager->persist($category);
             $categories[] = $category;
         }
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $post = new Blog();
             $post->setTitle($faker->sentence)
                 ->setContent($faker->paragraph)
@@ -87,7 +87,7 @@ class AppFixtures extends Fixture
                 $manager->persist($comment);
             }
 
-            for ($j = 0; $j < mt_rand(0, 10); $j++) {
+            for ($j = 0; $j < mt_rand(0, 1200); $j++) {
                 $like = new BlogLike();
                 $like->setUser($faker->randomElement($users))
                     ->setPost($faker->randomElement($posts));

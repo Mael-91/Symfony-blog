@@ -121,9 +121,15 @@ class User implements UserInterface, \Serializable
      */
     private $author;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogLike", mappedBy="user")
+     */
+    private $blogLikes;
+
     public function __construct()
     {
         $this->author = new ArrayCollection();
+        $this->blogLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -363,6 +369,37 @@ class User implements UserInterface, \Serializable
             // set the owning side to null (unless already changed)
             if ($author->getAuthor() === $this) {
                 $author->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogLike[]
+     */
+    public function getBlogLikes(): Collection
+    {
+        return $this->blogLikes;
+    }
+
+    public function addBlogLike(BlogLike $blogLike): self
+    {
+        if (!$this->blogLikes->contains($blogLike)) {
+            $this->blogLikes[] = $blogLike;
+            $blogLike->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogLike(BlogLike $blogLike): self
+    {
+        if ($this->blogLikes->contains($blogLike)) {
+            $this->blogLikes->removeElement($blogLike);
+            // set the owning side to null (unless already changed)
+            if ($blogLike->getUser() === $this) {
+                $blogLike->setUser(null);
             }
         }
 

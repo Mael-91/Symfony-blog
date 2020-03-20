@@ -14,6 +14,15 @@
                 <div class="datetime mt-3">{{ post.createdAt | ago('text-black-50') }} {% if info.category_name %}- <a href="{{ path('blog.category', {slug: info.category_slug}) }}" class="text-decoration-none text-muted">{{ info.category_name }}</a>{% endif %}</div>
                 <p class="card-text mt-3">{{ post.content | nl2br }}</p>
                 <span class="blockquote-footer text-right">{{ post.author }}</span>
+                <a href="{{ path('blog.like', {id: post.id, slug: post.slug}) }}" class="btn btn-like js-like">
+                    {% if app.user and post.likedByUser(app.user) %}
+                        <i class="like fas fa-thumbs-up float-left"></i>
+                    {% else %}
+                        <i class="like far fa-thumbs-up float-left"></i>
+                    {% endif %}
+                    <span class="float-left js-likes">{{ post.likes | length }}</span>
+                    <span class="float-left js-label">Like</span>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -49,6 +58,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('textareaResize') }}
+    {{ encore_entry_script_tags('blogLike') }}
     <script src="{{ asset('js/timeago.min.js') }}"></script>
     <script src="{{ asset('js/timeago.locales.min.js') }}"></script>
     <script>

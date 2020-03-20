@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Entity\BlogCategory;
 use App\Entity\BlogComment;
+use App\Entity\BlogLike;
 use App\Form\BlogCommentType;
 use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogCommentRepository;
+use App\Repository\BlogLikeRepository;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -124,5 +126,43 @@ class BlogController extends AbstractController {
             'category' => $category,
             'posts' => $posts
         ]);
+    }
+
+    /**
+     * Permet de liker ou d'unliker un article
+     *
+     * @param Blog $post
+     * @param BlogLikeRepository $likeRepository
+     * @return Response
+     */
+    public function like(Blog $post, BlogLikeRepository $likeRepository): Response {
+        $user = $this->getUser();
+        if (!$user) return $this->json([
+            'code' => 403,
+            'message' => 'Vous devez être connecté pour aimer un poste'
+        ], 403);
+        if ($post->isLikedByUser($user)) {
+            $like = $likeRepository->findOneBy([
+                'post' => $post,
+                'user' => $user
+            ]);
+            $this->manager->remove($like);
+            $this->manager->flush();
+            return $this->json([
+                'code' => 200,
+                'message' => 'like supprimé avec succès',
+                'likes' => $likeRepository->count(['post' => $post])
+            ], 200);
+        }
+        $like = new BlogLike();
+        $like->setPost($post)
+            ->setUser($user);
+        $this->manager->persist($like);
+        $this->manager->flush();
+        return $this->json([
+            'code' => 200,
+            'message' => 'like ajouté',
+            'likes' => $likeRepository->count(['post' => $post])
+        ], 200);
     }
 }

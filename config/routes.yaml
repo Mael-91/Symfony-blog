@@ -19,6 +19,14 @@ blog.category:
   requirements:
     slug: '[a-z\-]*'
 
+blog.like:
+  path: /blog/{slug}-{id}/like
+  controller: App\Controller\BlogController::like
+  requirements:
+    slug:  '[a-z0-9\-]*'
+  methods: [GET]
+
+
 # Administration
 admin.home:
   path: /dashboard

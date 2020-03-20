@@ -76,9 +76,15 @@ class Blog
      */
     private $author;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogLike", mappedBy="post")
+     */
+    private $likes;
+
     public function __construct() {
         $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +200,37 @@ class Blog
     }
 
     /**
+     * @return Collection|BlogLike[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(BlogLike $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(BlogLike $like): self
+    {
+        if ($this->likes->contains($like)) {
+            $this->likes->removeElement($like);
+            // set the owning side to null (unless already changed)
+            if ($like->getPost() === $this) {
+                $like->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|BlogComment[]
      */
     public function getComments(): Collection
@@ -222,6 +259,20 @@ class Blog
         }
 
         return $this;
+    }
+
+    /**
+     * Permet de savoir si un article est liké par un utilisateur
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function isLikedByUser(User $user): bool {
+        foreach ($this->likes as $like) {
+            if ($like->getUser() === $user) return true;
+        }
+
+        return false;
     }
 
     public function __toString() {

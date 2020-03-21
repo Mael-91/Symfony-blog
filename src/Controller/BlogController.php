@@ -49,7 +49,7 @@ class BlogController extends AbstractController {
      */
     public function index(PaginatorInterface $paginator, Request $request): Response {
         $post = $paginator->paginate($this->postRepository->findAllActiveQuery(),
-            $request->query->getInt('page', 1), 12);
+            $request->query->getInt('page', 1), 20);
         $category = $this->categoryRepository->findAll();
         return $this->render('pages/blog/blog.index.html.twig', [
             'current_menu' => 'blog',
@@ -115,9 +115,10 @@ class BlogController extends AbstractController {
      * @param string $slug
      * @return Response
      */
-    public function categoryIndex(BlogCategory $category, string $slug): Response {
+    public function categoryIndex(BlogCategory $category, PaginatorInterface $paginator, Request $request, string $slug): Response {
         $getSlug = $category->getSlug();
-        $posts = $this->postRepository->findPostsInCategory($category->getId());
+        $posts = $paginator->paginate($this->postRepository->findPostsInCategory($category->getId()),
+            $request->query->getInt('page', '1'), 20);
         if ($getSlug !== $slug) {
             return $this->redirectToRoute('blog.category', [
                 'slug' => $getSlug

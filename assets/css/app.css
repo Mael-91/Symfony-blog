@@ -6,3 +6,7 @@ div.pagination > nav {
     margin-left: auto!important;
     margin-right: auto!important;
 }
+
+i.fa-twitter {
+    color: #00acee;
+}

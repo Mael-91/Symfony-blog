@@ -66,7 +66,7 @@ class BlogController extends AbstractController {
      * @return Response
      * @throws \Exception
      */
-    public function show(Request $request, Blog $post, string $slug): Response {
+    public function show(Request $request, PaginatorInterface $paginator, Blog $post, string $slug): Response {
         $getSlug = $post->getSlug();
         $category = $this->postRepository->findWithCategory($post->getId());
         if ($getSlug !== $slug) {
@@ -75,7 +75,8 @@ class BlogController extends AbstractController {
                 'slug' => $getSlug
             ], 301);
         }
-        $comments = $this->commentRepository->findAllActive($post->getId());
+        $comments = $paginator->paginate($this->commentRepository->findAllActive($post->getId()),
+            $request->query->getInt('page', '1'), 20);
         $nbrCommentInPost = $this->commentRepository->countCommentInPost($post->getId());
 
         $comment = new BlogComment();
@@ -103,7 +104,7 @@ class BlogController extends AbstractController {
             'is_dashboard' => 'false',
             'post' => $post,
             'category' => $category,
-            'comment' => $comments,
+            'comments' => $comments,
             'commentForm' => $commentForm->createView(),
             'nbrComment' => $nbrCommentInPost
         ]);

@@ -9,6 +9,7 @@ use App\Form\UserCreateType;
 use App\Form\UserEditType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,8 +38,16 @@ class UsersController extends AbstractController
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function index(): Response {
-        $users = $this->userRepository->findAll();
+    /**
+     * Permet d'afficher tout les utilisateurs
+     *
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
+    public function index(PaginatorInterface $paginator, Request $request): Response {
+        $users = $paginator->paginate($this->userRepository->findAll(),
+            $request->query->getInt('page', '1'), 20);
         return $this->render('pages/dashboard/users/users.html.twig', [
             'current_menu' => 'dashboard-users',
             'is_dashboard' => 'true',
@@ -46,6 +55,13 @@ class UsersController extends AbstractController
         ]);
     }
 
+    /**
+     * Permet de créer un utilisateur
+     *
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
     public function create(Request $request): Response {
         $user = new User();
         $form = $this->createForm(UserCreateType::class, $user);
@@ -68,6 +84,14 @@ class UsersController extends AbstractController
         ]);
     }
 
+    /**
+     * Permet d'éditer un utilisateur
+     *
+     * @param User $user
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
     public function edit(User $user, Request $request): Response {
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
@@ -85,6 +109,13 @@ class UsersController extends AbstractController
         ]);
     }
 
+    /**
+     * Permet de supprimer un utilisateur
+     *
+     * @param User $user
+     * @param Request $request
+     * @return Response
+     */
     public function delete(User $user, Request $request): Response {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->get('_token'))) {
             $this->manager->remove($user);

@@ -6,6 +6,7 @@ use App\Entity\BlogComment;
 use App\Form\BlogCommentEditType;
 use App\Repository\BlogCommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,8 +28,16 @@ class BlogCommentsController extends AbstractController {
         $this->manager = $manager;
     }
 
-    public function comments(): Response {
-        $comments = $this->commentRepository->findAll();
+    /**
+     * Permet d'afficher tout les commentaires des articles
+     *
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
+    public function comments(PaginatorInterface $paginator, Request $request): Response {
+        $comments = $paginator->paginate($this->commentRepository->findAll(),
+            $request->query->getInt('page', '1'), 20);
         return $this->render('pages/dashboard/blog/comments.html.twig', [
             'current_menu' => 'blog-comments-manage',
             'is_dashboard' => 'true',
@@ -36,6 +45,14 @@ class BlogCommentsController extends AbstractController {
         ]);
     }
 
+    /**
+     * Permet d'éditer un commentaire
+     *
+     * @param Request $request
+     * @param BlogComment $comment
+     * @return Response
+     * @throws \Exception
+     */
     public function edit(Request $request, BlogComment $comment): Response {
         $commentForm = $this->createForm(BlogCommentEditType::class, $comment);
         $commentForm->handleRequest($request);
@@ -52,6 +69,13 @@ class BlogCommentsController extends AbstractController {
         ]);
     }
 
+    /**
+     * Permet de supprimer un commentaire
+     *
+     * @param BlogComment $comment
+     * @param Request $request
+     * @return Response
+     */
     public function delete(BlogComment $comment, Request $request): Response {
         if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->get('_token'))) {
             $this->manager->remove($comment);

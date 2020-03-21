@@ -7,6 +7,7 @@ use App\Entity\BlogCategory;
 use App\Form\BlogCategoryType;
 use App\Repository\BlogCategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,10 +29,15 @@ class BlogCategoriesController extends AbstractController {
     }
 
     /**
+     * Permet d'afficher toutes les catégories
+     *
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @return Response
      */
-    public function index(): Response {
-        $categories = $this->categoryRepository->findAll();
+    public function index(PaginatorInterface $paginator, Request $request): Response {
+        $categories = $paginator->paginate($this->categoryRepository->findAll(),
+            $request->query->getInt('page', 1), 20);
         return $this->render('pages/dashboard/blog/categories.html.twig', [
             'current_menu' => 'blog-categories-manage',
             'is_dashboard' => 'true',
@@ -39,6 +45,12 @@ class BlogCategoriesController extends AbstractController {
         ]);
     }
 
+    /**
+     * Permet de créer une catégorie
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function create(Request $request): Response {
         $category = new BlogCategory();
         $form = $this->createForm(BlogCategoryType::class, $category);
@@ -56,6 +68,13 @@ class BlogCategoriesController extends AbstractController {
         ]);
     }
 
+    /**
+     * Permet d'éditer une catégorie
+     *
+     * @param BlogCategory $category
+     * @param Request $request
+     * @return Response
+     */
     public function edit(BlogCategory $category, Request $request): Response {
         $form = $this->createForm(BlogCategoryType::class, $category);
         $form->handleRequest($request);
@@ -71,6 +90,13 @@ class BlogCategoriesController extends AbstractController {
         ]);
     }
 
+    /**
+     * Permet de supprimer une catégorie
+     *
+     * @param BlogCategory $category
+     * @param Request $request
+     * @return Response
+     */
     public function delete(BlogCategory $category, Request $request): Response {
         if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->get('_token'))) {
             $this->manager->remove($category);

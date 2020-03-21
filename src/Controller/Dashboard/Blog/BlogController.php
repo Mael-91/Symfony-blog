@@ -8,6 +8,7 @@ use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogCommentRepository;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,10 +56,13 @@ class BlogController extends AbstractController {
     }
 
     /**
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @return Response
      */
-    public function managePost(): Response {
-        $posts = $this->blogRepository->findAll();
+    public function managePost(PaginatorInterface $paginator, Request $request): Response {
+        $posts = $paginator->paginate($this->blogRepository->findAll(),
+            $request->query->getInt('page', '1'), 20);
         return $this->render('pages/dashboard/blog/posts.html.twig', [
             'current_menu' => 'blog-posts-manage',
             'is_dashboard' => 'true',

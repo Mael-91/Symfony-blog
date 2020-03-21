@@ -20,10 +20,10 @@ class User implements UserInterface, \Serializable
     ];
 
     public const Role = [
-        'Super Administrateur' => 'ROLE_SUPER_ADMIN',
-        'Administrateur' => 'ROLE_ADMIN',
-        'Moderateur' => 'ROLE_MODERATEUR',
-        'Utilisateur' => 'ROLE_USER'
+        'Super Administrator' => 'ROLE_SUPER_ADMIN',
+        'Administrator' => 'ROLE_ADMIN',
+        'Moderator' => 'ROLE_MODERATEUR',
+        'User' => 'ROLE_USER'
     ];
 
     /**

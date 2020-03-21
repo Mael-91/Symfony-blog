@@ -5,8 +5,10 @@
         <h2 class="text-center mt-5">Les dernier articles</h2>
         <div class="col-md-4">
         {% for post in posts %}
-            <div class="card mt-5" style="width: 18rem;">
-                <img src="" class="card-img-top" alt="">
+            <div class="card mt-5" style="width: 360px; height: auto;">
+                {% if post.pictureFilename %}
+                <img src="{{ vich_uploader_asset(post, 'pictureFile') }}" class="card-img-top" alt="{{ post.title }}" style="width: 360px; height: 230px;">
+                {% endif %}
                 <div class="card-body">
                     <h5 class="card-title"><a href="{{ path('blog.show', {slug: post.slug, id: post.id}) }}">{{ post.title }}</a></h5>
                     <p class="card-text">{{ post.content | truncate }}</p>

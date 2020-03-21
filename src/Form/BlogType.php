@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Blog;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,8 +15,13 @@ class BlogType extends AbstractType
         $builder
             ->add('title')
             ->add('content')
-            ->add('image')
             ->add('category')
+            ->add('pictureFile', FileType::class, [
+                'required' => false
+            ])
+            ->add('bannerFile', FileType::class, [
+                'required' => false
+            ])
             ->add('active')
         ;
     }

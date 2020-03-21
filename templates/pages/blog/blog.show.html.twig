@@ -3,9 +3,11 @@
 {% block body %}
     <div class="container">
         <div class="card mt-5">
-            <div class="card-body">
-                <img src="https://www.pompiersparis.fr/images/page_fixe/banniere/banniere-recrutement-engagez-vous.png" alt="" class="card-img-top">
-            </div>
+            {% if post.bannerFilename %}
+                <div class="card-body">
+                    <img src="{{ vich_uploader_asset(post, 'bannerFile') }}" alt="{{ post.title }}" class="card-img-top">
+                </div>
+            {% endif %}
         </div>
         <div class="card mt-5 mb-3">
             {% for info in category %}

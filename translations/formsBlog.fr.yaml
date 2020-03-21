@@ -1,7 +1,9 @@
 Title: Titre de l'article
 Author: Auteur
-Image: Image d'illustration
+Picture file: Image d'illustration
+Banner file: Bannière
 Slug: Lien de l'article
 Content: Contenu de l'article
 Active: Article visible ?
 Edited at: Modifié le
+Category: Catégorie de l'article

@@ -7,10 +7,14 @@ use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogRepository")
+ * @Vich\Uploadable()
  */
 class Blog
 {
@@ -40,10 +44,30 @@ class Blog
     private $slug;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image(minWidth="162", maxWidth="162", minHeight="162", maxHeight="162")
+     * @var string|null
+     * @ORM\Column(type="string", length=255)
      */
-    private $image;
+    private $pictureFilename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="blog_image", fileNameProperty="pictureFilename")
+     * @Assert\Image(mimeTypes="image/jpeg", mimeTypesMessage="Le fichier doit être au format JPEG.")
+     */
+    private $pictureFile;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255)
+     */
+    private $bannerFilename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="blog_image", fileNameProperty="bannerFilename")
+     * @Assert\Image(mimeTypes="image/jpeg", mimeTypesMessage="Le fichier doit être au format JPEG.")
+     */
+    private $bannerFile;
 
     /**
      * @ORM\Column(type="datetime")
@@ -128,6 +152,86 @@ class Blog
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getPictureFilename(): ?string
+    {
+        return $this->pictureFilename;
+    }
+
+    /**
+     * @param string|null $pictureFilename
+     * @return Blog
+     */
+    public function setPictureFilename(?string $pictureFilename): Blog
+    {
+        $this->pictureFilename = $pictureFilename;
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getPictureFile(): ?File
+    {
+        return $this->pictureFile;
+    }
+
+    /**
+     * @param File|null $pictureFile
+     * @return Blog
+     * @throws \Exception
+     */
+    public function setPictureFile(?File $pictureFile): Blog
+    {
+        $this->pictureFile = $pictureFile;
+        if ($this->pictureFile instanceof UploadedFile) {
+            $this->edited_at = new \DateTime();
+        }
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBannerFilename(): ?string
+    {
+        return $this->bannerFilename;
+    }
+
+    /**
+     * @param string|null $bannerFilename
+     * @return Blog
+     */
+    public function setBannerFilename(?string $bannerFilename): Blog
+    {
+        $this->bannerFilename = $bannerFilename;
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getBannerFile(): ?File
+    {
+        return $this->bannerFile;
+    }
+
+    /**
+     * @param File|null $bannerFile
+     * @return Blog
+     * @throws \Exception
+     */
+    public function setBannerFile(?File $bannerFile): Blog
+    {
+        $this->bannerFile = $bannerFile;
+        if ($this->bannerFile instanceof UploadedFile) {
+            $this->edited_at = new \DateTime();
+        }
+        return $this;
+    }
+
     public function getSlug(): string {
         return (new Slugify())->slugify($this->title);
     }
@@ -135,18 +239,6 @@ class Blog
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): self
-    {
-        $this->image = $image;
 
         return $this;
     }

@@ -2,15 +2,13 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\BlogCommentRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\BlogReplyRepository")
  */
-class BlogComment
+class BlogReply
 {
     /**
      * @ORM\Id()
@@ -20,21 +18,28 @@ class BlogComment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Blog", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Blog", inversedBy="replies")
      * @ORM\JoinColumn(nullable=false)
      */
     private $post;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @Gedmo\TreeParent()
+     * @ORM\ManyToOne(targetEntity="App\Entity\BlogComment", inversedBy="replies")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $comment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="blogReply")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $author;
 
     /**
      * @ORM\Column(type="text")
-     * @Assert\NotBlank()
      */
-    private $content;
+    private $reply_content;
 
     /**
      * @ORM\Column(type="datetime")
@@ -50,16 +55,6 @@ class BlogComment
      * @ORM\Column(type="boolean")
      */
     private $visible;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BlogReply", mappedBy="comment")
-     */
-    private $reply;
-
-    public function __construct()
-    {
-        $this->reply = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -78,26 +73,38 @@ class BlogComment
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getComment(): ?BlogComment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?BlogComment $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(string $author): self
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getReplyContent(): ?string
     {
-        return $this->content;
+        return $this->reply_content;
     }
 
-    public function setContent(string $content): self
+    public function setReplyContent(string $reply_content): self
     {
-        $this->content = $content;
+        $this->reply_content = $reply_content;
 
         return $this;
     }
@@ -134,37 +141,6 @@ class BlogComment
     public function setVisible(bool $visible): self
     {
         $this->visible = $visible;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|BlogReply[]
-     */
-    public function getReply(): Collection
-    {
-        return $this->reply;
-    }
-
-    public function addReply(BlogReply $reply): self
-    {
-        if (!$this->reply->contains($reply)) {
-            $this->reply[] = $reply;
-            $reply->setComment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReply(BlogReply $reply): self
-    {
-        if ($this->reply->contains($reply)) {
-            $this->reply->removeElement($reply);
-            // set the owning side to null (unless already changed)
-            if ($reply->getComment() === $this) {
-                $reply->setComment(null);
-            }
-        }
 
         return $this;
     }

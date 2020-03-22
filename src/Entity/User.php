@@ -126,10 +126,16 @@ class User implements UserInterface, \Serializable
      */
     private $blogLikes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogReply", mappedBy="author")
+     */
+    private $blogReply;
+
     public function __construct()
     {
         $this->author = new ArrayCollection();
         $this->blogLikes = new ArrayCollection();
+        $this->blogReply = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -400,6 +406,37 @@ class User implements UserInterface, \Serializable
             // set the owning side to null (unless already changed)
             if ($blogLike->getUser() === $this) {
                 $blogLike->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogReply[]
+     */
+    public function getBlogReply(): Collection
+    {
+        return $this->blogReply;
+    }
+
+    public function addBlogReply(BlogReply $blogReply): self
+    {
+        if (!$this->blogReply->contains($blogReply)) {
+            $this->blogReply[] = $blogReply;
+            $blogReply->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogReply(BlogReply $blogReply): self
+    {
+        if ($this->blogReply->contains($blogReply)) {
+            $this->blogReply->removeElement($blogReply);
+            // set the owning side to null (unless already changed)
+            if ($blogReply->getAuthor() === $this) {
+                $blogReply->setAuthor(null);
             }
         }
 

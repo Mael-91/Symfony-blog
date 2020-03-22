@@ -26,6 +26,12 @@ blog.like:
     slug:  '[a-z0-9\-]*'
   methods: [GET]
 
+blog.reply:
+  path: /blog/{slug}-{id}/reply/{comment}
+  controller: App\Controller\BlogController::replyComment
+  requirements:
+    slug:  '[a-z0-9\-]*'
+
 
 # Administration
 admin.home:

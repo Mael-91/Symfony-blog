@@ -105,10 +105,16 @@ class Blog
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogReply", mappedBy="post")
+     */
+    private $reply;
+
     public function __construct() {
         $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->reply = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,6 +353,37 @@ class Blog
             // set the owning side to null (unless already changed)
             if ($comment->getPost() === $this) {
                 $comment->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogReply[]
+     */
+    public function getReply(): Collection
+    {
+        return $this->reply;
+    }
+
+    public function addReply(BlogReply $reply): self
+    {
+        if (!$this->reply->contains($reply)) {
+            $this->reply[] = $reply;
+            $reply->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReply(BlogReply $reply): self
+    {
+        if ($this->reply->contains($reply)) {
+            $this->reply->removeElement($reply);
+            // set the owning side to null (unless already changed)
+            if ($reply->getPost() === $this) {
+                $reply->setPost(null);
             }
         }
 

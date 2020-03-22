@@ -10,3 +10,16 @@ div.pagination > nav {
 i.fa-twitter {
     color: #00acee;
 }
+
+/* Reply Comment */
+div.reply-action {
+    margin-top: 25px;
+}
+
+textarea.reply-zone {
+    resize: none;
+}
+
+button.reply-btn {
+    margin-top: 15px;
+}

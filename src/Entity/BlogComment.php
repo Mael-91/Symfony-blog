@@ -21,23 +21,17 @@ class BlogComment
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Blog", inversedBy="comments")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $post;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $author;
-
-    /**
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank()
+     * @ORM\Column(type="text", nullable=true)
      */
     private $content;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $created_at;
 
@@ -47,18 +41,29 @@ class BlogComment
     private $edited_at;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $visible;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BlogReply", mappedBy="comment")
+     * @ORM\ManyToOne(targetEntity="App\Entity\BlogComment", inversedBy="children")
      */
-    private $reply;
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogComment", mappedBy="parent")
+     */
+    private $children;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="blogComments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
 
     public function __construct()
     {
-        $this->reply = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,18 +79,6 @@ class BlogComment
     public function setPost(?Blog $post): self
     {
         $this->post = $post;
-
-        return $this;
-    }
-
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(string $author): self
-    {
-        $this->author = $author;
 
         return $this;
     }
@@ -138,31 +131,80 @@ class BlogComment
         return $this;
     }
 
-    /**
-     * @return Collection|BlogReply[]
-     */
-    public function getReply(): Collection
+    public function getAuthor(): ?User
     {
-        return $this->reply;
+        return $this->author;
     }
 
-    public function addReply(BlogReply $reply): self
+    public function setAuthor(?User $author): self
     {
-        if (!$this->reply->contains($reply)) {
-            $this->reply[] = $reply;
-            $reply->setComment($this);
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Permet de récupérer un id parent sur un commentaire enfant
+     *
+     * @return $this|null
+     */
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Permet de mettre un ID parent sur un commentaire enfant
+     *
+     * @param BlogComment|null $parent
+     * @return $this
+     */
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Permet de récupérer le commentaire enfant en fonction de l'id du commetnaire parent
+     *
+     * @return Collection|self[]
+     */
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    /**
+     * Permet d'ajouter un enfant
+     *
+     * @param BlogComment $child
+     * @return $this
+     */
+    public function addChild(self $child): self
+    {
+        if (!$this->children->contains($child)) {
+            $this->children[] = $child;
+            $child->setParent($this);
         }
 
         return $this;
     }
 
-    public function removeReply(BlogReply $reply): self
+    /**
+     * Permet de supprimer un enfant
+     *
+     * @param BlogComment $child
+     * @return $this
+     */
+    public function removeChild(self $child): self
     {
-        if ($this->reply->contains($reply)) {
-            $this->reply->removeElement($reply);
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
             // set the owning side to null (unless already changed)
-            if ($reply->getComment() === $this) {
-                $reply->setComment(null);
+            if ($child->getParent() === $this) {
+                $child->setParent(null);
             }
         }
 

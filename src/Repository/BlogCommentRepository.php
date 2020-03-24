@@ -20,36 +20,6 @@ class BlogCommentRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogComment::class);
     }
 
-    public function findAllActive() {
-        return $this->findActiveQuery()
-            ->orderBy('c.created_at', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findCommentForPost($postId) {
-        return $this->findActiveQuery()
-            ->where('c.post = :post_id')
-            ->addOrderBy('c.created_at')
-            ->setParameter('post_id', $postId)
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function countCommentInPost($postId) {
-        return $this->createQueryBuilder('c')
-            ->where('c.post = :postId')
-            ->setParameter('postId', $postId)
-            ->select('COUNT(c.post)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    private function findActiveQuery(): QueryBuilder {
-        return $this->createQueryBuilder('c')
-            ->where('c.visible = true');
-    }
-
     public function countComment()
     {
         return $this->createQueryBuilder('c')
@@ -58,32 +28,8 @@ class BlogCommentRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    // /**
-    //  * @return BlogComment[] Returns an array of BlogComment objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    private function findActiveQuery(): QueryBuilder {
+        return $this->createQueryBuilder('c')
+            ->where('c.visible = true');
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?BlogComment
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

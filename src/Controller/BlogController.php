@@ -6,9 +6,7 @@ use App\Entity\Blog;
 use App\Entity\BlogCategory;
 use App\Entity\BlogComment;
 use App\Entity\BlogLike;
-use App\Entity\BlogReply;
 use App\Exceptions\UserNotConnectedException;
-use App\Form\BlogCommentType;
 use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogCommentRepository;
 use App\Repository\BlogLikeRepository;
@@ -16,9 +14,13 @@ use App\Repository\BlogReplyRepository;
 use App\Repository\BlogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 class BlogController extends AbstractController {
 
@@ -38,26 +40,21 @@ class BlogController extends AbstractController {
      * @var EntityManagerInterface
      */
     private $manager;
-    /**
-     * @var BlogReplyRepository
-     */
-    private $replyRepository;
 
     public function __construct(
         BlogRepository $postRepository,
         BlogCategoryRepository $categoryRepository,
         BlogCommentRepository $commentRepository,
-        BlogReplyRepository $replyRepository,
         EntityManagerInterface $manager) {
         $this->postRepository = $postRepository;
         $this->categoryRepository = $categoryRepository;
         $this->commentRepository = $commentRepository;
-        $this->replyRepository = $replyRepository;
         $this->manager = $manager;
     }
 
     /**
      * @param PaginatorInterface $paginator
+     * @param Request $request
      * @return Response
      */
     public function index(PaginatorInterface $paginator, Request $request): Response {
@@ -74,6 +71,8 @@ class BlogController extends AbstractController {
 
     /**
      * @param BlogCategory $category
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @param string $slug
      * @return Response
      */
@@ -112,21 +111,9 @@ class BlogController extends AbstractController {
                 'slug' => $getSlug
             ], 301);
         }
-        $comments = $paginator->paginate($this->commentRepository->findAllActive($post->getId()),
+        $comments = $paginator->paginate($this->commentRepository->findBy(['post' => $post, 'visible' => true, 'parent' => null], ['created_at' => 'DESC']),
             $request->query->getInt('page', '1'), 20);
-        $nbrCommentInPost = $this->commentRepository->countCommentInPost($post->getId());
-
-        $comment = new BlogComment();
-        $commentForm = $this->createForm(BlogCommentType::class, $comment);
-        $commentForm->handleRequest($request);
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-                return $this->comment($comment, $post, $slug);
-            }
-        }
-
-        //$reply = $this->manager->getRepository(BlogReply::class)->findOneBy(['comment' => '2484']);
-        //dd($reply);
+        $nbrCommentInPost = $this->commentRepository->count(['post' => $post]);
 
         return $this->render('pages/blog/blog.show.html.twig', [
             'current_menu' => 'blog',
@@ -134,55 +121,76 @@ class BlogController extends AbstractController {
             'post' => $post,
             'category' => $category,
             'comments' => $comments,
-            'commentForm' => $commentForm->createView(),
-            'nbrComment' => $nbrCommentInPost,
+            'nbrComment' => $nbrCommentInPost
         ]);
     }
 
-    public function comment(BlogComment $entity, $post, string $slug): Response {
-        $entity->setPost($post);
-        $entity->setAuthor($this->getUser()->getUsername());
-        $entity->setCreatedAt(new \DateTime());
-        $entity->setVisible(true);
-        $this->manager->persist($entity);
+    /**
+     * REFACTORING :
+     * Passer les méthodes comment & reply dans un controller a part
+     * et dans une seule méthode récupérant l'id du commentaire via un $request->query
+     */
+
+    /**
+     * @param Request $request
+     * @param Blog $post
+     * @return Response
+     * @throws \Exception
+     */
+    public function comment(Request $request, Blog $post): Response {
+        $content = $request->request->get('comment_zone');
+        $user = $this->getUser();
+        $comment = new BlogComment();
+        if (!$user) {
+           throw new UserNotConnectedException();
+        }
+        if (empty($comment)) {
+            throw new \Exception('Le contenu ne peut être vide');
+        }
+        if (!$this->isCsrfTokenValid('comment' . $post->getId(), $request->request->get('_csrf_token_comment'))) {
+            throw new InvalidCsrfTokenException();
+        }
+        $comment->setPost($post)
+            ->setAuthor($this->getUser())
+            ->setContent($content)
+            ->setCreatedAt(new \DateTime())
+            ->setVisible(true);
+        $this->manager->persist($comment);
         $this->manager->flush();
-        $success = $this->addFlash('success-send-comment', 'Bravo ! Votre commentaire a été envoyé');
-        return $this->redirectToRoute('blog.show', [
-            'id' => $post->getId(),
-            'slug' => $slug,
-            'success-send-comment' => $success
-        ], 301);
+        $this->addFlash('success-send-comment', 'Bravo ! Votre commentaire a été envoyé');
+        return new JsonResponse(['code' => 200, 'message' => 'commentaire envoyé avec succès'], JsonResponse::HTTP_CREATED);
     }
 
-    public function replyComment(Blog $post, BlogComment $comment, Request $request): Response {
-        $user = $this->getUser();
-        if (!$user) {
-            throw new UserNotConnectedException();
-        }
-        // Faire une vérification avec listener / subscriber une fois l'usercheck implémanté
-        // pour vérifier si l'utilisateur n'est pas banni ou restreint
+    /**
+     * @param Request $request
+     * @param Blog $post
+     * @param BlogComment $comment
+     * @return Response
+     * @throws \Exception
+     * @ParamConverter("comment", class="App\Entity\BlogComment")
+     */
+    public function reply(Request $request, Blog $post, BlogComment $comment): Response {
         $content = $request->request->get('reply_zone');
-        $parentId = $request->request->get('parent_id');
-        $parentExist = $this->commentRepository->findOneBy(['id' => $parentId]);
-        if (!$parentExist) {
-            throw new \Exception('Parent doesn\'t exist', 400);
+        if (!$this->isGranted('ROLE_USER')) {
+            throw $this->createAccessDeniedException('You must be logged in to comment');
         }
         if (empty($content)) {
-            throw new \Exception('The content must not be null', 400);
+            throw new BadRequestHttpException('The content must not be null');
         }
-        if (!empty($content) && $token = $this->isCsrfTokenValid('reply_comment' . $comment->getId(), $request->request->get('_csrf_token'))) {
-            $reply = new BlogReply();
-            $reply->setPost($post)
-                ->setComment($comment)
-                ->setAuthor($user)
-                ->setReplyContent($content)
-                ->setCreatedAt(new \DateTime())
-                ->setVisible(true);
-            $this->manager->persist($reply);
-            $this->manager->flush();
-            //return $this->json(['code' => 200, 'message' => 'commentaire envoyé avec succès'], 200);
-            return $this->redirectToRoute('blog.show', ['id' => $post->getId(), 'slug' => $post->getSlug()], 301);
+        if (!$this->isCsrfTokenValid('reply_comment' . $comment->getId(), $request->request->get('_csrf_token_reply'))) {
+            throw new InvalidCsrfTokenException();
         }
+        $reply = new BlogComment();
+        $reply->setAuthor($this->getUser())
+            ->setPost($post)
+            ->setContent($content)
+            ->setCreatedAt(new \DateTime())
+            ->setVisible(true)
+            ->setParent($comment);
+        $this->manager->persist($reply);
+        $this->manager->flush();
+        //$success = $this->addFlash('success-send-comment', 'Bravo ! Votre réponse a été envoyé');
+        return new JsonResponse(['code' => 200, 'message' => 'réponse envoyé avec succès'], JsonResponse::HTTP_CREATED);
     }
 
     /**

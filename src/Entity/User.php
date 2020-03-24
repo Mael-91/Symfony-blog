@@ -127,15 +127,15 @@ class User implements UserInterface, \Serializable
     private $blogLikes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BlogReply", mappedBy="author")
+     * @ORM\OneToMany(targetEntity="App\Entity\BlogComment", mappedBy="author")
      */
-    private $blogReply;
+    private $blogComments;
 
     public function __construct()
     {
         $this->author = new ArrayCollection();
         $this->blogLikes = new ArrayCollection();
-        $this->blogReply = new ArrayCollection();
+        $this->blogComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -413,30 +413,30 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @return Collection|BlogReply[]
+     * @return Collection|BlogComment[]
      */
-    public function getBlogReply(): Collection
+    public function getBlogComments(): Collection
     {
-        return $this->blogReply;
+        return $this->blogComments;
     }
 
-    public function addBlogReply(BlogReply $blogReply): self
+    public function addBlogComment(BlogComment $blogComment): self
     {
-        if (!$this->blogReply->contains($blogReply)) {
-            $this->blogReply[] = $blogReply;
-            $blogReply->setAuthor($this);
+        if (!$this->blogComments->contains($blogComment)) {
+            $this->blogComments[] = $blogComment;
+            $blogComment->setAuthor($this);
         }
 
         return $this;
     }
 
-    public function removeBlogReply(BlogReply $blogReply): self
+    public function removeBlogComment(BlogComment $blogComment): self
     {
-        if ($this->blogReply->contains($blogReply)) {
-            $this->blogReply->removeElement($blogReply);
+        if ($this->blogComments->contains($blogComment)) {
+            $this->blogComments->removeElement($blogComment);
             // set the owning side to null (unless already changed)
-            if ($blogReply->getAuthor() === $this) {
-                $blogReply->setAuthor(null);
+            if ($blogComment->getAuthor() === $this) {
+                $blogComment->setAuthor(null);
             }
         }
 

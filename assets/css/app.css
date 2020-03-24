@@ -11,15 +11,56 @@ i.fa-twitter {
     color: #00acee;
 }
 
+/* Post */
+div.post, .post-banner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
 /* Reply Comment */
 div.reply-action {
     margin-top: 25px;
 }
 
-textarea.reply-zone {
+.show-reply-zone, button.show-reply-zone:focus {
+    outline: 0;
+    background-color: transparent;
+    border: none;
+    margin-left: -7px;
+}
+
+textarea.reply-zone, textarea.comment-zone {
     resize: none;
 }
 
-button.reply-btn {
+button.reply-btn, button.comment-btn {
     margin-top: 15px;
 }
+
+div.reply {
+    margin-left: 85px;
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+
+div.card {
+    background-color: #f4f4f4!important;
+}
+
+abbr.datetime {
+    color: #9e9e9e;
+    font-size: .7rem;
+}
+
+/* Reply action */
+
+/*div.no-visible {
+    display: none;
+}*/

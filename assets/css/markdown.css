@@ -1,5 +1,6 @@
 /* Markdown style */
 blockquote {
+    color: rgba(0,0,0,.5);
     margin-left: 35px;
     width: auto;
     padding-left: 5px;

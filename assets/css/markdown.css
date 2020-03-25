@@ -1,0 +1,21 @@
+/* Markdown style */
+blockquote {
+    margin-left: 35px;
+    width: auto;
+    padding-left: 5px;
+    border-left: 3px solid #dce1dc; /* e0e5e0*/
+}
+
+pre {
+    background-color: #f6f8fa;
+}
+
+table > thead > tr > th, tbody > tr > td {
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}

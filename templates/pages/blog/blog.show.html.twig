@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block title post.title %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('markdown') }}
+{% endblock %}
 {% block body %}
     <div class="container">
         <div class="post-banner mt-5">
@@ -14,7 +17,7 @@
             <div class="card-body">
                 <h5 class="card-title text-center">{{ post.title }}</h5>
                 <div class="datetime mt-3">{{ post.createdAt | ago('text-black-50') }} {% if info.category_name %}- <a href="{{ path('blog.category', {slug: info.category_slug}) }}" class="text-decoration-none text-muted">{{ info.category_name }}</a>{% endif %}</div>
-                <p class="card-text mt-3">{{ post.content | nl2br }}</p>
+                <p class="card-text mt-3">{{ post.content | markdown_converter | raw }}</p>
                 <span class="blockquote-footer text-right">{{ post.author }}</span>
                 <a href="{{ path('blog.like', {id: post.id, slug: post.slug}) }}" class="btn btn-like js-like">
                     {% if app.user and post.likedByUser(app.user) %}

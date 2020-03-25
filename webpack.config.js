@@ -28,8 +28,7 @@ Encore
     .addEntry('blogLike', './assets/js/functions/blog/Like.js')
     // CSS Files
     .addEntry('admin', './assets/css/dashboard.css')
-    //.addEntry('page1', './assets/js/page1.js')
-    //.addEntry('page2', './assets/js/page2.js')
+    .addEntry('markdown', './assets/css/markdown.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

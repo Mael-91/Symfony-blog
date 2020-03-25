@@ -11,7 +11,7 @@
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title"><a href="{{ path('blog.show', {slug: post.slug, id: post.id}) }}">{{ post.title }}</a></h5>
-                    <p class="card-text">{{ post.content | truncate }}</p>
+                    <p class="card-text">{{ post.content | unformatted_text | truncate }}</p>
                     <span class="blockquote-footer">{{ post.author }}</span>
                 </div>
             </div>

@@ -8,7 +8,7 @@
         <div class="post-banner mt-5">
             {% if post.bannerFilename %}
                 <div class="card-body">
-                    <img src="{{ vich_uploader_asset(post, 'bannerFile') }}" alt="{{ post.title }}" class="card-img-top">
+                    <img src="{{ vich_uploader_asset(post, 'bannerFile') | cloud_image('symfony-project-blog', 'image') }}" alt="{{ post.title }}" class="card-img-top">
                 </div>
             {% endif %}
         </div>

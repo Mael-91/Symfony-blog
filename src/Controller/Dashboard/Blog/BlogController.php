@@ -3,15 +3,19 @@
 namespace App\Controller\Dashboard\Blog;
 
 use App\Entity\Blog;
+use App\Event\CloudinaryDeleteEvent;
+use App\Event\CloudinaryUploadEvent;
 use App\Form\BlogType;
 use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogCommentRepository;
 use App\Repository\BlogRepository;
+use App\Service\CloudinaryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class BlogController extends AbstractController {
 
@@ -31,12 +35,28 @@ class BlogController extends AbstractController {
      * @var BlogCommentRepository
      */
     private $commentRepository;
+    /**
+     * @var CloudinaryService
+     */
+    private $cloudinaryService;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
-    public function __construct(BlogRepository $blogRepository, BlogCategoryRepository $categoryRepository, BlogCommentRepository $commentRepository, EntityManagerInterface $manager) {
+    public function __construct(
+        BlogRepository $blogRepository,
+        BlogCategoryRepository $categoryRepository,
+        BlogCommentRepository $commentRepository,
+        EntityManagerInterface $manager,
+        CloudinaryService $cloudinaryService,
+        EventDispatcherInterface $dispatcher) {
         $this->blogRepository = $blogRepository;
         $this->categoryRepository = $categoryRepository;
         $this->manager = $manager;
         $this->commentRepository = $commentRepository;
+        $this->cloudinaryService = $cloudinaryService;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -56,6 +76,8 @@ class BlogController extends AbstractController {
     }
 
     /**
+     * Liste les postes
+     *
      * @param PaginatorInterface $paginator
      * @param Request $request
      * @return Response
@@ -83,6 +105,8 @@ class BlogController extends AbstractController {
             $this->manager->persist($blog);
             $this->manager->flush();
             $this->addFlash('success-blog', 'La publication est un succès !');
+            $this->dispatcher->dispatch(new CloudinaryUploadEvent($blog->getPictureFile(), 'blog', null, 360, 230), CloudinaryUploadEvent::NAME);
+            $this->dispatcher->dispatch(new CloudinaryUploadEvent($blog->getBannerFile(), 'blog', null, null, null), CloudinaryUploadEvent::NAME);
             return $this->redirectToRoute('admin.blog.manage.post');
         }
         return $this->render('pages/dashboard/blog/crud_posts/create.html.twig', [
@@ -101,8 +125,19 @@ class BlogController extends AbstractController {
     public function edit(Blog $blog, Request $request): Response {
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
+        $pictureName = $blog->getPictureFilename();
+        $bannerName = $blog->getBannerFilename();
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
+            $newPicture = $blog->getPictureFile();
+            $newBanner = $blog->getBannerFile();
+            if ($blog->getPictureFilename() != $pictureName) {
+                $this->dispatcher->dispatch(new CloudinaryUploadEvent($newPicture, 'blog', null, 360, 230), CloudinaryUploadEvent::NAME);
+                $this->dispatcher->dispatch(new CloudinaryDeleteEvent('blog', null, $pictureName), CloudinaryDeleteEvent::NAME);
+            } elseif ($blog->getBannerFilename() != $bannerName) {
+                $this->dispatcher->dispatch(new CloudinaryUploadEvent($newBanner, 'blog', null, null, null), CloudinaryUploadEvent::NAME);
+                $this->dispatcher->dispatch(new CloudinaryDeleteEvent('blog', null, $bannerName), CloudinaryDeleteEvent::NAME);
+            }
             $this->addFlash('success-blog', 'La modification est un succès !');
             return $this->redirectToRoute('admin.blog.manage.post');
         }
@@ -121,6 +156,8 @@ class BlogController extends AbstractController {
      */
     public function delete(Blog $blog, Request $request): Response {
         if ($this->isCsrfTokenValid('delete' . $blog->getId(), $request->get('_token'))) {
+            $this->dispatcher->dispatch(new CloudinaryDeleteEvent('blog', null, $blog->getPictureFilename()), CloudinaryDeleteEvent::NAME);
+            $this->dispatcher->dispatch(new CloudinaryDeleteEvent('blog', null, $blog->getBannerFilename()), CloudinaryDeleteEvent::NAME);
             $this->manager->remove($blog);
             $this->manager->flush();
             $this->addFlash('success-blog', 'La suppression est un succès !');

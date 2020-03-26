@@ -7,7 +7,7 @@
         {% for post in posts %}
             <div class="card mt-5" style="width: 360px; height: auto;">
                 {% if post.pictureFilename %}
-                <img src="{{ vich_uploader_asset(post, 'pictureFile') }}" class="card-img-top" alt="{{ post.title }}" style="width: 360px; height: 230px;">
+                <img src="{{ vich_uploader_asset(post, 'pictureFile') | cloud_image('symfony-project-blog', 'blog') }}" class="card-img-top" alt="{{ post.title }}" style="width: 360px; height: 230px;">
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title"><a href="{{ path('blog.show', {slug: post.slug, id: post.id}) }}">{{ post.title }}</a></h5>

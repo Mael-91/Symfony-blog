@@ -62,7 +62,7 @@ class CloudinaryService {
 
     /**
      * Permet de faire la connexion avec le compte Cloudinary
-     *
+     * TODO Mettre les infos de connexion dans le service.yaml
      * @param bool $secure
      * @return array|null
      */

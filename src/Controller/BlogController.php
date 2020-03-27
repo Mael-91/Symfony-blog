@@ -12,15 +12,19 @@ use App\Repository\BlogCommentRepository;
 use App\Repository\BlogLikeRepository;
 use App\Repository\BlogReplyRepository;
 use App\Repository\BlogRepository;
+use App\Service\CacheService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class BlogController extends AbstractController {
 
@@ -40,16 +44,34 @@ class BlogController extends AbstractController {
      * @var EntityManagerInterface
      */
     private $manager;
+    /**
+     * @var CacheService
+     */
+    private $cache;
+    /**
+     * @var AdapterInterface
+     */
+    private $adapter;
+    /**
+     * @var CacheInterface
+     */
+    private $cacheInterface;
 
     public function __construct(
         BlogRepository $postRepository,
         BlogCategoryRepository $categoryRepository,
         BlogCommentRepository $commentRepository,
-        EntityManagerInterface $manager) {
+        EntityManagerInterface $manager,
+        CacheService $cache,
+        AdapterInterface $adapter,
+        CacheInterface $cacheInterface) {
         $this->postRepository = $postRepository;
         $this->categoryRepository = $categoryRepository;
         $this->commentRepository = $commentRepository;
         $this->manager = $manager;
+        $this->cache = $cache;
+        $this->adapter = $adapter;
+        $this->cacheInterface = $cacheInterface;
     }
 
     /**
@@ -61,6 +83,10 @@ class BlogController extends AbstractController {
         $post = $paginator->paginate($this->postRepository->findAllActiveQuery(),
             $request->query->getInt('page', 1), 20);
         $category = $this->categoryRepository->findAll();
+        $keyPost = $this->postRepository->countPost();
+        $keyCategory = $this->categoryRepository->countCategory();
+        $post = $this->cache->setCache($keyPost, $post);
+        $category = $this->cache->setCache($keyCategory, $category);
         return $this->render('pages/blog/blog.index.html.twig', [
             'current_menu' => 'blog',
             'is_dashboard' => 'false',
@@ -105,6 +131,7 @@ class BlogController extends AbstractController {
     public function show(Request $request, PaginatorInterface $paginator, Blog $post, string $slug): Response {
         $getSlug = $post->getSlug();
         $category = $this->postRepository->findWithCategory($post->getId());
+        $post = $this->cache->setCache($post->getEditedAt()->getTimestamp(), $post);
         if ($getSlug !== $slug) {
             return $this->redirectToRoute('blog.show', [
                 'id' => $post->getId(),
@@ -113,7 +140,9 @@ class BlogController extends AbstractController {
         }
         $comments = $paginator->paginate($this->commentRepository->findBy(['post' => $post, 'visible' => true, 'parent' => null], ['created_at' => 'DESC']),
             $request->query->getInt('page', '1'), 20);
+        $comments = $this->cache->setCache('10', $comments);
         $nbrCommentInPost = $this->commentRepository->count(['post' => $post]);
+        $nbrCommentInPost = $this->cache->setCache($nbrCommentInPost, $nbrCommentInPost);
 
         return $this->render('pages/blog/blog.show.html.twig', [
             'current_menu' => 'blog',

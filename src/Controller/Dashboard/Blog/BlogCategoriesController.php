@@ -38,7 +38,7 @@ class BlogCategoriesController extends AbstractController {
     public function index(PaginatorInterface $paginator, Request $request): Response {
         $categories = $paginator->paginate($this->categoryRepository->findAll(),
             $request->query->getInt('page', 1), 20);
-        return $this->render('pages/dashboard/blog/categories.html.twig', [
+        return $this->render('admin/blog/categories.html.twig', [
             'current_menu' => 'blog-categories-manage',
             'is_dashboard' => 'true',
             'categories' => $categories
@@ -61,7 +61,7 @@ class BlogCategoriesController extends AbstractController {
             $success = $this->addFlash('success-create-category', 'La catégorie a bien été créée');
             return $this->redirectToRoute('admin.blog.manage.categories', ['success-create' => $success], 301);
         }
-        return $this->render('pages/dashboard/blog/crud_categories/create.html.twig', [
+        return $this->render('admin/blog/crud_categories/create.html.twig', [
             'current_menu' => 'blog-categories-manage',
             'is_dashboard' => 'true',
             'form' => $form->createView()
@@ -83,7 +83,7 @@ class BlogCategoriesController extends AbstractController {
             $success = $this->addFlash('success-edit-category', 'La catégorie a bien été modifiée');
             return $this->redirectToRoute('admin.blog.manage.categories', ['success-edit' => $success], 301);
         }
-        return $this->render('pages/dashboard/blog/crud_categories/edit.html.twig', [
+        return $this->render('admin/blog/crud_categories/edit.html.twig', [
             'current_menu' => 'blog-categories-manage',
             'is_dashboard' => 'true',
             'form' => $form->createView()

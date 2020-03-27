@@ -29,7 +29,7 @@ class ForgotPasswordRequestListener {
             ->setFrom('mael.constantin@laposte.net')
             ->setTo($email)
             ->setSubject('Reset password')
-            ->setBody($this->environment->render('mail/reset_password.html.twig', [
+            ->setBody($this->environment->render('mails/security/reset_password.html.twig', [
                 'user' => $user,
                 'email' => $email,
                 'token' => $token

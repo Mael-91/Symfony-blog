@@ -48,7 +48,7 @@ class UsersController extends AbstractController
     public function index(PaginatorInterface $paginator, Request $request): Response {
         $users = $paginator->paginate($this->userRepository->findAll(),
             $request->query->getInt('page', '1'), 20);
-        return $this->render('pages/dashboard/users/users.html.twig', [
+        return $this->render('admin/users/users.html.twig', [
             'current_menu' => 'dashboard-users',
             'is_dashboard' => 'true',
             'users' => $users

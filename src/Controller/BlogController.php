@@ -87,7 +87,7 @@ class BlogController extends AbstractController {
         $keyCategory = $this->categoryRepository->countCategory();
         $post = $this->cache->setCache($keyPost, $post);
         $category = $this->cache->setCache($keyCategory, $category);
-        return $this->render('pages/blog/blog.index.html.twig', [
+        return $this->render('blog/blog.index.html.twig', [
             'current_menu' => 'blog',
             'is_dashboard' => 'false',
             'posts' => $post,
@@ -112,7 +112,7 @@ class BlogController extends AbstractController {
             ], 301);
         }
 
-        return $this->render('pages/blog/category.html.twig', [
+        return $this->render('blog/category.html.twig', [
             'current_menu' => 'blog',
             'is_dashboard' => 'false',
             'category' => $category,
@@ -144,7 +144,7 @@ class BlogController extends AbstractController {
         $nbrCommentInPost = $this->commentRepository->count(['post' => $post]);
         $nbrCommentInPost = $this->cache->setCache($nbrCommentInPost, $nbrCommentInPost);
 
-        return $this->render('pages/blog/blog.show.html.twig', [
+        return $this->render('blog/blog.show.html.twig', [
             'current_menu' => 'blog',
             'is_dashboard' => 'false',
             'post' => $post,

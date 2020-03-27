@@ -29,7 +29,7 @@ class RegistrationListener {
             ->setFrom('mael.constantin@gmail.com')
             ->setTo($email)
             ->setSubject('Confirm account')
-            ->setBody($this->environment->render('mail/register_mail.html.twig', [
+            ->setBody($this->environment->render('mails/security/register_mail.html.twig', [
                 'email' => $email,
                 'user' => $user,
                 'id' => $id,

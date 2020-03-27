@@ -38,7 +38,7 @@ class BlogCommentsController extends AbstractController {
     public function comments(PaginatorInterface $paginator, Request $request): Response {
         $comments = $paginator->paginate($this->commentRepository->findAll(),
             $request->query->getInt('page', '1'), 20);
-        return $this->render('pages/dashboard/blog/comments.html.twig', [
+        return $this->render('admin/blog/comments.html.twig', [
             'current_menu' => 'blog-comments-manage',
             'is_dashboard' => 'true',
             'comments' => $comments
@@ -62,7 +62,7 @@ class BlogCommentsController extends AbstractController {
             $success = $this->addFlash('success-edit-comment', 'Le commentaire a bien été modifié');
             return $this->redirectToRoute('admin.blog.manage.comment', ['success-edit-comment' => $success]);
         }
-        return $this->render('pages/dashboard/blog/crud_comments/edit.html.twig', [
+        return $this->render('admin/blog/crud_comments/edit.html.twig', [
             'current_menu' => 'blog-comments-manage',
             'is_dashboard' => 'true',
             'commentForm' => $commentForm->createView()

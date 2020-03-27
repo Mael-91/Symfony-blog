@@ -92,7 +92,7 @@ class SecurityController extends AbstractController {
             return $this->redirectToRoute('home', [ 'success' => $success ], 301);
         }
 
-        return $this->render('pages/security/signup.html.twig', [
+        return $this->render('security/signup.html.twig', [
             'current_menu' => 'register',
             'is_dashboard' => 'false',
             'user' => $user,
@@ -115,7 +115,7 @@ class SecurityController extends AbstractController {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('pages/security/login.html.twig', [
+        return $this->render('security/login.html.twig', [
             'current_menu' => 'login',
             'is_dashboard' => 'false',
             'last_username' => $lastUsername,
@@ -178,7 +178,7 @@ class SecurityController extends AbstractController {
             }
         }
 
-        return $this->render('pages/security/forgot_password.html.twig', [
+        return $this->render('security/forgot_password.html.twig', [
             'is_dashboard' => 'false',
             'form' => $form->createView()
         ]);
@@ -214,7 +214,7 @@ class SecurityController extends AbstractController {
             }
         }
 
-        return $this->render('pages/security/change_password.html.twig', [
+        return $this->render('security/change_password.html.twig', [
             'is_dashboard' => 'false',
             'form' => $form->createView()
         ]);

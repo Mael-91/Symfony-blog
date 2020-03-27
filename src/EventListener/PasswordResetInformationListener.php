@@ -29,7 +29,7 @@ class PasswordResetInformationListener {
             ->setFrom('mael.constantin@laposte.net')
             ->setTo($email)
             ->setSubject('Success change password notification')
-            ->setBody($this->environment->render('mail/reset_password_success.html.twig', [
+            ->setBody($this->environment->render('mails/security/reset_password_success.html.twig', [
                 'user' => $user,
                 'email' => $email,
                 'datetime' => new \DateTime()

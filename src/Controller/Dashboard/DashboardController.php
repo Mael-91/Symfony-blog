@@ -11,7 +11,7 @@ class DashboardController extends AbstractController {
      * @return Response
      */
     public function dashboard(): Response {
-        return $this->render('pages/dashboard/dashboard.html.twig', [
+        return $this->render('admin/dashboard.html.twig', [
             'current_menu' => 'dashboard',
             'is_dashboard' => 'true'
         ]);

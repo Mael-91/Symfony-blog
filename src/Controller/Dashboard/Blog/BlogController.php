@@ -66,7 +66,7 @@ class BlogController extends AbstractController {
         $numPost = $this->blogRepository->countPost();
         $numCategory = $this->categoryRepository->countCategory();
         $numComment = $this->commentRepository->countComment();
-        return $this->render('pages/dashboard/blog/dashboard_blog.html.twig', [
+        return $this->render('admin/blog/dashboard_blog.html.twig', [
             'current_menu' => 'dashboard-blog',
             'is_dashboard' => 'true',
             'numbersPost' => $numPost,
@@ -85,7 +85,7 @@ class BlogController extends AbstractController {
     public function managePost(PaginatorInterface $paginator, Request $request): Response {
         $posts = $paginator->paginate($this->blogRepository->findAll(),
             $request->query->getInt('page', '1'), 20);
-        return $this->render('pages/dashboard/blog/posts.html.twig', [
+        return $this->render('admin/blog/posts.html.twig', [
             'current_menu' => 'blog-posts-manage',
             'is_dashboard' => 'true',
             'posts' => $posts
@@ -109,7 +109,7 @@ class BlogController extends AbstractController {
             $this->dispatcher->dispatch(new CloudinaryUploadEvent($blog->getBannerFile(), 'blog', null, null, null), CloudinaryUploadEvent::NAME);
             return $this->redirectToRoute('admin.blog.manage.post');
         }
-        return $this->render('pages/dashboard/blog/crud_posts/create.html.twig', [
+        return $this->render('admin/blog/crud_posts/create.html.twig', [
             'current_menu' => 'blog-posts-manage',
             'is_dashboard' => 'true',
             'blog' => $blog,
@@ -141,7 +141,7 @@ class BlogController extends AbstractController {
             $this->addFlash('success-blog', 'La modification est un succès !');
             return $this->redirectToRoute('admin.blog.manage.post');
         }
-        return $this->render('pages/dashboard/blog/crud_posts/edit.html.twig', [
+        return $this->render('admin/blog/crud_posts/edit.html.twig', [
             'current_menu' => 'blog-posts-manage',
             'is_dashboard' => 'true',
             'blog' => $blog,

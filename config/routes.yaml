@@ -2,6 +2,14 @@ home:
   path: /
   controller: App\Controller\HomeController::index
 
+guide:
+  path: /guide
+  controller: App\Controller\Guide\GuideController::index
+
+guide.markdown:
+  path: /guide/markdown
+  controller: App\Controller\Guide\MarkdownGuideController::index
+
 # Blog
 blog.index:
   path: /blog

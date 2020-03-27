@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block title 'Guide - Markdown' %}
+{% block stylesheets %}
+{{ encore_entry_link_tags('GuideMarkdown') }}
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="col-md-6 mx-auto">
+            <h1>Guide Markdown</h1>
+            <h4>Styles</h4>
+            <pre class="styles">**Bold**<br>*italique*<br>~~barré~~</pre>
+            <h4>Titres</h4>
+            <pre># Grand titre</pre>
+            <pre>## Titre Moyen</pre>
+            <pre>### Petit titre</pre>
+            <pre>#### Très petit titre</pre>
+            <h4>Listes</h4>
+            <pre>* Liste non numérotée
+                * Liste non numérotée
+                * Liste non numérotée
+                <br>
+                1. Liste non numérotée
+                2. Liste non numérotée
+                3. Liste non numérotée
+            </pre>
+            <h4>Lien</h4>
+            <pre>[Texte à afficher optionnel](https://www.example.com)</pre>
+            <h4>Quotes</h4>
+            <pre>> Simple quote</pre>
+            <h4>Image</h4>
+            <pre>![](https://www.example.com/image_0.jpg)</pre>
+            <h4>Tableaux</h4>
+            <pre>
+                 | Colonne 1 | Colonne 2 | Colonne 3 |
+                 | --------- | --------- | --------- |
+                 | John      | Doe       | 15        |
+                 | Marie     | Doe       | 55        |
+                 | Henry     | Doe       | 27        |
+            </pre>
+            <h4>Afficher du code</h4>
+            <pre>
+                Sur une ligne :
+                Il sufffit d'utiliser : `<br>
+                `echo 'Hello World';`<br>
+                Ou sur plusieurs ligne<br>
+                ```
+                const form = document.querySelectorAll('my-form');
+                ```
+            </pre>
+        </div>
+    </div>
+{% endblock %}

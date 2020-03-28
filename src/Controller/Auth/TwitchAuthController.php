@@ -42,7 +42,14 @@ class TwitchAuthController extends AbstractController {
      */
     private $dispatcher;
 
-    public function __construct($twitchId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, TokenGeneratorService $tokenGenerator, EventDispatcherInterface $dispatcher) {
+    public function __construct(
+        $twitchId,
+        UrlGeneratorInterface $urlGenerator,
+        SessionInterface $session,
+        UserPasswordEncoderInterface $passwordEncoder,
+        EntityManagerInterface $manager,
+        TokenGeneratorService $tokenGenerator,
+        EventDispatcherInterface $dispatcher) {
 
         $this->twitchId = $twitchId;
         $this->urlGenerator = $urlGenerator;
@@ -70,6 +77,7 @@ class TwitchAuthController extends AbstractController {
         $user->setConfirmationToken($this->tokenGenerator->generateToken());
         $user->setRequestedTokenAt(new \DateTime());
         $user->setCreatedAt(new \DateTime());
+        $user->setOauth(true);
         $this->manager->persist($user);
         $this->manager->flush();
         $registerMail = new SecurityRegistrationEvent($user);

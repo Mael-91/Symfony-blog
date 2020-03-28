@@ -47,7 +47,12 @@ class SecurityController extends AbstractController {
      */
     private $passwordEncoder;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils, UserPasswordEncoderInterface $passwordEncoder, TokenGeneratorService $tokenGenerator) {
+    public function __construct(
+        UserRepository $userRepository,
+        EntityManagerInterface $manager,
+        AuthenticationUtils $authenticationUtils,
+        UserPasswordEncoderInterface $passwordEncoder,
+        TokenGeneratorService $tokenGenerator) {
         $this->authenticationUtils = $authenticationUtils;
         $this->userRepository = $userRepository;
         $this->manager = $manager;
@@ -80,6 +85,7 @@ class SecurityController extends AbstractController {
             $user->setRequestedTokenAt(new \DateTime('now'));
             $user->setEnabled(false);
             $user->setCreatedAt(new \DateTime('now'));
+            $user->setOauth(false);
             $this->manager->persist($user);
             $this->manager->flush();
             $success = $this->addFlash('success-register', 'Bravo, votre compte a été crée !');

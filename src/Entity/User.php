@@ -131,6 +131,11 @@ class User implements UserInterface, \Serializable
      */
     private $blogComments;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $oauth;
+
     public function __construct()
     {
         $this->author = new ArrayCollection();
@@ -518,5 +523,17 @@ class User implements UserInterface, \Serializable
 
     public function __toString() {
         return (string)$this->username;
+    }
+
+    public function getOauth(): ?bool
+    {
+        return $this->oauth;
+    }
+
+    public function setOauth(bool $oauth): self
+    {
+        $this->oauth = $oauth;
+
+        return $this;
     }
 }

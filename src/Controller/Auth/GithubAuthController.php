@@ -42,7 +42,14 @@ class GithubAuthController extends AbstractController {
      */
     private $dispatcher;
 
-    public function __construct($githubId, EntityManagerInterface $manager, SessionInterface $session, TokenGeneratorService $tokenGenerator, UserPasswordEncoderInterface $passwordEncoder, UrlGeneratorInterface $urlGenerator, EventDispatcherInterface $dispatcher)
+    public function __construct(
+        $githubId,
+        EntityManagerInterface $manager,
+        SessionInterface $session,
+        TokenGeneratorService $tokenGenerator,
+        UserPasswordEncoderInterface $passwordEncoder,
+        UrlGeneratorInterface $urlGenerator,
+        EventDispatcherInterface $dispatcher)
     {
         $this->manager = $manager;
         $this->session = $session;
@@ -76,6 +83,7 @@ class GithubAuthController extends AbstractController {
         $user->setRequestedTokenAt(new \DateTime());
         $user->setCreatedAt(new \DateTime());
         $user->setEnabled(false);
+        $user->setOauth(true);
         $this->manager->persist($user);
         $this->manager->flush();
         $registerMail = new SecurityRegistrationEvent($user);

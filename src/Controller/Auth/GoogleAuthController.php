@@ -42,7 +42,14 @@ class GoogleAuthController extends AbstractController {
      */
     private $dispatcher;
 
-    public function __construct($googleId, UrlGeneratorInterface $urlGenerator, SessionInterface $session, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, TokenGeneratorService $tokenGenerator, EventDispatcherInterface $dispatcher) {
+    public function __construct(
+        $googleId,
+        UrlGeneratorInterface $urlGenerator,
+        SessionInterface $session,
+        UserPasswordEncoderInterface $passwordEncoder,
+        EntityManagerInterface $manager,
+        TokenGeneratorService $tokenGenerator,
+        EventDispatcherInterface $dispatcher) {
 
         $this->googleId = $googleId;
         $this->urlGenerator = $urlGenerator;
@@ -71,6 +78,7 @@ class GoogleAuthController extends AbstractController {
         $user->setConfirmationToken($this->tokenGenerator->generateToken());
         $user->setRequestedTokenAt(new \DateTime());
         $user->setCreatedAt(new \DateTime());
+        $user->setOauth(true);
         $this->manager->persist($user);
         $this->manager->flush();
         $registerMail = new SecurityRegistrationEvent($user);

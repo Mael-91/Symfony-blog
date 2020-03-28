@@ -140,9 +140,7 @@ class BlogController extends AbstractController {
         }
         $comments = $paginator->paginate($this->commentRepository->findBy(['post' => $post, 'visible' => true, 'parent' => null], ['created_at' => 'DESC']),
             $request->query->getInt('page', '1'), 20);
-        $comments = $this->cache->setCache('10', $comments);
         $nbrCommentInPost = $this->commentRepository->count(['post' => $post]);
-        $nbrCommentInPost = $this->cache->setCache($nbrCommentInPost, $nbrCommentInPost);
 
         return $this->render('blog/blog.show.html.twig', [
             'current_menu' => 'blog',

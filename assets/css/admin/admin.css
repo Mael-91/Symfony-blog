@@ -17,14 +17,25 @@
 .card_user,
 .card_user_oauth,
 .card_user_signup,
-.card_last_user {
+.card_last_user,
+.card_like,
+.card_last_post,
+.card_last_comment {
     width: 18rem;
     margin-left: 15px;
 }
 
 .card_read,
-.card_last_user {
+.card_like,
+.card_last_post,
+.card_last_comment{
     margin-top: 15px;
+}
+
+.card_user,
+.card_user_oauth,
+.card_like {
+    height: 144px!important;
 }
 
 button.button_modal_read {

@@ -19,32 +19,10 @@ class BlogLikeRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogLike::class);
     }
 
-    // /**
-    //  * @return BlogLike[] Returns an array of BlogLike objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+    public function countLike(): int {
+        return $this->createQueryBuilder('l')
+            ->select('COUNT(l)')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getSingleScalarResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?BlogLike
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

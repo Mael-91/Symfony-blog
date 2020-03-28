@@ -39,6 +39,14 @@ class BlogRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findlastArticle(): array {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.created_at', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findPostsInCategory($category) {
         $manager = $this->getEntityManager()->getConnection();
 
@@ -71,33 +79,4 @@ class BlogRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->where('p.active = true');
     }
-
-    // /**
-    //  * @return Blog[] Returns an array of Blog objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Blog
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

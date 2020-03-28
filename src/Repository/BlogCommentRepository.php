@@ -20,12 +20,19 @@ class BlogCommentRepository extends ServiceEntityRepository
         parent::__construct($registry, BlogComment::class);
     }
 
-    public function countComment()
-    {
+    public function countComment(): int {
         return $this->createQueryBuilder('c')
             ->select('COUNT(c)')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findLastComment(): array {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.created_at', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
     }
 
     private function findActiveQuery(): QueryBuilder {

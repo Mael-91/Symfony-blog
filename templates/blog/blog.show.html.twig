@@ -56,7 +56,7 @@
         </div>
         {% for comment in comments %}
                 <div class="comment" style="margin-top: 20px;" id="{{ comment.id }}">
-                    <div class="card">
+                    <div class="comment-card card">
                         <div class="card-body">
                             <span class="card-title"><a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ comment.author }}</a> <abbr class="datetime">- {{ comment.createdAt | ago('text-black-50') }} -</abbr> <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;">Répondre</button></span>
                             <p class="card-text mt-2">{{ comment.content | nl2br }}</p>
@@ -74,7 +74,7 @@
             {% if comment.children is not empty %}
                 {% for commentChild in comment.children %}
                     <div class="reply">
-                        <div class="card card-color">
+                        <div class="reply-card card card-color">
                             <div class="card-body">
                                 <span class="card-title"><a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ commentChild.author }}</a> <abbr class="datetime">- {{ commentChild.createdAt |ago('text-black-50') }} -</abbr> <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;">Répondre</button></span>
                                 <p class="card-text mt-2">{{ commentChild.content }}</p>

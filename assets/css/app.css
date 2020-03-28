@@ -1,4 +1,5 @@
 body {
+    /*background-color: #100020;*/
     background-color: transparent;
 }
 
@@ -50,7 +51,7 @@ div.reply {
     margin-top: 25px;
 }
 
-div.card {
+div.comment-card, div.reply-card {
     background-color: #f4f4f4!important;
 }
 

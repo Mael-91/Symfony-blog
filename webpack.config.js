@@ -27,7 +27,7 @@ Encore
     .addEntry('textareaResize', './assets/js/autoSizeTextarea.js')
     .addEntry('blogLike', './assets/js/functions/blog/Like.js')
     // CSS Files
-    .addEntry('admin', './assets/css/dashboard.css')
+    .addEntry('dashboard', './assets/css/dashboard.css')
     .addEntry('markdown', './assets/css/markdown.css')
     .addEntry('GuideMarkdown', './assets/css/guide/markdown.css')
 

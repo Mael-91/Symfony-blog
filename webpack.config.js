@@ -30,6 +30,8 @@ Encore
     .addEntry('dashboard', './assets/css/dashboard.css')
     .addEntry('markdown', './assets/css/markdown.css')
     .addEntry('GuideMarkdown', './assets/css/guide/markdown.css')
+    .addEntry('admin', './assets/css/admin/admin.css')
+    .addEntry('blog', './assets/css/blog/blog.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

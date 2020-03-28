@@ -1,0 +1,38 @@
+.blog_info {
+    margin-top: 25px;
+}
+
+.user_part {
+    margin-top: 15px;
+}
+
+.user_info {
+    margin-top: 25px;
+}
+
+.card_article,
+.card_category,
+.card_comment,
+.card_read,
+.card_user,
+.card_user_oauth,
+.card_user_signup,
+.card_last_user {
+    width: 18rem;
+    margin-left: 15px;
+}
+
+.card_read,
+.card_last_user {
+    margin-top: 15px;
+}
+
+button.button_modal_read {
+    background: transparent;
+    color: #2243EC;
+    border: none;
+}
+
+button.button_modal_read:hover, button.button_modal_read:active {
+    color: #182987;
+}

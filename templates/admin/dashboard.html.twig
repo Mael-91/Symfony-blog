@@ -1,7 +1,127 @@
 {% extends 'base.html.twig' %}
 {% block title 'Tablea d\'administratioin' %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('admin') }}
+{% endblock %}
 {% block body %}
     <div class="container">
         <h4 class="text-center">Gestion du site</h4>
+        <div class="blog_info" style="margin-top: 25px;">
+            <div class="row col-md-12 mx-auto">
+                <div class="card card_article">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre d'article</h5>
+                        <p class="card-text">15 articles</p>
+                        <a href="{{ path('admin.blog.manage.post') }}" class="card-link">Gestion des article</a>
+                    </div>
+                </div>
+                <div class="card card_category">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre de catégories</h5>
+                        <p class="card-text">15 catégories</p>
+                        <a href="{{ path('admin.blog.manage.categories') }}" class="card-link">Gestion des catégories</a>
+                    </div>
+                </div>
+                <div class="card card_comment">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre de commentaires</h5>
+                        <p class="card-text">15 commetnaires</p>
+                        <a href="{{ path('admin.blog.manage.categories') }}" class="card-link">Gestion des commentaires</a>
+                    </div>
+                </div>
+                <div class="card card_read">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre de lecture</h5>
+                        <p class="card-text">1500 lectures</p>
+                        <button class="button_modal_read" type="button" data-toggle="modal" data-target="#readModal">En savoir plus</button>
+                        <div class="modal fade" id="readModal" tabindex="-1" role="dialog" aria-labelledby="readModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="readModalLabel">Statistique de lecture</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Nombre de lecture par jour : 15</p>
+                                        <p>Nombre de lecture par mois : 150</p>
+                                        <p>Nombre de lecture par jour : 1500</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="text-center user_part">Statistiques et informations des utilisateurs</h4>
+        <div class="user_info">
+            <div class="row col-md-12 mx-auto">
+                <div class="card card_user">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre d'utilisateur</h5>
+                        <p class="card-text">21 Utilisateurs</p>
+                        <a href="{{ path('admin.users') }}" class="card-link">Gestion des utilisateurs</a>
+                    </div>
+                </div>
+                <div class="card card_user_oauth">
+                    <div class="card-body">
+                        <h5 class="card-title">Insription via OAuth</h5>
+                        <p class="card-text">3 Utilisateurs</p>
+                        <button class="button_modal_read" type="button" data-toggle="modal" data-target="#oauthModal">En savoir plus</button>
+                        <div class="modal fade" id="oauthModal" tabindex="-1" role="dialog" aria-labelledby="oauthModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="oauthModalLabel">Statistique de lecture</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Nombre d'inscription par jour : 15</p>
+                                        <p>Nombre d'inscription par mois : 150</p>
+                                        <p>Nombre d'inscription par jour : 1500</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card_user_signup">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre d'inscription</h5>
+                        <p class="card-text">5 insciptions aujourd'hui</p>
+                        <button class="button_modal_read" type="button" data-toggle="modal" data-target="#inscriptionModal">En savoir plus</button>
+                        <div class="modal fade" id="inscriptionModal" tabindex="-1" role="dialog" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="inscriptionModalLabel">Statistique de lecture</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Nombre d'inscription par jour : 15</p>
+                                        <p>Nombre d'inscription par mois : 150</p>
+                                        <p>Nombre d'inscription par jour : 1500</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card_last_user">
+                    <div class="card-header">Dernier insrits</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href="lien vers le profile">John Doe</a></li>
+                        <li class="list-group-item"><a href="lien vers le profile">John Doe</a></li>
+                        <li class="list-group-item"><a href="lien vers le profile">John Doe</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

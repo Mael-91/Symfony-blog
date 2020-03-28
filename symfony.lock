@@ -1,4 +1,7 @@
 {
+    "cloudinary/cloudinary_php": {
+        "version": "1.16.0"
+    },
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },

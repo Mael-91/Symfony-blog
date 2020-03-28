@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "antishov/doctrine-extensions-bundle": "^1.4",
+        "cloudinary/cloudinary_php": "^1.16",
         "cocur/slugify": "^4.0",
         "knplabs/knp-markdown-bundle": "^1.8",
         "knplabs/knp-paginator-bundle": "^5.1",

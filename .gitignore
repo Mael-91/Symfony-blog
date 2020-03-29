@@ -1,14 +1,12 @@
 ## IDE
 /.idea/*
 ###> symfony/framework-bundle ###
-/src/Migrations/*.php
+/src/Migrations/
 /.env.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/svgs/
-/public/webfonts/
 /var/
 /vendor/
 /assets/js/timeago.locales.min.js
@@ -27,3 +25,6 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###< mael/bundle ##
+/bundles/

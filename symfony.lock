@@ -26,6 +26,9 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v5.1.1"
     },
+    "mael/recaptcha-bundle": {
+        "version": "dev-master"
+    },
     "michelf/php-markdown": {
         "version": "1.9.0"
     },

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1eb14904417da2893157f7a503ee9f06",
+    "content-hash": "4fe53977f839570cf1f9e8d695f8f6cf",
     "packages": [
         {
             "name": "antishov/doctrine-extensions-bundle",
@@ -1917,6 +1917,69 @@
                 "symfony"
             ],
             "time": "2020-01-21T17:00:39+00:00"
+        },
+        {
+            "name": "mael/recaptcha-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mael-91/MaelRecaptchaBundle.git",
+                "reference": "02867459e5906d722c0cb971958ebdfde5dfde15"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mael-91/MaelRecaptchaBundle/zipball/02867459e5906d722c0cb971958ebdfde5dfde15",
+                "reference": "02867459e5906d722c0cb971958ebdfde5dfde15",
+                "shasum": ""
+            },
+            "require": {
+                "google/recaptcha": "^1.2",
+                "php": "^7.3",
+                "symfony/config": "^4.4|^5.0",
+                "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/form": "^4.4|^5.0",
+                "symfony/http-foundation": "^4.4|^5.0",
+                "symfony/http-kernel": "^4.4|^5.0",
+                "symfony/options-resolver": "^4.4|^5.0",
+                "symfony/twig-pack": "*",
+                "symfony/validator": "^4.4|^5.0"
+            },
+            "suggest": {
+                "symfony/console": "For validating YAML files using the lint command",
+                "symfony/yaml": "To use YAML mapping"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Mael\\MaelRecaptchaBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mael"
+                },
+                {
+                    "name": "Community Contributions",
+                    "homepage": "https://github.com/Mael-91/MaelRecaptchaBundle/contributors"
+                }
+            ],
+            "description": "Google recaptcha bundle for twig",
+            "homepage": "https://github.com/Mael-91",
+            "keywords": [
+                "Abuse",
+                "captcha",
+                "google",
+                "no-robot",
+                "recaptcha",
+                "spam",
+                "symfony",
+                "twig"
+            ],
+            "time": "2020-03-29T19:38:11+00:00"
         },
         {
             "name": "michelf/php-markdown",
@@ -8290,7 +8353,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mael/recaptcha-bundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

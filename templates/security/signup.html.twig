@@ -2,7 +2,7 @@
 {% block title 'S\'inscire' %}
 {% block body %}
     <div class="container mt-3">
-        {{ form_start(registration) }}
+        {{ form_start(registration, {'attr': {'id': 'form-recaptcha'}}) }}
             <div class="col-md-4 mx-auto">
                 <div>{{ form_row(registration.username) }}</div>
                 <div>{{ form_row(registration.first_name) }}</div>
@@ -11,8 +11,17 @@
                 <div>{{ form_row(registration.password) }}</div>
                 <div>{{ form_row(registration.birthday) }}</div>
                 <div>{{ form_row(registration.sexe) }}</div>
-                <button class="btn btn-primary" type="submit">S'inscire</button>
+                <div>{{ form_row(registration.captcha) }}</div>
             </div>
         {{ form_end(registration) }}
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onSubmitCaptcha(token) {
+            document.getElementById("form-recaptcha").submit();
+        }
+    </script>
 {% endblock %}

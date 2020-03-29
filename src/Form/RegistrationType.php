@@ -3,9 +3,10 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Mael\MaelRecaptchaBundle\Validator\MaelRecaptcha;
+use Mael\MaelRecaptchaBundle\Type\MaelRecaptchaSubmitType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -50,6 +51,11 @@ class RegistrationType extends AbstractType
             ->add('sexe', ChoiceType::class, [
                 'choices' => $this->getChoices(),
                 'translation_domain' => 'userForm'
+            ])
+            ->add('captcha', MaelRecaptchaSubmitType::class, [
+                'label' => 'Submit',
+                'attr' => ['class' => 'btn btn-primary'],
+                'constraints' => new MaelRecaptcha()
             ])
         ;
     }

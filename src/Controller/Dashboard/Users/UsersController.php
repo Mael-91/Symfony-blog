@@ -76,7 +76,7 @@ class UsersController extends AbstractController
             $this->addFlash('success-user', 'L\'utilisateur a bien été modifié');
             return $this->redirectToRoute('admin.users', [], 301);
         }
-        return $this->render('pages/dashboard/users/crud/create.html.twig', [
+        return $this->render('admin/users/crud/create.html.twig', [
             'current_menu' => 'dashboard-users',
             'is_dashboard' => 'true',
             'user' => $user,
@@ -101,7 +101,7 @@ class UsersController extends AbstractController
             $this->addFlash('success-user', 'L\'utilisateur a bien été modifié');
             return $this->redirectToRoute('admin.users', [], 301);
         }
-        return $this->render('pages/dashboard/users/crud/edit.html.twig', [
+        return $this->render('admin/users/crud/edit.html.twig', [
             'current_menu' => 'dashboard-users',
             'is_dashboard' => 'true',
             'user' => $user,

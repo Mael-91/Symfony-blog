@@ -136,11 +136,17 @@ class User implements UserInterface, \Serializable
      */
     private $oauth;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\LoginAttempt", mappedBy="user")
+     */
+    private $loginAttempts;
+
     public function __construct()
     {
         $this->author = new ArrayCollection();
         $this->blogLikes = new ArrayCollection();
         $this->blogComments = new ArrayCollection();
+        $this->loginAttempts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -533,6 +539,37 @@ class User implements UserInterface, \Serializable
     public function setOauth(bool $oauth): self
     {
         $this->oauth = $oauth;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LoginAttempt[]
+     */
+    public function getLoginAttempts(): Collection
+    {
+        return $this->loginAttempts;
+    }
+
+    public function addLoginAttempt(LoginAttempt $loginAttempt): self
+    {
+        if (!$this->loginAttempts->contains($loginAttempt)) {
+            $this->loginAttempts[] = $loginAttempt;
+            $loginAttempt->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoginAttempt(LoginAttempt $loginAttempt): self
+    {
+        if ($this->loginAttempts->contains($loginAttempt)) {
+            $this->loginAttempts->removeElement($loginAttempt);
+            // set the owning side to null (unless already changed)
+            if ($loginAttempt->getUser() === $this) {
+                $loginAttempt->setUser(null);
+            }
+        }
 
         return $this;
     }

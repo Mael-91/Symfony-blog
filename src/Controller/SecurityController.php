@@ -7,7 +7,6 @@ use App\Event\SecurityForgotPasswordRequestEvent;
 use App\Event\SecurityLoginEvent;
 use App\Event\SecurityPasswordInformationEvent;
 use App\Event\SecurityRegistrationEvent;
-use App\EventSubscriber\MailSubscriber;
 use App\Form\ForgotPasswordType;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
@@ -19,8 +18,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -92,7 +91,7 @@ class SecurityController extends AbstractController {
             $registrationEvent = new SecurityRegistrationEvent($user);
             $dispatcher->dispatch($registrationEvent, SecurityRegistrationEvent::NAME);
             // Login user after registration
-            $loginAfter = new UsernamePasswordToken($user->getUsername(), $user->getPassword(), 'security.user.provider.concrete.from_database', $user->getRoles());
+            $loginAfter = new PostAuthenticationGuardToken($user, 'security.user.provider.concrete.from_database', $user->getRoles());
             $this->get('security.token_storage')->setToken($loginAfter);
             $this->get('session')->set('_security_main', serialize($loginAfter));
             return $this->redirectToRoute('home', [ 'success' => $success ], 301);

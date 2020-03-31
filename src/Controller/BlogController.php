@@ -6,6 +6,7 @@ use App\Entity\Blog;
 use App\Entity\BlogCategory;
 use App\Entity\BlogComment;
 use App\Entity\BlogLike;
+use App\Event\UserActivityEvent;
 use App\Exceptions\UserNotConnectedException;
 use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogCommentRepository;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class BlogController extends AbstractController {
 
@@ -56,6 +57,10 @@ class BlogController extends AbstractController {
      * @var CacheInterface
      */
     private $cacheInterface;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
     public function __construct(
         BlogRepository $postRepository,
@@ -64,7 +69,8 @@ class BlogController extends AbstractController {
         EntityManagerInterface $manager,
         CacheService $cache,
         AdapterInterface $adapter,
-        CacheInterface $cacheInterface) {
+        CacheInterface $cacheInterface,
+        EventDispatcherInterface $dispatcher) {
         $this->postRepository = $postRepository;
         $this->categoryRepository = $categoryRepository;
         $this->commentRepository = $commentRepository;
@@ -72,6 +78,7 @@ class BlogController extends AbstractController {
         $this->cache = $cache;
         $this->adapter = $adapter;
         $this->cacheInterface = $cacheInterface;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -184,6 +191,7 @@ class BlogController extends AbstractController {
             ->setVisible(true);
         $this->manager->persist($comment);
         $this->manager->flush();
+        $this->dispatcher->dispatch(new UserActivityEvent($this->getUser(), null, $comment, null));
         $this->addFlash('success-send-comment', 'Bravo ! Votre commentaire a été envoyé');
         return new JsonResponse(['code' => 200, 'message' => 'commentaire envoyé avec succès'], JsonResponse::HTTP_CREATED);
     }
@@ -216,6 +224,7 @@ class BlogController extends AbstractController {
             ->setParent($comment);
         $this->manager->persist($reply);
         $this->manager->flush();
+        $this->dispatcher->dispatch(new UserActivityEvent($this->getUser(), null, $reply, null));
         //$success = $this->addFlash('success-send-comment', 'Bravo ! Votre réponse a été envoyé');
         return new JsonResponse(['code' => 200, 'message' => 'réponse envoyé avec succès'], JsonResponse::HTTP_CREATED);
     }
@@ -251,6 +260,7 @@ class BlogController extends AbstractController {
             ->setUser($user);
         $this->manager->persist($like);
         $this->manager->flush();
+        $this->dispatcher->dispatch(new UserActivityEvent($user, null, null, $like));
         return $this->json([
             'code' => 200,
             'message' => 'like ajouté',

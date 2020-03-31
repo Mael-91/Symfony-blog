@@ -141,12 +141,18 @@ class User implements UserInterface, \Serializable
      */
     private $loginAttempts;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserActivity", mappedBy="user", orphanRemoval=true)
+     */
+    private $userActivities;
+
     public function __construct()
     {
         $this->author = new ArrayCollection();
         $this->blogLikes = new ArrayCollection();
         $this->blogComments = new ArrayCollection();
         $this->loginAttempts = new ArrayCollection();
+        $this->userActivities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -568,6 +574,37 @@ class User implements UserInterface, \Serializable
             // set the owning side to null (unless already changed)
             if ($loginAttempt->getUser() === $this) {
                 $loginAttempt->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserActivity[]
+     */
+    public function getUserActivities(): Collection
+    {
+        return $this->userActivities;
+    }
+
+    public function addUserActivity(UserActivity $userActivity): self
+    {
+        if (!$this->userActivities->contains($userActivity)) {
+            $this->userActivities[] = $userActivity;
+            $userActivity->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserActivity(UserActivity $userActivity): self
+    {
+        if ($this->userActivities->contains($userActivity)) {
+            $this->userActivities->removeElement($userActivity);
+            // set the owning side to null (unless already changed)
+            if ($userActivity->getUser() === $this) {
+                $userActivity->setUser(null);
             }
         }
 

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,6 +27,16 @@ class BlogLike
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="blogLikes")
      */
     private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserActivity", mappedBy="blog_like", orphanRemoval=true)
+     */
+    private $userActivities;
+
+    public function __construct()
+    {
+        $this->userActivities = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -51,6 +63,37 @@ class BlogLike
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserActivity[]
+     */
+    public function getUserActivities(): Collection
+    {
+        return $this->userActivities;
+    }
+
+    public function addUserActivity(UserActivity $userActivity): self
+    {
+        if (!$this->userActivities->contains($userActivity)) {
+            $this->userActivities[] = $userActivity;
+            $userActivity->setBlogLike($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserActivity(UserActivity $userActivity): self
+    {
+        if ($this->userActivities->contains($userActivity)) {
+            $this->userActivities->removeElement($userActivity);
+            // set the owning side to null (unless already changed)
+            if ($userActivity->getBlogLike() === $this) {
+                $userActivity->setBlogLike(null);
+            }
+        }
 
         return $this;
     }

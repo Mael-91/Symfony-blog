@@ -105,10 +105,16 @@ class Blog
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserActivity", mappedBy="blog", orphanRemoval=true)
+     */
+    private $userActivities;
+
     public function __construct() {
         $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->userActivities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -369,5 +375,36 @@ class Blog
 
     public function __toString() {
         return $this->title;
+    }
+
+    /**
+     * @return Collection|UserActivity[]
+     */
+    public function getUserActivities(): Collection
+    {
+        return $this->userActivities;
+    }
+
+    public function addUserActivity(UserActivity $userActivity): self
+    {
+        if (!$this->userActivities->contains($userActivity)) {
+            $this->userActivities[] = $userActivity;
+            $userActivity->setBlog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserActivity(UserActivity $userActivity): self
+    {
+        if ($this->userActivities->contains($userActivity)) {
+            $this->userActivities->removeElement($userActivity);
+            // set the owning side to null (unless already changed)
+            if ($userActivity->getBlog() === $this) {
+                $userActivity->setBlog(null);
+            }
+        }
+
+        return $this;
     }
 }

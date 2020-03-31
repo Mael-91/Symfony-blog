@@ -61,9 +61,15 @@ class BlogComment
      */
     private $author;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserActivity", mappedBy="blog_comment", orphanRemoval=true)
+     */
+    private $userActivities;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
+        $this->userActivities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -205,6 +211,37 @@ class BlogComment
             // set the owning side to null (unless already changed)
             if ($child->getParent() === $this) {
                 $child->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserActivity[]
+     */
+    public function getUserActivities(): Collection
+    {
+        return $this->userActivities;
+    }
+
+    public function addUserActivity(UserActivity $userActivity): self
+    {
+        if (!$this->userActivities->contains($userActivity)) {
+            $this->userActivities[] = $userActivity;
+            $userActivity->setBlogComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserActivity(UserActivity $userActivity): self
+    {
+        if ($this->userActivities->contains($userActivity)) {
+            $this->userActivities->removeElement($userActivity);
+            // set the owning side to null (unless already changed)
+            if ($userActivity->getBlogComment() === $this) {
+                $userActivity->setBlogComment(null);
             }
         }
 

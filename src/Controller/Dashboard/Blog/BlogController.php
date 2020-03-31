@@ -5,6 +5,7 @@ namespace App\Controller\Dashboard\Blog;
 use App\Entity\Blog;
 use App\Event\CloudinaryDeleteEvent;
 use App\Event\CloudinaryUploadEvent;
+use App\Event\UserActivityEvent;
 use App\Form\BlogType;
 use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogCommentRepository;
@@ -107,6 +108,7 @@ class BlogController extends AbstractController {
             $this->addFlash('success-blog', 'La publication est un succès !');
             $this->dispatcher->dispatch(new CloudinaryUploadEvent($blog->getPictureFile(), 'blog', null, 360, 230), CloudinaryUploadEvent::NAME);
             $this->dispatcher->dispatch(new CloudinaryUploadEvent($blog->getBannerFile(), 'blog', null, null, null), CloudinaryUploadEvent::NAME);
+            $this->dispatcher->dispatch(new UserActivityEvent($this->getUser(), $blog, null, null));
             return $this->redirectToRoute('admin.blog.manage.post');
         }
         return $this->render('admin/blog/crud_posts/create.html.twig', [

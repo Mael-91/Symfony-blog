@@ -82,7 +82,7 @@ class Blog
     /**
      * @ORM\Column(type="boolean", options={"default": true})
      */
-    private $active;
+    private $visible;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BlogCategory", inversedBy="posts")
@@ -267,14 +267,14 @@ class Blog
         return $this;
     }
 
-    public function getActive(): ?bool
+    public function getVisible(): ?bool
     {
-        return $this->active;
+        return $this->visible;
     }
 
-    public function setActive(bool $active): self
+    public function setVisible(bool $visible): self
     {
-        $this->active = $active;
+        $this->visible = $visible;
 
         return $this;
     }

@@ -24,8 +24,8 @@ class BlogRepository extends ServiceEntityRepository
     /**
      * @return Query
      */
-    public function findAllActiveQuery(): Query {
-        return $this->findActiveQuery()
+    public function findAllVisibleQuery(): Query {
+        return $this->findVisibleQuery()
             ->getQuery();
     }
 
@@ -33,7 +33,7 @@ class BlogRepository extends ServiceEntityRepository
      * @return Blog[] array
      */
     public function findLatest(): array {
-        return $this->findActiveQuery()
+        return $this->findVisibleQuery()
             ->setMaxResults(4)
             ->getQuery()
             ->getResult();
@@ -50,7 +50,7 @@ class BlogRepository extends ServiceEntityRepository
     public function findPostsInCategory($category) {
         $manager = $this->getEntityManager()->getConnection();
 
-        $sql = 'SELECT p.*, p.active = true, c.name as category_name, c.slug as category_slug
+        $sql = 'SELECT p.*, p.visible = true, c.name as category_name, c.slug as category_slug
                 FROM blog as p LEFT JOIN blog_category as c ON  c.id = p.category_id
                 WHERE p.category_id = :category ORDER BY p.created_at DESC';
         $stmt = $manager->prepare($sql);
@@ -75,8 +75,8 @@ class BlogRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    private function findActiveQuery(): QueryBuilder {
+    private function findVisibleQuery(): QueryBuilder {
         return $this->createQueryBuilder('p')
-            ->where('p.active = true');
+            ->where('p.visible = true');
     }
 }

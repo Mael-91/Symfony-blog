@@ -22,7 +22,7 @@ class BlogType extends AbstractType
             ->add('bannerFile', FileType::class, [
                 'required' => false
             ])
-            ->add('active')
+            ->add('visible')
         ;
     }
 

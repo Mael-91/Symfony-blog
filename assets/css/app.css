@@ -12,6 +12,11 @@ i.fa-twitter {
     color: #00acee;
 }
 
+/* Navbar */
+.dropdown-left {
+    left: -8rem!important;
+}
+
 /* Post */
 div.post, .post-banner {
     position: relative;

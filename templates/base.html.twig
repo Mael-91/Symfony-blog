@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui"/>
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
         {{ encore_entry_link_tags('app') }}
         {% block stylesheets %}{% endblock %}
     </head>
@@ -29,23 +30,26 @@
                     </ul>
                     <ul class="nav navbar-nav">
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                            <li class="nav-item">
-                                <a href="" class="nav-link {% if current_menu is defined and current_menu == 'profile' %}active{% endif %}">Profil</a>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="profilDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profil</a>
+                                <div class="dropdown-menu dropdown-left" aria-labelledby="profilDropdown">
+                                    <a href="{{ path('profil.index', {id: app.user.id}) }}" class="dropdown-item {% if current_menu is defined and current_menu == 'profil' %} active {% endif %}">Profil</a>
+                                    {% if is_granted('ROLE_SUPPORT') or is_granted('ROLE_MODERATEUR') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                                        <a href="{{ path('admin.home') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'dashboard' %} active {% endif %}">Administration</a>
+                                    {% endif %}
+                                    <div class="dropdown-divider"></div>
+                                    <a href="{{ path('profil.security', {id: app.user.id}) }}" class="dropdown-item {% if current_menu is defined and current_menu == 'profil-security' %} active {% endif %}">Sécurité du compte</a>
+                                    <a href="{{ path('profil.details', {id: app.user.id}) }}" class="dropdown-item {% if current_menu is defined and current_menu == 'profil-details' %} active {% endif %}">Détails du compte</a>
+                                    <div class="dropdown-divider"></div>
+                                    {% if is_granted('ROLE_USER') %}
+                                        <a href="{{ path('logout') }}" class="dropdown-item">Déconnexion</a>
+                                    {% endif %}
+                                </div>
                             </li>
                         {% endif %}
-                        {% if is_granted('ROLE_SUPPORT') or is_granted('ROLE_MODERATEUR') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('admin.home') }}">Dashboard</a>
-                            </li>
-                        {% endif %}
-                        {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                        {% if not is_granted('ROLE_USER') %}
                             <li class="nav-item">
                                 <a class="nav-link {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" href="{{ path('login') }}">Connexion</a>
-                            </li>
-                        {% endif %}
-                        {% if is_granted('ROLE_USER') %}
-                            <li class="nav-item ml-auto">
-                                <a class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
                             </li>
                         {% endif %}
                         {% if not is_granted('ROLE_USER') %}

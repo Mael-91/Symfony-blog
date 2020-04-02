@@ -130,7 +130,7 @@ class SecurityController extends AbstractController {
 
     /**
      * Permet de confirmer le compte
-     *
+     * TODO Token de confirmation dans une entité a part et faire le traitement via un service (egale au PasswordService)
      * @param string $token
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -152,7 +152,8 @@ class SecurityController extends AbstractController {
 
     /**
      * Permet d'emettre une demande de changement du mot de passe
-     *
+     * TODO Faire le traitement de la demande dans le ChangePassword et utiliser l'entité PasswordToken
+     * TODO utiliser le PasswordService pour le traitement du mdp
      * @param Request $request
      * @param EventDispatcherInterface $dispatcher
      * @return Response
@@ -191,7 +192,8 @@ class SecurityController extends AbstractController {
 
     /**
      * Permet d'effectuer le changement de mot de passe
-     *
+     * TODO Faire le traitement de la demande dans le ChangePassword et utiliser l'entité PasswordToken
+     * TODO utiliser le PasswordService pour le traitement du mdp
      * @param Request $request
      * @param string $token
      * @param EventDispatcherInterface $dispatcher

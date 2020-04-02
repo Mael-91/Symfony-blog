@@ -2,21 +2,8 @@
 {% block title 'Accueil' %}
 {% block body %}
     <div class="container ">
-        {% for error in app.flashes('error-is-connected') %}
-        <div class="alert alert-danger">
-            {{ error }}
-        </div>
-        {% endfor %}
-        {% for success in app.flashes('success-register') %}
-            <div class="alert alert-success">
-                {{ success }}
-            </div>
-        {% endfor %}
-        {% for success in app.flashes('success-confirm-account') %}
-            <div class="alert alert-success">
-                {{ success }}
-            </div>
-        {% endfor %}
+        {{ include('_reusable/_success_alert.html.twig') }}
+        {{ include('_reusable/_error_alert.html.twig') }}
         <div class="jumbotron mt-4">
             <h1 class="display-4">Bienvenue sur le blog</h1>
             <p class="lead">Bienvenue sur le blog parlant des nouvelles technologies !</p>

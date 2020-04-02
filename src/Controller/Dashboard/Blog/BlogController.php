@@ -105,11 +105,11 @@ class BlogController extends AbstractController {
             $blog->setAuthor($this->getUser());
             $this->manager->persist($blog);
             $this->manager->flush();
-            $this->addFlash('success-blog', 'La publication est un succès !');
+            $this->addFlash('success', 'La publication est un succès !');
             $this->dispatcher->dispatch(new CloudinaryUploadEvent($blog->getPictureFile(), 'blog', null, 360, 230), CloudinaryUploadEvent::NAME);
             $this->dispatcher->dispatch(new CloudinaryUploadEvent($blog->getBannerFile(), 'blog', null, null, null), CloudinaryUploadEvent::NAME);
             $this->dispatcher->dispatch(new UserActivityEvent($this->getUser(), $blog, null, null));
-            return $this->redirectToRoute('admin.blog.manage.post');
+            return $this->redirectToRoute('admin.blog.manage.post', [], 301);
         }
         return $this->render('admin/blog/crud_posts/create.html.twig', [
             'current_menu' => 'blog-posts-manage',
@@ -140,8 +140,8 @@ class BlogController extends AbstractController {
                 $this->dispatcher->dispatch(new CloudinaryUploadEvent($newBanner, 'blog', null, null, null), CloudinaryUploadEvent::NAME);
                 $this->dispatcher->dispatch(new CloudinaryDeleteEvent('blog', null, $bannerName), CloudinaryDeleteEvent::NAME);
             }
-            $this->addFlash('success-blog', 'La modification est un succès !');
-            return $this->redirectToRoute('admin.blog.manage.post');
+            $this->addFlash('success', 'La modification est un succès !');
+            return $this->redirectToRoute('admin.blog.manage.post', [], 301);
         }
         return $this->render('admin/blog/crud_posts/edit.html.twig', [
             'current_menu' => 'blog-posts-manage',
@@ -162,7 +162,7 @@ class BlogController extends AbstractController {
             $this->dispatcher->dispatch(new CloudinaryDeleteEvent('blog', null, $blog->getBannerFilename()), CloudinaryDeleteEvent::NAME);
             $this->manager->remove($blog);
             $this->manager->flush();
-            $this->addFlash('success-blog', 'La suppression est un succès !');
+            $this->addFlash('success', 'La suppression est un succès !');
         }
         return $this->redirectToRoute('admin.blog.manage.post');
     }

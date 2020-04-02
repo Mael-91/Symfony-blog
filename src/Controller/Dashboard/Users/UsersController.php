@@ -73,7 +73,7 @@ class UsersController extends AbstractController
             $user->setCreatedAt(new \DateTime('now'));
             $this->manager->persist($user);
             $this->manager->flush();
-            $this->addFlash('success-user', 'L\'utilisateur a bien été modifié');
+            $this->addFlash('success', 'L\'utilisateur a bien été modifié');
             return $this->redirectToRoute('admin.users', [], 301);
         }
         return $this->render('admin/users/crud/create.html.twig', [

@@ -58,8 +58,8 @@ class BlogCategoriesController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->persist($category);
             $this->manager->flush();
-            $success = $this->addFlash('success-create-category', 'La catégorie a bien été créée');
-            return $this->redirectToRoute('admin.blog.manage.categories', ['success-create' => $success], 301);
+            $this->addFlash('success', 'La catégorie a bien été créée');
+            return $this->redirectToRoute('admin.blog.manage.categories', [], 301);
         }
         return $this->render('admin/blog/crud_categories/create.html.twig', [
             'current_menu' => 'blog-categories-manage',
@@ -80,8 +80,8 @@ class BlogCategoriesController extends AbstractController {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->flush();
-            $success = $this->addFlash('success-edit-category', 'La catégorie a bien été modifiée');
-            return $this->redirectToRoute('admin.blog.manage.categories', ['success-edit' => $success], 301);
+            $this->addFlash('success', 'La catégorie a bien été modifiée');
+            return $this->redirectToRoute('admin.blog.manage.categories', [], 301);
         }
         return $this->render('admin/blog/crud_categories/edit.html.twig', [
             'current_menu' => 'blog-categories-manage',
@@ -101,7 +101,7 @@ class BlogCategoriesController extends AbstractController {
         if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->get('_token'))) {
             $this->manager->remove($category);
             $this->manager->flush();
-            $this->addFlash('success-delete-category', 'La suppression est un succès !');
+            $this->addFlash('success', 'La suppression est un succès !');
         }
         return $this->redirectToRoute('admin.blog.manage.categories', [], 301);
     }

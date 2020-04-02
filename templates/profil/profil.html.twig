@@ -12,14 +12,7 @@
         <img src="{% if user.avatarFilename is not null %} {{ vich_uploader_asset(user, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %} /test/avatar.png {% endif %}" alt="Avatar de {{ user.username }}" class="rounded-circle profil-picture">
         <!-- Mettre nom du profil  à la droite de l'image en hauteur -->
         <span class="profil-username">{{ user.username }}</span>
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" aria-hidden="true">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
+        {{ include('_reusable/_success_alert.html.twig') }}
         <div class="row">
             <div class="col-3">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">

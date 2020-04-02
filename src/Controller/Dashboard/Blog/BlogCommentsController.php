@@ -59,8 +59,8 @@ class BlogCommentsController extends AbstractController {
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
             $comment->setEditedAt(new \DateTime());
             $this->manager->flush();
-            $success = $this->addFlash('success-edit-comment', 'Le commentaire a bien été modifié');
-            return $this->redirectToRoute('admin.blog.manage.comment', ['success-edit-comment' => $success]);
+            $this->addFlash('success', 'Le commentaire a bien été modifié');
+            return $this->redirectToRoute('admin.blog.manage.comment', [], 301);
         }
         return $this->render('admin/blog/crud_comments/edit.html.twig', [
             'current_menu' => 'blog-comments-manage',
@@ -80,7 +80,7 @@ class BlogCommentsController extends AbstractController {
         if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->get('_token'))) {
             $this->manager->remove($comment);
             $this->manager->flush();
-            $this->addFlash('success-delete-comment', 'La suppression est un succès');
+            $this->addFlash('success', 'La suppression est un succès');
         }
         return $this->redirectToRoute('admin.blog.manage.comment');
     }

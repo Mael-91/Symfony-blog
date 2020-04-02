@@ -192,7 +192,7 @@ class BlogController extends AbstractController {
         $this->manager->persist($comment);
         $this->manager->flush();
         $this->dispatcher->dispatch(new UserActivityEvent($this->getUser(), null, $comment, null));
-        $this->addFlash('success-send-comment', 'Bravo ! Votre commentaire a été envoyé');
+        $this->addFlash('success', 'Bravo ! Votre commentaire a été envoyé');
         return new JsonResponse(['code' => 200, 'message' => 'commentaire envoyé avec succès'], JsonResponse::HTTP_CREATED);
     }
 
@@ -225,7 +225,7 @@ class BlogController extends AbstractController {
         $this->manager->persist($reply);
         $this->manager->flush();
         $this->dispatcher->dispatch(new UserActivityEvent($this->getUser(), null, $reply, null));
-        //$success = $this->addFlash('success-send-comment', 'Bravo ! Votre réponse a été envoyé');
+        //$success = $this->addFlash('success', 'Bravo ! Votre réponse a été envoyé');
         return new JsonResponse(['code' => 200, 'message' => 'réponse envoyé avec succès'], JsonResponse::HTTP_CREATED);
     }
 

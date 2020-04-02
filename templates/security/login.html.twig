@@ -7,16 +7,9 @@
                 {{ error.messageKey | trans(error.messageData, 'security') }}
             </div>
         {% endif %}
-        {% for success in app.flashes('success-send-mail-fopw') %}
-            <div class="alert alert-success">
-                {{ success }}
-            </div>
-        {% endfor %}
-        {% for success in app.flashes('success-change-password') %}
-            <div class="alert alert-success">
-                {{ success }}
-            </div>
-        {% endfor %}
+        <div class="col-md-6">
+            {{ include('_reusable/_success_alert.html.twig') }}
+        </div>
         <form action="{{ path('login') }}" method="post" class="col-md-4 float-left">
             <div class="form-group">
                 <label for="username">Nom d'utilisateur</label>

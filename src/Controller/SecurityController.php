@@ -87,14 +87,14 @@ class SecurityController extends AbstractController {
             $user->setOauth(false);
             $this->manager->persist($user);
             $this->manager->flush();
-            $success = $this->addFlash('success-register', 'Bravo, votre compte a été crée !');
+            $this->addFlash('success', 'Bravo, votre compte a été crée !');
             $registrationEvent = new SecurityRegistrationEvent($user);
             $dispatcher->dispatch($registrationEvent, SecurityRegistrationEvent::NAME);
             // Login user after registration
             $loginAfter = new PostAuthenticationGuardToken($user, 'security.user.provider.concrete.from_database', $user->getRoles());
             $this->get('security.token_storage')->setToken($loginAfter);
             $this->get('session')->set('_security_main', serialize($loginAfter));
-            return $this->redirectToRoute('home', [ 'success' => $success ], 301);
+            return $this->redirectToRoute('home', [], 301);
         }
 
         return $this->render('security/signup.html.twig', [
@@ -114,8 +114,8 @@ class SecurityController extends AbstractController {
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
          if ($this->getUser()) {
-             $error = $this->addFlash('error-is-connected', 'Your are already connected');
-             return $this->redirectToRoute('home', [ 'error-login' => $error ], 301);
+             $this->addFlash('error', 'Your are already connected');
+             return $this->redirectToRoute('home', [], 301);
          }
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
@@ -145,8 +145,8 @@ class SecurityController extends AbstractController {
             $user->setRequestedTokenAt(null);
             $user->setEnabled(true);
             $this->manager->flush();
-            $successConfirmation = $this->addFlash('success-confirm-account', 'Votre compte a bien été confirmé');
-            return $this->redirectToRoute('home', ['success-confirmation' => $successConfirmation], 301);
+            $this->addFlash('success', 'Votre compte a bien été confirmé');
+            return $this->redirectToRoute('home', [], 301);
         }
     }
 
@@ -170,17 +170,17 @@ class SecurityController extends AbstractController {
             $email = $form->getData();
             $findUser = $this->userRepository->findOneBy(['email' => $email->getEmail()]);
             if (is_null($findUser)) {
-                $emailNotExist = $this->addFlash('error-email-not-exist', 'L\'email spécifié n\'existe pas');
-                return $this->redirectToRoute('forgot_password_request', ['error-email-exist' => $emailNotExist], 301);
+                $this->addFlash('error-email-not-exist', 'L\'email spécifié n\'existe pas');
+                return $this->redirectToRoute('forgot_password_request', [], 301);
             } elseif ($form->isSubmitted() && $form->isValid() && $findUser !== null) {
                 $findUser->setPasswordToken($this->tokenGenerator->generateToken(10));
                 $findUser->setRequestedPwTokenAt(new \DateTime('now'));
                 $this->manager->flush();
                 $passwordEvent = new SecurityForgotPasswordRequestEvent($findUser);
                 $dispatcher->dispatch($passwordEvent, SecurityForgotPasswordRequestEvent::NAME);
-                $successSendMail = $this->addFlash('success-send-mail-fopw', 'Le mail a bien été envoyé');
+                $this->addFlash('success', 'Le mail a bien été envoyé');
 
-                return $this->redirectToRoute('login', ['success-mail-fopw' => $successSendMail], 301);
+                return $this->redirectToRoute('login', [], 301);
             }
         }
 
@@ -216,8 +216,8 @@ class SecurityController extends AbstractController {
                 $this->manager->flush();
                 $resetConfirmation = new SecurityPasswordInformationEvent($user);
                 $dispatcher->dispatch($resetConfirmation, SecurityPasswordInformationEvent::NAME);
-                $successChangePW = $this->addFlash('success-change-password', 'Le mot de passe a bien été modifié');
-                return $this->redirectToRoute('login', ['success-change-pw' => $successChangePW], 301);
+                $this->addFlash('success', 'Le mot de passe a bien été modifié');
+                return $this->redirectToRoute('login', [], 301);
             }
         }
 

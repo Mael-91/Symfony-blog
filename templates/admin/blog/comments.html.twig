@@ -6,16 +6,7 @@
 {% block body %}
     <div class="container">
         <h4 class="text-center mt-3">Gestion des commentaires</h4>
-        {% for message in app.flashes('success-edit-comment') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% for message in app.flashes('success-delete-comment') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        {% endfor %}
+        {{ include('_reusable/_success_alert.html.twig') }}
         <table class="table table-stripped mt-3">
             <thead>
             <tr>

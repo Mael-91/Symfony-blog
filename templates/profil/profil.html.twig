@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+{% block title 'Profil' %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('profil') }}
+{% endblock %}
+{% block body %}
+    <div class="banner">
+        <img src="{% if user.bannerFilename is not null %} {{ vich_uploader_asset(user, 'bannerFile') | cloud_image('symfony-project-blog', 'user/banner') }} {% else %} /test/test_banner.jpg {% endif %}" alt="Bannière de {{ user.username }}" class="profil-banner img-fluid">
+        </div>
+    </div>
+    <div class="container">
+        <img src="{% if user.avatarFilename is not null %} {{ vich_uploader_asset(user, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %} /test/avatar.png {% endif %}" alt="Avatar de {{ user.username }}" class="rounded-circle profil-picture">
+        <!-- Mettre nom du profil  à la droite de l'image en hauteur -->
+        <span class="profil-username">{{ user.username }}</span>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" aria-hidden="true">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col-3">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link" id="v-pills-last-activities-tab" data-toggle="pill" href="#v-pills-last-activities" role="tab" aria-controls="v-pills-last-activities" aria-selected="true">Dernières activités</a>
+                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
+                    <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade" id="v-pills-last-activities" role="tabpanel" aria-labelledby="v-pills-last-activities-tab">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a href="#nav-blog-article" class="nav-item nav-link active" id="nav-blog-article-tab" data-toggle="tab" role="tab" aria-controls="nav-blog-article" aria-selected="true">Derniers articles</a>
+                                <a href="#nav-blog-comment" class="nav-item nav-link" id="nav-blog-comment-tab" data-toggle="tab" role="tab" aria-controls="nav-blog-comment" aria-selected="false">Derniers commentaire</a>
+                                <a href="#nav-blog-like" class="nav-item nav-link" id="nav-blog-like-tab" data-toggle="tab" role="tab" aria-controls="nav-blog-like" aria-selected="false">Derniers likes</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-blog-article" role="tabpanel" aria-labelledby="nav-blog-article-tab">
+                                {% if articles is empty %}
+                                    <h4 class="not-blog-message">Aucun article aimé trouvé</h4>
+                                {% else %}
+                                    {% for article in articles %}
+                                        <div class="card last-activities-card mt-2">
+                                            <div class="card-body">
+                                                <p class="card-text"><!-- Afficher les badges ici à côté du titre pour le forum --><a class="object-concerned card-link" href="{{ path('blog.show', {id: article.id, slug: article.slug}) }}">{{ article.title }}</a></p>
+                                                <p class="excerpt-article">{{ article.content | truncate(150) }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane fade" id="nav-blog-comment" role="tabpanel" aria-labelledby="nav-blog-comment-tab">
+                                {% if user.blogComments is empty %}
+                                    <h4 class="not-comment-message">Aucun commentaire trouvé</h4>
+                                {% else %}
+                                    {% for comment in user.blogComments %}
+                                        <div class="card last-activities-card mt-2">
+                                            <div class="card-body">
+                                                <p class="card-text"><span class="user-activity">{{ user.username }}</span> a commenté l'article <a class="object-concerned card-link" href="{{ path('blog.show', {id: comment.post.id, slug: comment.post.slug, '_fragment': comment.id}) }}">{{ comment.post.title }}</a> - {{ comment.content | truncate(55) }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane fade" id="nav-blog-like" role="tabpanel" aria-labelledby="nav-blog-like-tab">
+                                {% if user.blogLikes is empty %}
+                                    <h4 class="not-blogLikes-messages">Aucun commentaire trouvé</h4>
+                                {% else %}
+                                    {% for like in user.blogLikes %}
+                                        <div class="card last-activities-card mt-2">
+                                            <div class="card-body">
+                                                <p class="card-text"><i class="fas fa-heart heart-color fa-1x"></i> <span class="user-activity">{{ user.username }}</span> a aimé <a class="object-concerned card-link" href="{{ path('blog.show', {id: like.post.id, slug: like.post.slug}) }}">{{ like.post.title }}</a> <i class="fas fa-heart heart-color fa-1x"></i></p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">profile</div>
+                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">messages</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

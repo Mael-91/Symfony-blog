@@ -1,0 +1,31 @@
+img.profil-banner {
+    margin-top: 2rem;
+}
+
+.img-fluid {
+    position: relative!important;
+    height: 250px!important;
+}
+
+/* Photo de profil */
+/* positioner les éléments en fonction des @media query) voir les media de bootstrap */
+.profil-picture {
+    position: relative!important;
+    top: -75px;
+    width: 132px;
+    height: 132px;
+}
+
+.profil-username {
+
+}
+
+.user-activity,
+.object-concerned {
+    font-weight: bold;
+}
+
+/* Icone */
+.heart-color {
+    color: #fb0030;
+}

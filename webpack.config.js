@@ -32,6 +32,7 @@ Encore
     .addEntry('GuideMarkdown', './assets/css/guide/markdown.css')
     .addEntry('admin', './assets/css/admin/admin.css')
     .addEntry('blog', './assets/css/blog/blog.css')
+    .addEntry('profil', './assets/css/profil/profil.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

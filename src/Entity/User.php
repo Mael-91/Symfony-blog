@@ -5,11 +5,15 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @Vich\Uploadable()
  */
 class User implements UserInterface, \Serializable
 {
@@ -146,13 +150,46 @@ class User implements UserInterface, \Serializable
      */
     private $userActivities;
 
-    public function __construct()
-    {
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatarFilename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="user_avatar", fileNameProperty="avatarFilename")
+     * @Assert\Image(mimeTypes="image/jpeg", mimeTypesMessage="The file must be in JPG format")
+     */
+    private $avatarFile;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $bannerFilename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="user_banner", fileNameProperty="bannerFilename")
+     * @Assert\Image(mimeTypes="image/jpeg", mimeTypesMessage="The file must be in JPG format")
+     */
+    private $bannerFile;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PasswordToken", mappedBy="user")
+     */
+    private $requestPasswordToken;
+
+    public function __construct() {
         $this->author = new ArrayCollection();
         $this->blogLikes = new ArrayCollection();
         $this->blogComments = new ArrayCollection();
         $this->loginAttempts = new ArrayCollection();
         $this->userActivities = new ArrayCollection();
+        $this->requestPasswordToken = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->edited_at = new \DateTime();
     }
 
     public function getId(): ?int
@@ -202,6 +239,13 @@ class User implements UserInterface, \Serializable
     public function getPassword(): string
     {
         return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -288,13 +332,6 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
     public function getConfirmationToken(): ?string
     {
         return $this->confirmation_token;
@@ -364,6 +401,98 @@ class User implements UserInterface, \Serializable
     {
         $this->last_login = $last_login;
 
+        return $this;
+    }
+
+    public function getOauth(): ?bool
+    {
+        return $this->oauth;
+    }
+
+    public function setOauth(bool $oauth): self
+    {
+        $this->oauth = $oauth;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAvatarFilename(): ?string
+    {
+        return $this->avatarFilename;
+    }
+
+    /**
+     * @param string|null $avatarFilename
+     * @return User
+     */
+    public function setAvatarFilename(?string $avatarFilename): User
+    {
+        $this->avatarFilename = $avatarFilename;
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getAvatarFile(): ?File
+    {
+        return $this->avatarFile;
+    }
+
+    /**
+     * @param File|null $avatarFile
+     * @return User
+     * @throws \Exception
+     */
+    public function setAvatarFile(?File $avatarFile): User
+    {
+        $this->avatarFile = $avatarFile;
+        if ($this->avatarFile instanceof UploadedFile) {
+            $this->edited_at = new \DateTime();
+        }
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBannerFilename(): ?string
+    {
+        return $this->bannerFilename;
+    }
+
+    /**
+     * @param string|null $bannerFilename
+     * @return User
+     */
+    public function setBannerFilename(?string $bannerFilename): User
+    {
+        $this->bannerFilename = $bannerFilename;
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getBannerFile(): ?File
+    {
+        return $this->bannerFile;
+    }
+
+    /**
+     * @param File|null $bannerFile
+     * @return User
+     * @throws \Exception
+     */
+    public function setBannerFile(?File $bannerFile): User
+    {
+        $this->bannerFile = $bannerFile;
+        if ($this->bannerFile instanceof UploadedFile) {
+            $this->edited_at = new \DateTime();
+        }
         return $this;
     }
 
@@ -461,6 +590,94 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * @return Collection|LoginAttempt[]
+     */
+    public function getLoginAttempts(): Collection
+    {
+        return $this->loginAttempts;
+    }
+
+    public function addLoginAttempt(LoginAttempt $loginAttempt): self
+    {
+        if (!$this->loginAttempts->contains($loginAttempt)) {
+            $this->loginAttempts[] = $loginAttempt;
+            $loginAttempt->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoginAttempt(LoginAttempt $loginAttempt): self
+    {
+        if ($this->loginAttempts->contains($loginAttempt)) {
+            $this->loginAttempts->removeElement($loginAttempt);
+            // set the owning side to null (unless already changed)
+            if ($loginAttempt->getUser() === $this) {
+                $loginAttempt->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserActivity[]
+     */
+    public function getUserActivities(): Collection
+    {
+        return $this->userActivities;
+    }
+
+    public function addUserActivity(UserActivity $userActivity): self
+    {
+        if (!$this->userActivities->contains($userActivity)) {
+            $this->userActivities[] = $userActivity;
+            $userActivity->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserActivity(UserActivity $userActivity): self
+    {
+        if ($this->userActivities->contains($userActivity)) {
+            $this->userActivities->removeElement($userActivity);
+            // set the owning side to null (unless already changed)
+            if ($userActivity->getUser() === $this) {
+                $userActivity->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRequestPasswordToken(): Collection
+    {
+        return $this->requestPasswordToken;
+    }
+
+    public function addRequestPasswordToken(PasswordToken $passwordToken): self {
+        if (!$this->requestPasswordToken->contains($passwordToken)) {
+            $this->requestPasswordToken[] = $passwordToken;
+            $passwordToken->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequestPasswordToken(PasswordToken $requestPasswordToken): self
+    {
+        if ($this->requestPasswordToken->contains($requestPasswordToken)) {
+            $this->requestPasswordToken->removeElement($requestPasswordToken);
+            if ($requestPasswordToken->getUser() === $this) {
+                $requestPasswordToken->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @see UserInterface
      */
     public function getSalt()
@@ -535,79 +752,5 @@ class User implements UserInterface, \Serializable
 
     public function __toString() {
         return (string)$this->username;
-    }
-
-    public function getOauth(): ?bool
-    {
-        return $this->oauth;
-    }
-
-    public function setOauth(bool $oauth): self
-    {
-        $this->oauth = $oauth;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|LoginAttempt[]
-     */
-    public function getLoginAttempts(): Collection
-    {
-        return $this->loginAttempts;
-    }
-
-    public function addLoginAttempt(LoginAttempt $loginAttempt): self
-    {
-        if (!$this->loginAttempts->contains($loginAttempt)) {
-            $this->loginAttempts[] = $loginAttempt;
-            $loginAttempt->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLoginAttempt(LoginAttempt $loginAttempt): self
-    {
-        if ($this->loginAttempts->contains($loginAttempt)) {
-            $this->loginAttempts->removeElement($loginAttempt);
-            // set the owning side to null (unless already changed)
-            if ($loginAttempt->getUser() === $this) {
-                $loginAttempt->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|UserActivity[]
-     */
-    public function getUserActivities(): Collection
-    {
-        return $this->userActivities;
-    }
-
-    public function addUserActivity(UserActivity $userActivity): self
-    {
-        if (!$this->userActivities->contains($userActivity)) {
-            $this->userActivities[] = $userActivity;
-            $userActivity->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserActivity(UserActivity $userActivity): self
-    {
-        if ($this->userActivities->contains($userActivity)) {
-            $this->userActivities->removeElement($userActivity);
-            // set the owning side to null (unless already changed)
-            if ($userActivity->getUser() === $this) {
-                $userActivity->setUser(null);
-            }
-        }
-
-        return $this;
     }
 }

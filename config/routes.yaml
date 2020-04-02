@@ -1,19 +1,23 @@
 home:
   path: /
   controller: App\Controller\HomeController::index
+  methods: [GET]
 
 guide:
   path: /guide
   controller: App\Controller\Guide\GuideController::index
+  methods: [GET]
 
 guide.markdown:
   path: /guide/markdown
   controller: App\Controller\Guide\MarkdownGuideController::index
+  methods: [GET]
 
 # Blog
 blog.index:
   path: /blog
   controller: App\Controller\BlogController::index
+  methods: [GET]
 
 blog.show:
   path: /blog/{slug}-{id}
@@ -144,6 +148,10 @@ register:
   controller: App\Controller\SecurityController::register
   methods: [GET|POST]
 
+#  Après l'ajout du système de profil                 #
+#  Commencer par le refactoring du SecurityController #
+#  Faire le refactoring des route                     #
+#  Commencer par mettre l'oublie de mdp               #
 confirmation_account:
   path: /confirm-account/{token}-{id}
   controller: App\Controller\SecurityController::confirmAccount
@@ -159,6 +167,11 @@ change_password_post:
   controller: App\Controller\SecurityController::forgotPasswordPost
   methods: [GET|POST]
 
+change_password:
+  path: /profil/{id}/security/{token}
+  controller: App\Controller\Security\ChangePassword::change
+  methods: [GET|POST]
+
 github_connect:
   path: /auth/github
   controller: App\Controller\Auth\GithubAuthController::connect
@@ -170,3 +183,24 @@ google_connect:
 twitch_connect:
   path: /auth/twitch
   controller: App\Controller\Auth\TwitchAuthController::connect
+
+# Profil
+
+profil.index:
+  path: /profil/{id}
+  controller: App\Controller\Profil\ProfilController::profil
+  methods: [GET]
+
+#profil.privacy:
+#  path: /profil/{id}/privacy
+
+profil.details:
+  path: /profil/{id}/details
+  controller: App\Controller\Profil\ProfilController::details
+  methods: [GET|POST]
+
+profil.security:
+  path: /profil/{id}/security
+  controller: App\Controller\Profil\ProfilController::security
+  methods: [GET|POST]
+

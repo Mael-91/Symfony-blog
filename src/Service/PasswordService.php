@@ -72,11 +72,12 @@ class PasswordService {
 
     /**
      * Permet de mettre à jour le MDP
-     * @param User $user
+     * @param string $password
      * @param PasswordToken $token
      */
-    public function updatePassword(User $user, PasswordToken $token): void {
-        $user->setPassword($this->encoder->encodePassword($user, $user->getPassword()));
+    public function updatePassword(string $password, PasswordToken $token): void {
+        $user = $token->getUser();
+        $user->setPassword($this->encoder->encodePassword($user, $password));
         $this->manager->remove($token);
         $this->manager->flush();
     }

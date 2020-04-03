@@ -26,7 +26,7 @@
             </div>
             {{ form_start(securityForm, {attr: {id: 'form-recaptcha'}}) }}
             <div class="col-md-6 mx-auto">
-                <div>{{ form_row(securityForm.captcha) }}</div>
+                <div>{{ form_row(securityForm.captcha_password) }}</div>
             </div>
             {{ form_end(securityForm) }}
         </div>
@@ -34,7 +34,7 @@
             {{ form_start(emailForm, {attr: {id: 'form-recaptcha-2'}}) }}
             <div class="col-md-6 mx-auto">
                 <div>{{ form_row(emailForm.email) }}</div>
-                <div>{{ form_row(emailForm.captcha) }}</div>
+                <div>{{ form_row(emailForm.captcha_email) }}</div>
             </div>
             {{ form_end(emailForm) }}
         </div>

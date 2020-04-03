@@ -13,7 +13,7 @@ class ProfilSecurityPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('captcha', MaelRecaptchaSubmitType::class, [
+            ->add('captcha_password', MaelRecaptchaSubmitType::class, [
                 'label' => 'I would like to change my password',
                 'attr' => ['class' => 'btn btn-outline-danger']
             ])

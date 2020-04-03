@@ -18,7 +18,7 @@ class ProfilEmailSecurityType extends AbstractType
                 'required' => true,
                 'attr' => ['placeholder' => 'example@example.com']
             ])
-            ->add('captcha', MaelRecaptchaSubmitType::class, [
+            ->add('captcha_email', MaelRecaptchaSubmitType::class, [
                 'label' => 'Save',
                 'attr' => ['class' => 'btn btn-primary']
             ])

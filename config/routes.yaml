@@ -22,116 +22,125 @@ blog.index:
 blog.show:
   path: /blog/{slug}-{id}
   controller: App\Controller\BlogController::show
+  methods: [GET]
   requirements:
     slug:  '[a-z0-9\-]*'
 
 blog.category:
   path: /blog/category/{slug}
   controller: App\Controller\BlogController::categoryIndex
+  methods: [GET]
   requirements:
     slug: '[a-z\-]*'
 
 blog.like:
   path: /blog/{slug}-{id}/like
   controller: App\Controller\BlogController::like
+  methods: [GET]
   requirements:
     slug:  '[a-z0-9\-]*'
-  methods: [GET]
 
 blog.comment:
   path: /blog/{slug}-{id}/comment/{post}
   controller: App\Controller\BlogController::comment
+  methods: [POST]
   requirements:
     slug:  '[a-z0-9\-]*'
 
 blog.reply:
   path: /blog/{slug}-{id}/reply/{comment}
   controller: App\Controller\BlogController::reply
+  methods: [POST]
   requirements:
     slug:  '[a-z0-9\-]*'
 
 
 # Administration
 admin.home:
-  path: /dashboard
-  controller: App\Controller\Dashboard\DashboardController::dashboard
+  path: /admin
+  controller: App\Controller\Admin\DashboardController::dashboard
+  methods: [GET]
 
 # Manage Blog
 admin.blog:
-  path: /dashboard/blog
-  controller: App\Controller\Dashboard\Blog\BlogController::index
+  path: /admin/blog
+  controller: App\Controller\Admin\Blog\BlogController::index
+  methods: [GET]
 
 admin.blog.manage.post:
-  path: /dashboard/blog/manage/post
-  controller: App\Controller\Dashboard\Blog\BlogController::managePost
+  path: /admin/blog/post
+  controller: App\Controller\Admin\Blog\BlogController::managePost
+  methods: [GET]
 
 admin.blog.post.create:
-  path: /dashboard/blog/manage/post/create
-  controller: App\Controller\Dashboard\Blog\BlogController::create
+  path: /admin/blog/post/post/create
+  controller: App\Controller\Admin\Blog\BlogController::create
   methods: [GET|POST]
 
 admin.blog.post.edit:
-  path: /dashboard/blog/manage/post/edit/{id}
-  controller: App\Controller\Dashboard\Blog\BlogController::edit
+  path: /admin/blog/post/post/edit/{id}
+  controller: App\Controller\Admin\Blog\BlogController::edit
   methods: [GET|POST]
 
 admin.blog.post.delete:
-  path: /dashboard/blog/manage/post/{id}
-  controller: App\Controller\Dashboard\Blog\BlogController::delete
+  path: /admin/blog/post/post/{id}
+  controller: App\Controller\Admin\Blog\BlogController::delete
   methods: [DELETE]
 
 admin.blog.manage.categories:
-  path: /dashboard/blog/manage/categories
-  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::index
+  path: /admin/blog/post/categories
+  controller: App\Controller\Admin\Blog\BlogCategoriesController::index
+  methods: [GET]
 
 admin.blog.categories.create:
-  path: /dashboard/blog/manage/categories/create
-  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::create
+  path: /admin/blog/post/categories/create
+  controller: App\Controller\Admin\Blog\BlogCategoriesController::create
   methods: [GET|POST]
 
 admin.blog.categories.edit:
-  path: /dashboard/blog/manage/categories/edit/{id}
-  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::edit
+  path: /admin/blog/post/categories/edit/{id}
+  controller: App\Controller\Admin\Blog\BlogCategoriesController::edit
   methods: [GET|POST]
 
 admin.blog.categories.delete:
-  path: /dashboard/blog/manage/categories/{id}
-  controller: App\Controller\Dashboard\Blog\BlogCategoriesController::delete
+  path: /admin/blog/post/categories/{id}
+  controller: App\Controller\Admin\Blog\BlogCategoriesController::delete
   methods: [DELETE]
 
 admin.blog.manage.comment:
-  path: /dashboard/blog/manage/comments
-  controller: App\Controller\Dashboard\Blog\BlogCommentsController::comments
+  path: /admin/blog/post/comments
+  controller: App\Controller\Admin\Blog\BlogCommentsController::comments
   methods: [GET|POST]
 
 admin.blog.comment.edit:
-  path: /dashboard/blog/manage/comments/edit/{id}
-  controller: App\Controller\Dashboard\Blog\BlogCommentsController::edit
+  path: /admin/blog/post/comments/edit/{id}
+  controller: App\Controller\Admin\Blog\BlogCommentsController::edit
   methods: [GET|POST]
 
 admin.blog.comment.delete:
-  path: /dashboard/blog/manage/comments/{id}
-  controller: App\Controller\Dashboard\Blog\BlogCommentsController::delete
+  path: /admin/blog/post/comments/{id}
+  controller: App\Controller\Admin\Blog\BlogCommentsController::delete
   methods: [DELETE]
 
 # Manage users
 admin.users:
-  path: /dashboard/users
-  controller: App\Controller\Dashboard\Users\UsersController::index
+  path: /admin/users
+  controller: App\Controller\Admin\Users\UsersController::index
+  methods: [GET]
 
 admin.user.create:
-  path: /dashboard/users/create
-  controller: App\Controller\Dashboard\Users\UsersController::create
+  path: /admin/users/create
+  controller: App\Controller\Admin\Users\UsersController::create
   methods: [GET|POST]
 
 admin.user.edit:
-  path: /dashboard/users/edit/{id}
-  controller: App\Controller\Dashboard\Users\UsersController::edit
+  path: /admin/users/edit/{id}
+  controller: App\Controller\Admin\Users\UsersController::edit
   methods: [GET|POST]
 
 admin.user.delete:
-  path: /dashboard/users/{id}
-  controller: App\Controller\Dashboard\Users\UsersController::delete
+  path: /admin/users/{id}
+  controller: App\Controller\Admin\Users\UsersController::delete
   methods: [DELETE]
 
 # Security
@@ -142,16 +151,13 @@ login:
 
 logout:
   path: /logout
+  methods: [GET]
 
 register:
   path: /register
   controller: App\Controller\SecurityController::register
   methods: [GET|POST]
 
-#  Après l'ajout du système de profil                 #
-#  Commencer par le refactoring du SecurityController #
-#  Faire le refactoring des route                     #
-#  Commencer par mettre l'oublie de mdp               #
 confirmation_account:
   path: /confirm-account/{token}-{id}
   controller: App\Controller\SecurityController::confirmAccount
@@ -162,7 +168,7 @@ forgot_password_request:
   controller: App\Controller\SecurityController::forgotPasswordRequest
   methods: [GET|POST]
 
-change_password_post:
+forgot_password_post:
   path: /forgot-password/{token}
   controller: App\Controller\SecurityController::forgotPasswordPost
   methods: [GET|POST]
@@ -175,14 +181,17 @@ change_password:
 github_connect:
   path: /auth/github
   controller: App\Controller\Auth\GithubAuthController::connect
+  methods: [GET]
 
 google_connect:
   path: /auth/google
   controller: App\Controller\Auth\GoogleAuthController::connect
+  methods: [GET]
 
 twitch_connect:
   path: /auth/twitch
   controller: App\Controller\Auth\TwitchAuthController::connect
+  methods: [GET]
 
 # Profil
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\Dashboard\Users;
+namespace App\Controller\Admin\Users;
 
 
 use App\Entity\User;

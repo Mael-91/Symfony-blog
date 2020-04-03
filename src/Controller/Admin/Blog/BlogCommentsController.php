@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Dashboard\Blog;
+namespace App\Controller\Admin\Blog;
 
 use App\Entity\BlogComment;
 use App\Form\BlogCommentEditType;

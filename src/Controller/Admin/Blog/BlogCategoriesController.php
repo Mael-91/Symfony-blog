@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\Dashboard\Blog;
+namespace App\Controller\Admin\Blog;
 
-use App\Controller\Dashboard\BlogRepository;
+use App\Controller\Admin\BlogRepository;
 use App\Entity\BlogCategory;
 use App\Form\BlogCategoryType;
 use App\Repository\BlogCategoryRepository;

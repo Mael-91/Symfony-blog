@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Dashboard;
+namespace App\Controller\Admin;
 
 use App\Repository\BlogCategoryRepository;
 use App\Repository\BlogCommentRepository;

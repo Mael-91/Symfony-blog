@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app_name: symfony-project-blog
+    default_mail: no-reply@symfony-project-blog.com
 
 services:
     # default configuration for services in *this* file
@@ -34,22 +35,6 @@ services:
     App\Service\CloudinaryService:
         arguments:
             - '@service_container'
-
-    App\EventListener\LoginListener:
-        tags:
-            - {name: 'kernel.event_listener', event: 'security.interactive_login'}
-
-    App\EventListener\RegistrationListener:
-        tags:
-            - {name: 'kernel.event_listener', event: 'security.registration'}
-
-    App\EventListener\ForgotPasswordRequestListener:
-        tags:
-            - {name: 'kernel.event_listener', event: 'security.forgot.password.request'}
-
-    App\EventListener\PasswordResetInformationListener:
-        tags:
-            - {name: 'kernel.event_listener', event: 'security.reset.password.information'}
 
     App\EventSubscriber\CloudinarySubscriber:
         tags:

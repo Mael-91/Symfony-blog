@@ -29,16 +29,6 @@ class BlogRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-    /**
-     * @return Blog[] array
-     */
-    public function findLatest(): array {
-        return $this->findVisibleQuery()
-            ->setMaxResults(4)
-            ->getQuery()
-            ->getResult();
-    }
-
     public function findlastArticle(): array {
         return $this->createQueryBuilder('p')
             ->orderBy('p.created_at', 'DESC')
@@ -47,28 +37,7 @@ class BlogRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findPostsInCategory($category) {
-        $manager = $this->getEntityManager()->getConnection();
-
-        $sql = 'SELECT p.*, p.visible = true, c.name as category_name, c.slug as category_slug
-                FROM blog as p LEFT JOIN blog_category as c ON  c.id = p.category_id
-                WHERE p.category_id = :category ORDER BY p.created_at DESC';
-        $stmt = $manager->prepare($sql);
-        $stmt->execute(['category' => $category]);
-        return $stmt->fetchAll();
-    }
-
-    public function findWithCategory($postId) {
-        $manager = $this->getEntityManager()->getConnection();
-
-        $sql = 'SELECT p.category_id, c.name as category_name, c.slug as category_slug FROM blog
-                as p LEFT JOIN blog_category as c ON c.id = p.category_id WHERE p.id = :postID';
-        $stmt = $manager->prepare($sql);
-        $stmt->execute(['postID' => $postId]);
-        return $stmt->fetchAll();
-    }
-
-    public function countPost() {
+    public function countPost(): int {
         return $this->createQueryBuilder('p')
             ->select('COUNT(p)')
             ->getQuery()

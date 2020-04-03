@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Panel Administration{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <img src="" alt="">
+            <a class="navbar-brand" href="{{ path('home') }}">Symfony Blog</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('admin.home') }}">Panneau d'administration</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if current_menu is defined and current_menu == 'dashboard-users' %}active{% endif %}" href="{{ path('admin.users') }}">Utilisateurs</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="gestionBlogDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion du Blog</a>
+                        <div class="dropdown-menu" aria-labelledby="gestionBlogDropdown">
+                            <a href="{{ path('admin.blog') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'dashboard-blog' %}active{% endif %}">Statistique du blog</a>
+                            <a href="{{ path('admin.blog.manage.post') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'blog-posts-manage' %}active{% endif %}">Gestion des articles</a>
+                            <a href="{{ path('admin.blog.manage.categories') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'blog-categories-manage' %}active{% endif %}">Gestion des catégories</a>
+                            <a href="{{ path('admin.blog.manage.comment') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'blog-comments-manage' %}active{% endif %}">Gestion des commentaires</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {% block body %}{% endblock %}
+        {{ encore_entry_script_tags('app') }}
+        {% block javascript %}{% endblock %}
+    </body>
+</html>

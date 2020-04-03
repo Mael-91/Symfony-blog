@@ -13,10 +13,9 @@
             {% endif %}
         </div>
         <div class="post mt-5 mb-3">
-            {% for info in category %}
             <div class="card-body">
                 <h5 class="card-title text-center">{{ post.title }}</h5>
-                <div class="datetime mt-3">{{ post.createdAt | ago('text-black-50') }} {% if info.category_name %}- <a href="{{ path('blog.category', {slug: info.category_slug}) }}" class="text-decoration-none text-muted">{{ info.category_name }}</a>{% endif %}</div>
+                <div class="datetime mt-3">{{ post.createdAt | ago('text-black-50') }} {% if category %}- <a href="{{ path('blog.category', {slug: category.0.category_slug}) }}" class="text-decoration-none text-muted">{{ category.0.category_name }}</a>{% endif %}</div>
                 <p class="card-text mt-3">{{ post.content | markdown_converter | raw }}</p>
                 <span class="blockquote-footer text-right">{{ post.author }}</span>
                 <a href="{{ path('blog.like', {id: post.id, slug: post.slug}) }}" class="btn btn-like js-like">
@@ -29,7 +28,6 @@
                     <span class="float-left js-label">Like</span>
                 </a>
             </div>
-            {% endfor %}
         </div>
     </div>
     <div class="container">

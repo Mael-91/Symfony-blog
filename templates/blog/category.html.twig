@@ -3,18 +3,7 @@
 {% block body %}
     <div class="container">
         <h3>Category</h3>
-        {% for post in posts %}
-            <div class="card mt-5" style="width: 360px; height: auto;">
-                {% if post.picture_filename %}
-                    <img src="/images/blog/{{ post.picture_filename }}" class="card-img-top" alt="" style="width: 360px; height: 230px;">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{{ path('blog.show', {slug: post.slug, id: post.id}) }}">{{ post.title }}</a></h5>
-                    <p class="card-text">{{ post.content | truncate }}</p>
-                    <span class="blockquote-footer">{{ post.author_id }}</span>
-                </div>
-            </div>
-        {% endfor %}
+            {{ include('blog/_posts.html.twig') }}
         <div class="pagination mt-2">
             {{ knp_pagination_render(posts) }}
         </div>

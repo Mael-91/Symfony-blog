@@ -106,23 +106,15 @@ class BlogController extends AbstractController {
      * @param BlogCategory $category
      * @param PaginatorInterface $paginator
      * @param Request $request
-     * @param string $slug
      * @return Response
      */
-    public function categoryIndex(BlogCategory $category, PaginatorInterface $paginator, Request $request, string $slug): Response {
-        $getSlug = $category->getSlug();
-        $posts = $paginator->paginate($this->postRepository->findPostsInCategory($category->getId()),
+    public function categoryIndex(BlogCategory $category, PaginatorInterface $paginator, Request $request): Response {
+        $posts = $paginator->paginate($this->postRepository->findBy(['category' => $category->getId()]),
             $request->query->getInt('page', '1'), 20);
-        if ($getSlug !== $slug) {
-            return $this->redirectToRoute('blog.category', [
-                'slug' => $getSlug
-            ], 301);
-        }
 
         return $this->render('blog/category.html.twig', [
             'current_menu' => 'blog',
             'is_dashboard' => 'false',
-            'category' => $category,
             'posts' => $posts
         ]);
     }
@@ -137,7 +129,7 @@ class BlogController extends AbstractController {
      */
     public function show(Request $request, PaginatorInterface $paginator, Blog $post, string $slug): Response {
         $getSlug = $post->getSlug();
-        $category = $this->postRepository->findWithCategory($post->getId());
+        $category = $this->categoryRepository->findOneBy(['id' => $post->getCategory()]);
         $post = $this->cache->setCache($post->getEditedAt()->getTimestamp(), $post);
         if ($getSlug !== $slug) {
             return $this->redirectToRoute('blog.show', [

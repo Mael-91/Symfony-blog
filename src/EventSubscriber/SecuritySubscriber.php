@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Event\LoginAfterRegistrationEvent;
 use App\Event\PasswordTokenValidityEvent;
 use App\Event\RequestChangePasswordEvent;
 use App\Event\SecurityForgotPasswordRequestEvent;
@@ -10,7 +11,9 @@ use App\Event\SecurityRegistrationEvent;
 use App\Repository\PasswordTokenRepository;
 use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Twig\Environment;
 
@@ -31,12 +34,22 @@ class SecuritySubscriber implements EventSubscriberInterface {
      * @var EntityManagerInterface
      */
     private $manager;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
-    public function __construct(EntityManagerInterface $manager, Environment $environment, PasswordTokenRepository $passwordTokenRepository, MailerService $mailerService) {
+    public function __construct(
+        EntityManagerInterface $manager,
+        Environment $environment,
+        PasswordTokenRepository $passwordTokenRepository,
+        MailerService $mailerService,
+        ContainerInterface $container) {
         $this->environment = $environment;
         $this->passwordTokenRepository = $passwordTokenRepository;
         $this->mailerService = $mailerService;
         $this->manager = $manager;
+        $this->container = $container;
     }
 
     public static function getSubscribedEvents() {
@@ -45,7 +58,8 @@ class SecuritySubscriber implements EventSubscriberInterface {
             RequestChangePasswordEvent::class => 'onRequestChangePasswordEvent',
             SecurityForgotPasswordRequestEvent::class => 'onSecurityForgotPasswordRequestEvent',
             SecurityPasswordInformationEvent::class => 'onSecurityPasswordInformationEvent',
-            SecurityRegistrationEvent::class => 'onSecurityRegistrationEvent'
+            SecurityRegistrationEvent::class => 'onSecurityRegistrationEvent',
+            LoginAfterRegistrationEvent::class => 'onLoginAfterRegistrationEvent'
         ];
     }
 
@@ -99,7 +113,13 @@ class SecuritySubscriber implements EventSubscriberInterface {
                 'email' => $event->getUser()->getEmail(),
                 'user' => $event->getUser()->getUsername(),
                 'id' => $event->getUser()->getId(),
-                'token' => $event->getUser()->getConfirmationToken()
+                'token' => $event->getToken()->getToken()
             ]);
+    }
+
+    public function onLoginAfterRegistrationEvent(LoginAfterRegistrationEvent $event): void {
+        $login = new PostAuthenticationGuardToken($event->getUser(), 'security.user.provider.concrete.from_database', $event->getUser()->getRoles());
+        $this->container->get('security.token_storage')->setToken($login);
+        $this->container->get('session')->set('_security_main', serialize($login));
     }
 }

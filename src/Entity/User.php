@@ -30,6 +30,8 @@ class User implements UserInterface, \Serializable
         'User' => 'ROLE_USER'
     ];
 
+    public const DEFAULT_ROLE = 'ROLE_USER';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -91,29 +93,9 @@ class User implements UserInterface, \Serializable
     private $edited_at;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $confirmation_token;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $requested_token_at;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $enabled;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $password_token;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $requested_pw_token_at;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -177,9 +159,14 @@ class User implements UserInterface, \Serializable
     private $bannerFile;
 
     /**
-     * @ORM\OneToMany(targetEntity="PasswordToken", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="App\Entity\PasswordToken", mappedBy="user", cascade={"persist", "remove"})
      */
     private $requestPasswordToken;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ConfirmationToken", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $confirmationToken;
 
     public function __construct() {
         $this->author = new ArrayCollection();
@@ -187,9 +174,10 @@ class User implements UserInterface, \Serializable
         $this->blogComments = new ArrayCollection();
         $this->loginAttempts = new ArrayCollection();
         $this->userActivities = new ArrayCollection();
-        $this->requestPasswordToken = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->edited_at = new \DateTime();
+        $this->enabled = false;
+        $this->oauth = false;
     }
 
     public function getId(): ?int
@@ -332,30 +320,6 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getConfirmationToken(): ?string
-    {
-        return $this->confirmation_token;
-    }
-
-    public function setConfirmationToken(?string $confirmation_token): self
-    {
-        $this->confirmation_token = $confirmation_token;
-
-        return $this;
-    }
-
-    public function getRequestedTokenAt(): ?\DateTimeInterface
-    {
-        return $this->requested_token_at;
-    }
-
-    public function setRequestedTokenAt(?\DateTimeInterface $requested_token_at): self
-    {
-        $this->requested_token_at = $requested_token_at;
-
-        return $this;
-    }
-
     public function getEnabled(): ?int
     {
         return $this->enabled;
@@ -364,30 +328,6 @@ class User implements UserInterface, \Serializable
     public function setEnabled(int $enabled): self
     {
         $this->enabled = $enabled;
-
-        return $this;
-    }
-
-    public function getPasswordToken(): ?string
-    {
-        return $this->password_token;
-    }
-
-    public function setPasswordToken(?string $password_token): self
-    {
-        $this->password_token = $password_token;
-
-        return $this;
-    }
-
-    public function getRequestedPwTokenAt(): ?\DateTimeInterface
-    {
-        return $this->requested_pw_token_at;
-    }
-
-    public function setRequestedPwTokenAt(?\DateTimeInterface $requested_pw_token_at): self
-    {
-        $this->requested_pw_token_at = $requested_pw_token_at;
 
         return $this;
     }
@@ -651,57 +591,23 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getRequestPasswordToken(): Collection
-    {
-        return $this->requestPasswordToken;
-    }
-
-    public function addRequestPasswordToken(PasswordToken $passwordToken): self {
-        if (!$this->requestPasswordToken->contains($passwordToken)) {
-            $this->requestPasswordToken[] = $passwordToken;
-            $passwordToken->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequestPasswordToken(PasswordToken $requestPasswordToken): self
-    {
-        if ($this->requestPasswordToken->contains($requestPasswordToken)) {
-            $this->requestPasswordToken->removeElement($requestPasswordToken);
-            if ($requestPasswordToken->getUser() === $this) {
-                $requestPasswordToken->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @see UserInterface
      */
-    public function getSalt()
-    {
+    public function getSalt() {
         return null;
     }
 
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+    public function eraseCredentials() {
     }
 
     /**
-     * String representation of object
-     * @link https://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
+     * @return string
      */
-    public function serialize()
-    {
+    public function serialize() {
         return serialize([
             $this->id,
             $this->username,
@@ -714,24 +620,14 @@ class User implements UserInterface, \Serializable
             $this->sexe,
             $this->created_at,
             $this->edited_at,
-            $this->confirmation_token,
-            $this->requested_token_at,
-            $this->enabled,
-            $this->password_token
+            $this->enabled
         ]);
     }
 
     /**
-     * Constructs the object
-     * @link https://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
+     * @param string $serialized
      */
-    public function unserialize($serialized)
-    {
+    public function unserialize($serialized) {
         list(
             $this->id,
             $this->username,
@@ -744,10 +640,7 @@ class User implements UserInterface, \Serializable
             $this->sexe,
             $this->created_at,
             $this->edited_at,
-            $this->confirmation_token,
-            $this->requested_token_at,
-            $this->enabled,
-            $this->password_token) = unserialize($serialized, ['allowed_classes' => false]);
+            $this->enabled) = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     public function __toString() {

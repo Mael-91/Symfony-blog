@@ -2,38 +2,31 @@
 
 namespace App\Service;
 
-use App\Exceptions\AccountTokenExpiredException;
+use App\Entity\ConfirmationToken;
 
 class TokenGeneratorService {
 
+    const EXPIRE_IN = 2880; // 48H
+
     /**
-     * Permet de générer un chaine de caractère aléatoire
-     *
+     * Génère un token de taille aléatoire
      * @param int $lenght
      * @return string
      * @throws \Exception
      */
     public function generateToken(int $lenght = 20): string {
         $replace = ['+', '=', '/'];
-        return rtrim(str_replace($replace, '', base64_encode(random_bytes($lenght))));
+        return rtrim(substr(str_replace($replace, '', bin2hex(random_bytes((int)ceil($lenght / 2)))), 2, $lenght));
     }
 
     /**
-     * Permet de vérifier la temps de validité d'un jeton
-     *
-     * @param \DateTime|null $requestedAt
+     * Permet de vérifier si un token est expiré
+     * @param ConfirmationToken $token
      * @return bool
      * @throws \Exception
      */
-    public function isExpired(\DateTime $requestedAt = null): bool {
-        if (is_null($requestedAt)) {
-            throw new AccountTokenExpiredException();
-        }
-
-        $now = new \DateTime('now');
-        $interval = $now->getTimestamp() - $requestedAt->getTimestamp();
-        $validTime = 60 * 15;
-        $isValid = $interval > $validTime ? false : $isValid = true;
-        return $isValid;
+    public function isExpired(ConfirmationToken $token): bool {
+        $expiration = new \DateTime('-' . self::EXPIRE_IN . 'minutes');
+        return $token->getCreatedAt() < $expiration;
     }
 }

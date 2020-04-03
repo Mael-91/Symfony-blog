@@ -2,25 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\ConfirmationToken;
 use App\Entity\User;
-use App\Event\SecurityForgotPasswordRequestEvent;
+use App\Event\LoginAfterRegistrationEvent;
 use App\Event\SecurityLoginEvent;
-use App\Event\SecurityPasswordInformationEvent;
 use App\Event\SecurityRegistrationEvent;
-use App\Form\ForgotPasswordType;
 use App\Form\LoginType;
 use App\Form\RegistrationType;
-use App\Form\ResettingPasswordType;
 use App\Repository\UserRepository;
 use App\Service\TokenGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -68,37 +63,31 @@ class SecurityController extends AbstractController {
 
     /**
      * Permet de s'inscrire
-     *
      * @param Request $request
      * @return Response
      * @throws \Exception
      */
     public function register(Request $request): Response {
         if ($this->getUser()) {
-            $error = $this->addFlash('error-is-connected', 'Your are already connected');
+            $error = $this->addFlash('error', 'Your are already connected');
             return $this->redirectToRoute('home', [ 'error-is-connected' => $error ], 301);
         }
 
         $user = new User();
+        $token = new ConfirmationToken();
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->passwordEncoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
-            $user->setRoles(['ROLE_USER']);
-            $user->setConfirmationToken($this->tokenGenerator->generateToken());
-            $user->setRequestedTokenAt(new \DateTime('now'));
-            $user->setEnabled(false);
-            $user->setCreatedAt(new \DateTime('now'));
-            $user->setOauth(false);
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPassword()))
+                ->setRoles([User::DEFAULT_ROLE]);
             $this->manager->persist($user);
+            $token->setUser($user)
+                ->setToken($this->tokenGenerator->generateToken(10));
+            $this->manager->persist($token);
             $this->manager->flush();
-            $this->addFlash('success', 'Bravo, votre compte a été crée !');
-            $this->dispatcher->dispatch(new SecurityRegistrationEvent($user));
-            // Login user after registration
-            $loginAfter = new PostAuthenticationGuardToken($user, 'security.user.provider.concrete.from_database', $user->getRoles());
-            $this->get('security.token_storage')->setToken($loginAfter);
-            $this->get('session')->set('_security_main', serialize($loginAfter));
+            $this->addFlash('success', 'Well done, your account has been created !'); // Mettre erreur spéciale dans le _success_alert (voir carte -> Frontend)
+            $this->dispatcher->dispatch(new SecurityRegistrationEvent($user, $token));
+            $this->dispatcher->dispatch(new LoginAfterRegistrationEvent($user));
             return $this->redirectToRoute('home', [], 301);
         }
 
@@ -112,7 +101,6 @@ class SecurityController extends AbstractController {
 
     /**
      * Permet de se connecter avec un utilisateur
-     *
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
@@ -133,98 +121,7 @@ class SecurityController extends AbstractController {
         ]);
     }
 
-    /**
-     * Permet de confirmer le compte
-     * TODO Token de confirmation dans une entité a part et faire le traitement via un service (egale au PasswordService)
-     * @param string $token
-     * @param int $id
-     * @return RedirectResponse
-     * @throws \Exception
-     */
-    public function confirmAccount($token, $id): RedirectResponse {
-        $user = $this->userRepository->findOneBy(['id' => $id]);
-        if (is_null($user->getConfirmationToken()) || $token !== $user->getConfirmationToken() || !$this->tokenGenerator->isExpired($user->getRequestedTokenAt())) {
-            throw new AccessDeniedHttpException('Un problème est survenu lors de la demande de vérification du compte, veuillez rééssayer');
-        } else {
-            $user->setConfirmationToken(null);
-            $user->setRequestedTokenAt(null);
-            $user->setEnabled(true);
-            $this->manager->flush();
-            $this->addFlash('success', 'Votre compte a bien été confirmé');
-            return $this->redirectToRoute('home', [], 301);
-        }
-    }
-
-    /**
-     * Permet d'emettre une demande de changement du mot de passe
-     * TODO Faire le traitement de la demande dans le ChangePassword et utiliser l'entité PasswordToken
-     * TODO utiliser le PasswordService pour le traitement du mdp
-     * @param Request $request
-     * @return Response
-     * @throws \Exception
-     */
-    public function forgotPasswordRequest(Request $request): Response {
-        if ($this->getUser()) {
-            throw new AccessDeniedHttpException('Vous n\'avez pas le droit d\'acceder à cette page lorsque vous êtes connecter');
-        }
-
-        $form = $this->createForm(ForgotPasswordType::class);
-        $form->handleRequest($request);
-        if ($request->isMethod('POST')) {
-            $email = $form->getData();
-            $findUser = $this->userRepository->findOneBy(['email' => $email->getEmail()]);
-            if (is_null($findUser)) {
-                $this->addFlash('error', 'L\'email spécifié n\'existe pas');
-                return $this->redirectToRoute('forgot_password_request', [], 301);
-            } elseif ($form->isSubmitted() && $form->isValid() && $findUser !== null) {
-                $findUser->setPasswordToken($this->tokenGenerator->generateToken(10));
-                $findUser->setRequestedPwTokenAt(new \DateTime('now'));
-                $this->manager->flush();
-                $this->dispatcher->dispatch(new SecurityForgotPasswordRequestEvent($findUser));
-                $this->addFlash('success', 'Le mail a bien été envoyé');
-
-                return $this->redirectToRoute('login', [], 301);
-            }
-        }
-
-        return $this->render('security/forgot_password.html.twig', [
-            'is_dashboard' => 'false',
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * Permet d'effectuer le changement de mot de passe
-     * TODO Faire le traitement de la demande dans le ChangePassword et utiliser l'entité PasswordToken
-     * TODO utiliser le PasswordService pour le traitement du mdp
-     * @param Request $request
-     * @param string $token
-     * @return Response
-     * @throws \Exception
-     */
-    public function forgotPasswordPost(Request $request, $token): Response {
-        $user = $this->userRepository->findOneBy(['password_token' => $token]);
-        $form = $this->createForm(ResettingPasswordType::class);
-        $form->handleRequest($request);
-        if (is_null($user->getPasswordToken()) || $token !== $user->getPasswordToken() || !$this->tokenGenerator->isExpired($user->getRequestedPwTokenAt())) {
-            throw new AccessDeniedHttpException('Un problème est survenu lors de la demande de changement du mot de passe, veuillez réitérer la demande');
-        } else {
-            if ($form->isSubmitted() && $form->isValid()) {
-                $data = $form->getData();
-                $password = $this->passwordEncoder->encodePassword($user, $data->getPassword());
-                $user->setPassword($password);
-                $user->setPasswordToken(null);
-                $user->setRequestedPwTokenAt(null);
-                $this->manager->flush();
-                $this->dispatcher->dispatch(new SecurityPasswordInformationEvent($user));
-                $this->addFlash('success', 'Le mot de passe a bien été modifié');
-                return $this->redirectToRoute('login', [], 301);
-            }
-        }
-
-        return $this->render('security/change_forgot_password.html.twig', [
-            'is_dashboard' => 'false',
-            'form' => $form->createView()
-        ]);
+    public function logout(): void {
+        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 }

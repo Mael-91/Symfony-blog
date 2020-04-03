@@ -151,6 +151,7 @@ login:
 
 logout:
   path: /logout
+  controller: App\Controller\SecurityController::logout
   methods: [GET]
 
 register:
@@ -159,22 +160,17 @@ register:
   methods: [GET|POST]
 
 confirmation_account:
-  path: /confirm-account/{token}-{id}
-  controller: App\Controller\SecurityController::confirmAccount
+  path: /confirm-account/{token}
+  controller: App\Controller\Security\AccountController::confirm
   methods : [GET]
 
-forgot_password_request:
+forgot_password:
   path: /forgot-password
-  controller: App\Controller\SecurityController::forgotPasswordRequest
-  methods: [GET|POST]
-
-forgot_password_post:
-  path: /forgot-password/{token}
-  controller: App\Controller\SecurityController::forgotPasswordPost
+  controller: App\Controller\Security\ChangePassword::forgotPassword
   methods: [GET|POST]
 
 change_password:
-  path: /profil/{id}/security/{token}
+  path: /change-password/{token}
   controller: App\Controller\Security\ChangePassword::change
   methods: [GET|POST]
 

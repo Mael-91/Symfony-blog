@@ -2,6 +2,7 @@
 
 namespace App\Controller\Auth;
 
+use App\Entity\ConfirmationToken;
 use App\Entity\User;
 use App\Event\SecurityRegistrationEvent;
 use App\Service\TokenGeneratorService;
@@ -34,7 +35,7 @@ class TwitchAuthController extends AbstractController {
      */
     private $manager;
     /**
-     * @var \App\Service\TokenGeneratorService
+     * @var TokenGeneratorService
      */
     private $tokenGenerator;
     /**
@@ -69,19 +70,21 @@ class TwitchAuthController extends AbstractController {
 
     public function generateAccount(string $username, string $email) {
         $user = new User();
+        $token = new ConfirmationToken();
         $user->setUsername($username);
         $user->setEmail($email);
         $password = $this->passwordEncoder->encodePassword($user, random_bytes(20));
         $user->setPassword($password);
+        $user->setRoles([User::DEFAULT_ROLE]);
         $user->setEnabled(false);
-        $user->setConfirmationToken($this->tokenGenerator->generateToken());
-        $user->setRequestedTokenAt(new \DateTime());
-        $user->setCreatedAt(new \DateTime());
         $user->setOauth(true);
         $this->manager->persist($user);
+        $token->setUser($user)
+            ->setToken($this->tokenGenerator->generateToken(10));
+        $this->manager->persist($token);
         $this->manager->flush();
-        $registerMail = new SecurityRegistrationEvent($user);
-        $this->dispatcher->dispatch($registerMail, SecurityRegistrationEvent::NAME);
+        $this->addFlash('success', 'Well done, your account has been created');
+        $this->dispatcher->dispatch(new SecurityRegistrationEvent($user, $token));
 
         return $user;
     }

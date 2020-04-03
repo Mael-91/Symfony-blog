@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\PasswordTokenRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ConfirmationTokenRepository")
  */
-class PasswordToken
+class ConfirmationToken
 {
     /**
      * @ORM\Id()
@@ -17,7 +17,7 @@ class PasswordToken
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="requestPasswordToken")
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="confirmationToken")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

@@ -68,38 +68,38 @@ class SecuritySubscriber implements EventSubscriberInterface {
 
     public function onSecurityForgotPasswordRequestEvent(SecurityForgotPasswordRequestEvent $event) {
         $this->mailerService->sendMail(null,
-            $event->getEmail(),
+            $event->getUser()->getEmail(),
             \Swift_Message::PRIORITY_HIGH,
             'Reset Password',
             'mails/security/reset_password.html.twig', [
-                'user' => $event->getUser(),
-                'email' => $event->getEmail(),
-                'token' => $event->getToken()
+                'user' => $event->getUser()->getUsername(),
+                'email' => $event->getUser()->getEmail(),
+                'token' => $event->getUser()->getPasswordToken()
             ]);
     }
 
     public function onSecurityPasswordInformationEvent(SecurityPasswordInformationEvent $event) {
         $this->mailerService->sendMail(null,
-            $event->getEmail(),
+            $event->getUser()->getEmail(),
             \Swift_Message::PRIORITY_HIGH,
             'Success change password notification',
             'mails/security/reset_password_success.html.twig', [
-                'user' => $event->getUser(),
-                'email' => $event->getEmail(),
+                'user' => $event->getUser()->getUsername(),
+                'email' => $event->getUser()->getEmail(),
                 'datetime' => new \DateTime()
             ]);
     }
 
     public function onSecurityRegistrationEvent(SecurityRegistrationEvent $event) {
         $this->mailerService->sendMail(null,
-            $event->getEmail(),
+            $event->getUser()->getEmail(),
             \Swift_Message::PRIORITY_NORMAL,
             'Confirm account',
             'mails/security/register_mail.html.twig', [
-                'email' => $event->getEmail(),
-                'user' => $event->getUser(),
-                'id' => $event->getId(),
-                'token' => $event->getConfirmationToken()
+                'email' => $event->getUser()->getEmail(),
+                'user' => $event->getUser()->getUsername(),
+                'id' => $event->getUser()->getId(),
+                'token' => $event->getUser()->getConfirmationToken()
             ]);
     }
 }

@@ -7,8 +7,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SecurityRegistrationEvent extends Event {
 
-    public const NAME = 'security.registration';
-
     /**
      * @var UserInterface
      */
@@ -19,19 +17,6 @@ class SecurityRegistrationEvent extends Event {
     }
 
     public function getUser() {
-        return $this->user->getUsername();
+        return $this->user;
     }
-
-    public function getEmail() {
-        return $this->user->getEmail();
-    }
-
-    public function getId() {
-        return $this->user->getId();
-    }
-
-    public function getConfirmationToken() {
-        return $this->user->getConfirmationToken();
-    }
-
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Event;
 
 use App\Entity\User;
@@ -8,7 +7,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SecurityPasswordInformationEvent extends Event {
 
-    public const NAME = 'security.reset.password.information';
     /**
      * @var User
      */
@@ -19,10 +17,6 @@ class SecurityPasswordInformationEvent extends Event {
     }
 
     public function getUser() {
-        return $this->user->getUsername();
-    }
-
-    public function getEmail() {
-        return $this->user->getEmail();
+        return $this->user;
     }
 }

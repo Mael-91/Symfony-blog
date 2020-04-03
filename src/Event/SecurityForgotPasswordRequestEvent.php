@@ -7,7 +7,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SecurityForgotPasswordRequestEvent extends Event {
 
-    public const NAME = 'security.forgot.password.request';
     /**
      * @var User
      */
@@ -18,15 +17,6 @@ class SecurityForgotPasswordRequestEvent extends Event {
     }
 
     public function getUser() {
-        return $this->user->getUsername();
+        return $this->user;
     }
-
-    public function getEmail() {
-        return $this->user->getEmail();
-    }
-
-    public function getToken() {
-        return $this->user->getPasswordToken();
-    }
-
 }

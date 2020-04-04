@@ -73,16 +73,14 @@ class GithubAuthController extends AbstractController {
     /**
      * @inheritDoc
      */
-    public function generateAccount(string $username, string $email) {
+    public function generateAccount(string $username, string $email): User {
         $user = new User();
         $token = new ConfirmationToken();
-        $user->setUsername($username);
-        $user->setEmail($email);
-        $password = $this->passwordEncoder->encodePassword($user, random_bytes(20));
-        $user->setPassword($password);
-        $user->setRoles([User::DEFAULT_ROLE]);
-        $user->setEnabled(false);
-        $user->setOauth(true);
+        $user->setUsername($username)
+            ->setEmail($email)
+            ->setPassword($this->passwordEncoder->encodePassword($user, random_bytes(20)))
+            ->setRoles([User::DEFAULT_ROLE])
+            ->setOauth(true);
         $this->manager->persist($user);
         $token->setUser($user)
             ->setToken($this->tokenGenerator->generateToken(10));

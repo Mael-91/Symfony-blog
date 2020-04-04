@@ -67,18 +67,16 @@ class GoogleAuthController extends AbstractController {
         return new RedirectResponse("https://accounts.google.com/o/oauth2/v2/auth?scope=openid%20profile%20email&access_type=online&response_type=code&state=$state&redirect_uri=$url&client_id=$this->googleId");
     }
 
-    public function generateAccount(string $username, string $email, string $firstName, string $familyName) {
+    public function generateAccount(string $username, string $email, string $firstName, string $familyName): User {
         $user = new User();
         $token = new ConfirmationToken();
-        $user->setUsername($username);
-        $user->setFirstName($firstName);
-        $user->setLastName($familyName);
-        $user->setEmail($email);
-        $password = $this->passwordEncoder->encodePassword($user, random_bytes(20));
-        $user->setPassword($password);
-        $user->setRoles([User::DEFAULT_ROLE]);
-        $user->setEnabled(false);
-        $user->setOauth(true);
+        $user->setUsername($username)
+            ->setFirstName($firstName)
+            ->setLastName($familyName)
+            ->setEmail($email)
+            ->setPassword($this->passwordEncoder->encodePassword($user, random_bytes(20)))
+            ->setRoles([User::DEFAULT_ROLE])
+            ->setOauth(true);
         $this->manager->persist($user);
         $token->setUser($user)
             ->setToken($this->tokenGenerator->generateToken(10));

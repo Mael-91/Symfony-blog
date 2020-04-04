@@ -112,6 +112,8 @@ class Blog
 
     public function __construct() {
         $this->created_at = new \DateTime();
+        $this->edited_at = new \DateTime();
+        $this->visible = true;
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->userActivities = new ArrayCollection();

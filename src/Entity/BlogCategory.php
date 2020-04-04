@@ -34,7 +34,7 @@ class BlogCategory
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Blog", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="App\Entity\Blog", mappedBy="category", orphanRemoval=true)
      */
     private $posts;
 

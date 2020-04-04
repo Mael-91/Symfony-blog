@@ -38,6 +38,7 @@
         </span>
         <div class="border-top my-3"></div>
         {{ include('_reusable/_success_alert.html.twig') }}
+        {{ include('_reusable/_error_alert.html.twig') }}
         <div class="send-comment mt-3">
             <div class="comment-action">
                 <form action="{{ path('blog.comment', {id: post.id, slug: post.slug, post: post.id}) }}" method="post" class="form-group" name="comment_form" id="comment">

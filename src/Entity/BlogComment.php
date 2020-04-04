@@ -70,6 +70,9 @@ class BlogComment
     {
         $this->children = new ArrayCollection();
         $this->userActivities = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->edited_at = new \DateTime();
+        $this->visible = true;
     }
 
     public function getId(): ?int

@@ -35,21 +35,21 @@ blog.category:
 
 blog.like:
   path: /blog/{slug}-{id}/like
-  controller: App\Controller\BlogController::like
+  controller:  App\Controller\Core\Like\BlogLikeController::like
   methods: [GET]
   requirements:
     slug:  '[a-z0-9\-]*'
 
 blog.comment:
   path: /blog/{slug}-{id}/comment/{post}
-  controller: App\Controller\BlogController::comment
+  controller: App\Controller\Core\Comment\BlogCommentController::comment
   methods: [POST]
   requirements:
     slug:  '[a-z0-9\-]*'
 
 blog.reply:
   path: /blog/{slug}-{id}/reply/{comment}
-  controller: App\Controller\BlogController::reply
+  controller: App\Controller\Core\Comment\BlogCommentController::reply
   methods: [POST]
   requirements:
     slug:  '[a-z0-9\-]*'

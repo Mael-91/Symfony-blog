@@ -8,6 +8,6 @@ class UserNotConnectedException extends AccountStatusException {
 
     public function getMessageKey()
     {
-        return 'You must be logged in to comment';
+        return 'You must be logged in';
     }
 }

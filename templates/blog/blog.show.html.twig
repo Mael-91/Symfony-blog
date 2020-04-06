@@ -31,7 +31,8 @@
         </div>
     </div>
     <div class="container">
-        <span class="text-dark mt-3" style="font-size: 20px">{{ nbrComment }} {% if nbrComment > 1 %} Commentaires {% else %} Commentaire {% endif %}
+        <!-- TODO: Remplacer la span par une div -->
+        <span class="text-dark mt-3" style="font-size: 20px"><span class="nbr-comment-js">{{ nbrComment }}</span> <span>{% if nbrComment > 1 %} Commentaires {% else %} Commentaire {% endif %}</span>
             <span class="float-right">
                 <a class="twitter-share" target="_blank" href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ url('blog.show', {id: post.id, slug: post.slug}) }}&via=Mael_91"><i class="fab fa-twitter"></i></a>
             </span>
@@ -41,44 +42,46 @@
         {{ include('_reusable/_error_alert.html.twig') }}
         <div class="send-comment mt-3">
             <div class="comment-action">
-                <form action="{{ path('blog.comment', {id: post.id, slug: post.slug, post: post.id}) }}" method="post" class="form-group" name="comment_form" id="comment">
+                <form action="{{ path('blog.comment', {id: post.id, slug: post.slug, post: post.id}) }}" method="post" class="form-group comment-js" name="comment_form" id="comment">
                     <label for="comment_text" class="required">Votre commentaire</label>
                     <textarea class="form-control autoExpand comment-zone" id="comment_text" name="comment_zone"></textarea>
-                    <input type="hidden" name="_csrf_token_comment" value="{{ csrf_token('comment' ~ post.id) }}">
-                    <button class="btn btn-success comment-btn" type="submit">Commenter</button>
+                    <input type="hidden" name="_csrf_token_comment" value="{{ csrf_token('comment' ~ post.id) }}" id="csrf">
+                    <button class="btn btn-success comment-btn submit-js" type="submit">Commenter</button>
                 </form>
             </div>
         </div>
-        {% for comment in comments %}
+        <div class="block-comment" id="block-comment">
+            {% for comment in comments %}
                 <div class="comment" style="margin-top: 20px;" id="{{ comment.id }}">
                     <div class="comment-card card">
                         <div class="card-body">
-                            <span class="card-title"><a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ comment.author }}</a> <abbr class="datetime">- {{ comment.createdAt | ago('text-black-50') }} -</abbr> <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;">Répondre</button></span>
+                            <span class="card-title">
+                                <a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ comment.author }}</a>
+                                <abbr class="datetime">- {{ comment.createdAt | ago('text-black-50') }} -</abbr>
+                                <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;" id="reply" data-id="{{ comment.id }}">Répondre</button>
+                            </span>
                             <p class="card-text mt-2">{{ comment.content | nl2br }}</p>
                         </div>
                     </div>
-                </div>
-            <div class="reply-action no-visible" id="reply_action">
-                <form action="{{ path('blog.reply', {id: post.id, slug: post.slug, comment: comment.id}) }}" method="post" class="form-group" name="reply_form" id="reply">
-                    <label for="reply_comment" class="required">Votre réponse</label>
-                    <textarea class="form-control autoExpand reply-zone" id="reply_comment" name="reply_zone"></textarea>
-                    <input type="hidden" name="_csrf_token_reply" value="{{ csrf_token('reply_comment' ~ comment.id) }}">
-                    <button class="btn btn-success reply-btn" type="submit" id="send-reply">Répondre</button>
-                </form>
-            </div>
-            {% if comment.children is not empty %}
-                {% for commentChild in comment.children %}
-                    <div class="reply">
-                        <div class="reply-card card card-color">
-                            <div class="card-body">
-                                <span class="card-title"><a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ commentChild.author }}</a> <abbr class="datetime">- {{ commentChild.createdAt |ago('text-black-50') }} -</abbr> <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;">Répondre</button></span>
-                                <p class="card-text mt-2">{{ commentChild.content }}</p>
+                    {% if comment.children is not empty %}
+                        {% for commentChild in comment.children %}
+                            <div class="reply">
+                                <div class="reply-card card card-color">
+                                    <div class="card-body">
+                                    <span class="card-title">
+                                        <a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ commentChild.author }}</a>
+                                        <abbr class="datetime">- {{ commentChild.createdAt |ago('text-black-50') }} -
+                                        </abbr> <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;">Répondre</button>
+                                    </span>
+                                        <p class="card-text mt-2">{{ commentChild.content }}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
         <div class="pagination mt-2">
             {{ knp_pagination_render(comments) }}
         </div>
@@ -88,6 +91,8 @@
     {{ parent() }}
     {{ encore_entry_script_tags('textareaResize') }}
     {{ encore_entry_script_tags('blogLike') }}
+    {{ encore_entry_script_tags('blogComment') }}
+    {{ encore_entry_script_tags('blogReplyAction') }}
     <script src="{{ asset('js/timeago.min.js') }}"></script>
     <script src="{{ asset('js/timeago.locales.min.js') }}"></script>
     <script>

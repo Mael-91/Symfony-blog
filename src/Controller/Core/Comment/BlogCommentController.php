@@ -6,7 +6,9 @@ use App\Entity\Blog;
 use App\Entity\BlogComment;
 use App\Event\UserActivityEvent;
 use App\Exceptions\UserNotConnectedException;
+use App\Repository\BlogCommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,10 +30,18 @@ class BlogCommentController extends AbstractController {
      * @var EventDispatcherInterface
      */
     private $dispatcher;
+    /**
+     * @var BlogCommentRepository
+     */
+    private $repository;
 
-    public function __construct(EntityManagerInterface $manager, EventDispatcherInterface $dispatcher) {
+    public function __construct(
+        EntityManagerInterface $manager,
+        EventDispatcherInterface $dispatcher,
+        BlogCommentRepository $repository) {
         $this->manager = $manager;
         $this->dispatcher = $dispatcher;
+        $this->repository = $repository;
     }
 
     /**
@@ -42,28 +52,39 @@ class BlogCommentController extends AbstractController {
      * @throws \Exception
      */
     public function comment(Request $request, Blog $post): JsonResponse {
-        $content = $request->request->get('comment_zone');
+        $data = json_decode($request->getContent(), true);
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('error', 'You must be logged in to comment');
             throw new UserNotConnectedException();
         }
-        if (empty($content)) {
+        if (empty($data['content'])) {
             $this->addFlash('error', 'The content must not be null');
             return new JsonResponse(['code' => 400, 'message' => 'The content must not be null'], JsonResponse::HTTP_BAD_REQUEST);
         }
-        if (!$this->isCsrfTokenValid('comment' . $post->getId(), $request->request->get('_csrf_token_comment'))) {
+        if (!$this->isCsrfTokenValid('comment' . $post->getId(), $data['csrf'])) {
             throw new InvalidCsrfTokenException();
         }
         $comment = new BlogComment();
         $comment->setPost($post)
             ->setAuthor($user)
-            ->setContent($content);
+            ->setContent($data['content']);
         $this->manager->persist($comment);
         $this->manager->flush();
         $this->dispatcher->dispatch(new UserActivityEvent($user, null, $comment, null));
         $this->addFlash('success', 'Well done ! Your comment has been sent.');
-        return new JsonResponse(['code' => 200, 'message' => 'commentaire envoyé avec succès'], JsonResponse::HTTP_CREATED);
+        $getNbrComment = $this->repository->count(['post' => $post]);
+        return new JsonResponse([
+            'code' => 200,
+            'message' => 'commentaire envoyé avec succès',
+            'comment' =>  [
+                'id' => $comment->getId(),
+                'author' => $comment->getAuthor()->getUsername(),
+                'date' => $comment->getCreatedAt()->format(\DateTime::ISO8601),
+                'content' => $comment->getContent()
+            ],
+            'nbrComment' => $getNbrComment,
+        ], JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -76,27 +97,39 @@ class BlogCommentController extends AbstractController {
      */
     public function reply(Request $request, Blog $post, BlogComment $comment): JsonResponse {
         $content = $request->request->get('reply_zone');
+        $data = json_decode($request->getContent(), true);
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('error', 'You must be logged in to comment');
             throw $this->createAccessDeniedException();
         }
-        if (empty($content)) {
+        if (empty($data['content'])) {
             $this->addFlash('error', 'The content must not be null');
             return new JsonResponse(['code' => 400, 'message' => 'The content must not be null'], JsonResponse::HTTP_BAD_REQUEST);
         }
-        if (!$this->isCsrfTokenValid('reply_comment' . $comment->getId(), $request->request->get('_csrf_token_reply'))) {
+        if (!$this->isCsrfTokenValid('reply_comment' . $comment->getId(), $data['csrf'])) {
             throw new InvalidCsrfTokenException();
         }
         $reply = new BlogComment();
         $reply->setAuthor($user)
             ->setPost($post)
-            ->setContent($content)
+            ->setContent($data['content'])
             ->setParent($comment);
         $this->manager->persist($reply);
         $this->manager->flush();
         $this->dispatcher->dispatch(new UserActivityEvent($user, null, $reply, null));
         $this->addFlash('success', 'Well done, you reply has been sent.');
-        return new JsonResponse(['code' => 200, 'message' => 'réponse envoyée avec succès'], JsonResponse::HTTP_CREATED);
+        $getNbrComment = $this->repository->count(['post' => $post]);
+        return new JsonResponse([
+            'code' => 200,
+            'message' => 'réponse envoyée avec succès',
+            'reply' => [
+                'parent' => $comment->getId(),
+                'author' => $reply->getAuthor()->getUsername(),
+                'date' => $reply->getCreatedAt()->format(\DateTime::ISO8601),
+                'content' => $reply->getContent()
+            ],
+            'nbrComment' => $getNbrComment
+        ], JsonResponse::HTTP_CREATED);
     }
 }

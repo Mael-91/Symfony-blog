@@ -30,11 +30,11 @@ Encore
     .addEntry('blogAction', './assets/js/actions/blog.js')
     // CSS Files
     .addEntry('dashboard', './assets/css/dashboard.css')
-    .addEntry('markdown', './assets/css/markdown.css')
-    .addEntry('GuideMarkdown', './assets/css/guide/markdown.css')
-    .addEntry('admin', './assets/css/admin/admin.css')
-    .addEntry('blog', './assets/css/blog/blog.css')
-    .addEntry('profil', './assets/css/profil/profil.css')
+    .addEntry('markdown', './assets/css/modules/markdown.css')
+    .addEntry('GuideMarkdown', './assets/css/pages/guide/markdown.css')
+    .addEntry('admin', './assets/css/pages/admin/admin.css')
+    .addEntry('blog', './assets/css/pages/blog/blog.css')
+    .addEntry('profil', './assets/css/pages/profil/profil.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

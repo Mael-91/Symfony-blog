@@ -54,3 +54,4 @@ button.reply-btn, button.comment-btn {
 
 @import "./elements/comment.css";
 @import "./elements/form_comment.css";
+@import "./elements/alert.css";

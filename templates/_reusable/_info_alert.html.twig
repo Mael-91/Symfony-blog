@@ -1,0 +1,3 @@
+{% for message in app.flashes('info') %}
+    <alert-message type="info" dark="true">{{ message |nl2br }}</alert-message>
+{% endfor %}

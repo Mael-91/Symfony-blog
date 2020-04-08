@@ -5,8 +5,9 @@
 {% endblock %}
 {% block body %}
     <div class="container">
-        <h4 class="text-center">Gestion des categories</h4>
         {{ include('_reusable/_success_alert.html.twig') }}
+        {{ include('_reusable/_error_alert.html.twig') }}
+        <h4 class="text-center">Gestion des categories</h4>
         <a href="{{ path('admin.blog.categories.create') }}" class="btn btn-primary float-right mb-1">Publier</a>
         <table class="table table-stripped mt-3">
             <thead>

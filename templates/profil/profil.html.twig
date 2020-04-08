@@ -4,6 +4,8 @@
     {{ encore_entry_link_tags('profil') }}
 {% endblock %}
 {% block body %}
+    {{ include('_reusable/_success_alert.html.twig') }}
+    {{ include('_reusable/_error_alert.html.twig') }}
     <div class="banner">
         <img src="{% if user.bannerFilename is not null %} {{ vich_uploader_asset(user, 'bannerFile') | cloud_image('symfony-project-blog', 'user/banner') }} {% else %} /test/test_banner.jpg {% endif %}" alt="Bannière de {{ user.username }}" class="profil-banner img-fluid">
         </div>
@@ -12,7 +14,6 @@
         <img src="{% if user.avatarFilename is not null %} {{ vich_uploader_asset(user, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %} /test/avatar.png {% endif %}" alt="Avatar de {{ user.username }}" class="rounded-circle profil-picture">
         <!-- Mettre nom du profil  à la droite de l'image en hauteur -->
         <span class="profil-username">{{ user.username }}</span>
-        {{ include('_reusable/_success_alert.html.twig') }}
         <div class="row">
             <div class="col-3">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">

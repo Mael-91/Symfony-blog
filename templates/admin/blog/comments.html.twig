@@ -5,8 +5,9 @@
 {% endblock %}
 {% block body %}
     <div class="container">
-        <h4 class="text-center mt-3">Gestion des commentaires</h4>
         {{ include('_reusable/_success_alert.html.twig') }}
+        {{ include('_reusable/_error_alert.html.twig') }}
+        <h4 class="text-center mt-3">Gestion des commentaires</h4>
         <table class="table table-stripped mt-3">
             <thead>
             <tr>

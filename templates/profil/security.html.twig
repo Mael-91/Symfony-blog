@@ -4,22 +4,21 @@
     {{ encore_entry_link_tags('profil') }}
 {% endblock %}
 {% block body %}
+    {{ include('_reusable/_success_alert.html.twig') }}
+    {{ include('_reusable/_error_alert.html.twig') }}
     <div class="banner">
         <img src="{% if user.bannerFilename is not null %} {{ vich_uploader_asset(user, 'bannerFile') | cloud_image('symfony-project-blog', 'user/banner') }} {% else %} /test/test_banner.jpg {% endif %}" alt="Bannière de {{ user.username }}" class="profil-banner img-fluid">
     </div>
     <div class="container">
         <img src="{% if user.avatarFilename is not null %} {{ vich_uploader_asset(user, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %} /test/avatar.png {% endif %}" alt="Avatar de {{ user.username }}" class="rounded-circle profil-picture">
         <span class="profil-username">{{ user.username }}</span>
-        <div class="col-md-6">
-            {{ include('_reusable/_success_alert.html.twig') }}
-        </div>
         <div class="2oauth">
 
         </div>
         <div class="change-password col-md-6 mx-auto">
             <h4 class="mb-2">Changement du mot de passe</h4>
             <p>En demandant un changement du mot de passe, vous recevrez un message contenant un lien pour pouvoir effectuer le changement du mot de passe, ce lien sera actif pendant 15 minutes au-dela, vous devrez refaire une demande</p>
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger" role="alert" style="border-left: none!important;">
                 <h4 class="alert-heading">Attention</h4>
                 <p>Lorsque vous aurez changé de mot de passe, il ne vous sera pas possible de le changer dans les 2 jours qui suivent</p>
                 <p>Si vous rencontez un problème suite au changement du mot de passe, veuillez contacter un Administrateur</p>

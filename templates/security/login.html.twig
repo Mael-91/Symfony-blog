@@ -2,16 +2,14 @@
 {% block title 'Se connecter' %}
 {% block body %}
     <div class="container mt-4">
+        {{ include('_reusable/_success_alert.html.twig') }}
+        {{ include('_reusable/_error_alert.html.twig') }}
         {% if error %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ error.messageKey | trans(error.messageData, 'security') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
         {% endif %}
-        <div class="col-md-6">
-            {{ include('_reusable/_success_alert.html.twig') }}
-            {{ include('_reusable/_error_alert.html.twig') }}
-        </div>
         <form action="{{ path('login') }}" method="post" class="col-md-4 float-left">
             <div class="form-group">
                 <label for="username">Nom d'utilisateur</label>

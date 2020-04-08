@@ -1,0 +1,73 @@
+.alert-element {
+    position: fixed!important;
+    /*float: right;*/
+    top: 75px;
+    right: 1rem;
+    word-wrap: break-word;
+    width: 320px!important;
+    padding: 1rem 1rem 1rem 1rem!important;
+    border: none!important;
+    border-radius: 0.25rem!important;
+    font-family: 'Roboto', sans-serif;
+    animation: fadeIn .5s both;
+    z-index: 99999;
+}
+
+.light {
+    color: #000!important;
+    background-color: rgb(232, 234, 240)!important;
+}
+
+.dark {
+    color: #FFF!important;
+    background-color: #050818e7!important;
+}
+
+.alert-success {
+    border-left: 5px solid rgb(35, 175, 35)!important;
+}
+
+.alert-danger {
+    border-left: 5px solid rgb(255, 65, 65)!important;
+}
+
+.alert-warning {
+    border-left: 5px solid rgb(253, 97, 41)!important;
+}
+
+.alert-info {
+    border-left: 5px solid rgb(49, 173, 230)!important;
+}
+
+.alert-dismiss .close {
+    position: absolute!important;
+    top: 2px!important;
+    right: 0!important;
+    padding: 0.75rem 1.25rem;
+    color: #FFFFFF!important;
+}
+
+.close, .close:focus {
+    font-size: 15px!important;
+    outline: 0!important;
+}
+
+button.close {
+    padding: 0!important;
+    background-color: transparent!important;
+    border: 0;
+    -webkit-appearance: none!important;
+    -moz-appearance: none!important;
+    appearance: none!important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}

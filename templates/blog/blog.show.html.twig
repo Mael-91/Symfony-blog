@@ -50,49 +50,37 @@
                 </form>
             </div>
         </div>
-        <div class="block-comment" id="block-comment">
-            {% for comment in comments %}
-                <div class="comment" style="margin-top: 20px;" id="{{ comment.id }}">
-                    <div class="comment-card card">
-                        <div class="card-body">
-                            <span class="card-title">
-                                <a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ comment.author }}</a>
-                                <abbr class="datetime">- {{ comment.createdAt | ago('text-black-50') }} -</abbr>
-                                <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;" id="reply" data-id="{{ comment.id }}">Répondre</button>
-                            </span>
-                            <p class="card-text mt-2">{{ comment.content | nl2br }}</p>
-                        </div>
-                    </div>
-                    {% if comment.children is not empty %}
-                        {% for commentChild in comment.children %}
-                            <div class="reply">
-                                <div class="reply-card card card-color">
-                                    <div class="card-body">
-                                    <span class="card-title">
-                                        <a href="" class="text-decoration-none text-muted" style="font-size: 1rem; font-weight: 700">{{ commentChild.author }}</a>
-                                        <abbr class="datetime">- {{ commentChild.createdAt |ago('text-black-50') }} -
-                                        </abbr> <button class="show-reply-zone text-muted" style="font-size: .7rem; text-decoration:  underline;">Répondre</button>
-                                    </span>
-                                        <p class="card-text mt-2">{{ commentChild.content }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
+        {% for comment in comments %}
+            <comment-block  author="{{ comment.author }}"
+                            author-avatar="{% if comment.author.avatarFilename is not null %}{{ vich_uploader_asset(comment.author, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %}/test/test_banner.jpg {% endif %}"
+                           author-link="{{ path('profil.index', {id: comment.author.id}) }}"
+                           datetime="{{ comment.createdAt | agoCustomElem('comment-date') }}"
+                           comment-id="{{ comment.id }}">
+                {{ comment.content }}
+            </comment-block>
+            {% if comment.children is not empty %}
+                {% for commentChild in comment.children %}
+                    <comment-block author="{{ commentChild.author }}"
+                                   author-avatar="{% if commentChild.author.avatarFilename is not null %}{{ vich_uploader_asset(commentChild.author, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %}/test/test_banner.jpg{% endif %}"
+                                   author-link="{{ path('profil.index', {id: commentChild.author.id}) }}"
+                                   datetime="{{ commentChild.createdAt | agoCustomElem('comment-date') }}"
+                                   isReply="true"
+                                   parent-id="{{ commentChild.parent.id }}">
+                        {{ commentChild.content }}
+                    </comment-block>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
         <div class="pagination mt-2">
             {{ knp_pagination_render(comments) }}
         </div>
     </div>
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }}
     {{ encore_entry_script_tags('textareaResize') }}
     {{ encore_entry_script_tags('blogLike') }}
     {{ encore_entry_script_tags('blogComment') }}
-    {{ encore_entry_script_tags('blogReplyAction') }}
+    {{ encore_entry_script_tags('blogAction') }}
     <script src="{{ asset('js/timeago.min.js') }}"></script>
     <script src="{{ asset('js/timeago.locales.min.js') }}"></script>
     <script>

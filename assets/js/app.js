@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import 'flatpickr';
 import { French } from 'flatpickr/dist/l10n/fr.js';
+import "./elements/blog/Comment.js"
 
 require('@fortawesome/fontawesome-free/css/all.min.css');
 require('@fortawesome/fontawesome-free/js/all.js');

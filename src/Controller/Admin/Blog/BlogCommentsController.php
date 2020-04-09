@@ -57,7 +57,6 @@ class BlogCommentsController extends AbstractController {
         $commentForm = $this->createForm(BlogCommentEditType::class, $comment);
         $commentForm->handleRequest($request);
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $comment->setEditedAt(new \DateTime());
             $this->manager->flush();
             $this->addFlash('success', 'Le commentaire a bien été modifié');
             return $this->redirectToRoute('admin.blog.manage.comment', [], 301);

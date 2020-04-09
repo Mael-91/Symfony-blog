@@ -70,7 +70,6 @@ class UsersController extends AbstractController
             $password = $this->passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles($user->getRoles());
-            $user->setCreatedAt(new \DateTime('now'));
             $this->manager->persist($user);
             $this->manager->flush();
             $this->addFlash('success', 'L\'utilisateur a bien été crée');
@@ -96,7 +95,6 @@ class UsersController extends AbstractController
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setEditedAt(new \DateTime('now'));
             $this->manager->flush();
             $this->addFlash('success', 'L\'utilisateur a bien été modifié');
             return $this->redirectToRoute('admin.users', [], 301);

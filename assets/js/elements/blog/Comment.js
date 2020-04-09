@@ -1,4 +1,6 @@
-class Comment extends HTMLElement {
+import moment from "moment"
+
+export default class Comment extends HTMLElement {
 
     /**
      * @param {String} author
@@ -6,7 +8,6 @@ class Comment extends HTMLElement {
      * @param {String} authorLink
      * @param {String} btnReplyName
      * @param {Date} date
-     * @param {String} dateClass
      * @param {Boolean} isReply
      * @param {String} commentContent
      * @param {Number} commentId
@@ -14,75 +15,57 @@ class Comment extends HTMLElement {
      */
     constructor(author, authorAvatar, authorLink, btnReplyName, date, isReply, commentContent, commentId, parentId) {
         super();
-        this.author = author;
-        this.avatar = authorAvatar;
-        this.authorLink = authorLink;
-        this.btn = btnReplyName;
-        this.date = date;
-        this.isReply = isReply;
-        this.commentContent = commentContent;
-        this.commentId = '';
-        this.parentId = ''; // L'id du commentaire pour l'apparition de la form
-        if (author === undefined) {
-            this.author = this.getAttribute('author');
+        if (author !== undefined) {
+            this.author = author
         } else {
-            this.author = author;
+            this.author = this.getAttribute('author')
         }
-        if (authorAvatar === undefined) {
-            this.avatar = this.getAttribute('author-avatar');
+        if (authorAvatar !== undefined) {
+            this.avatar = authorAvatar
         } else {
-            this.avatar = authorAvatar;
+            this.avatar = this.getAttribute('author-avatar')
         }
-        if (authorLink === undefined) {
-            this.authorLink = this.getAttribute('author-link');
+        if (authorLink !== undefined) {
+            this.authorLink = authorLink
         } else {
-            this.authorLink = authorLink;
+            this.authorLink = this.getAttribute('author-link')
         }
-        if (btnReplyName === undefined) {
-            if (this.getAttribute('btn-reply-name')) {
-                this.btn = this.getAttribute('btn-reply-name');
-            } else {
-                this.btn = 'Répondre'
-            }
+        if (btnReplyName !== undefined) {
+            this.btn = btnReplyName
         } else {
-            this.btn = btnReplyName;
+            this.btn = this.getAttribute('btn-reply-name')
         }
-        if (date === undefined) {
+        if (date !== undefined) {
+            this.date = `<span class="comment-date moment" datetime="${new Date(date)}">${moment(new Date(date)).locale('fr').fromNow()}</span>`
+        } else {
             this.date = this.getAttribute('datetime')
-        } else {
-            this.date = date;
         }
-        if (isReply === false) {
-            this.isReply = 'comment';
+
+        if (isReply !== undefined && isReply === true) {
+            this.isReply = 'comment comment-reply'
+        } else if (this.getAttribute('isReply')) {
+            this.isReply = 'comment comment-reply'
         } else {
-            this.isReply = 'comment comment-reply';
+            this.isReply = 'comment'
         }
-        if (this.getAttribute('isReply') === 'true') {
-            this.isReply = 'comment comment-reply';
+        if (commentContent !== undefined) {
+            this.commentContent = commentContent
         } else {
-            this.isReply = 'comment';
+            this.commentContent = this.getAttribute('content')
         }
-        if (commentContent === undefined) {
-            if (this.getAttribute('comment-content')) {
-                this.commentContent = this.getAttribute('content')
-            } else {
-                this.commentContent = this.innerHTML;
-            }
-        }
-        if (commentId !== undefined || this.getAttribute('comment-id')) {
-            if (commentId) {
-                this.commentId = 'id="' + commentId + '"';
-            } else {
-                const cId = this.getAttribute('comment-id');
-                this.commentId = 'id="' + cId + '"';
-            }
+        if (commentId !== undefined) {
+            this.commentId = 'id="' + commentId + '"'
+        } else if (this.getAttribute('comment-id')) {
+            this.commentId = 'id="' + this.getAttribute('comment-id') + '"'
         } else {
-            if (parentId) {
-                this.parentId = 'id="' + parentId + '"';
-            } else {
-                const pId = this.getAttribute('parent-id');
-                this.parentId = 'id="' + pId + '"';
-            }
+            this.commentId = ''
+        }
+        if (parentId !== undefined) {
+            this.parentId = 'id="' + parentId + '"'
+        } else if (this.getAttribute('parent-id')) {
+            this.parentId = 'id="' + this.getAttribute('parent-id') + '"'
+        } else {
+            this.parentId = ''
         }
         this.deleteAttribute()
     }
@@ -100,7 +83,7 @@ class Comment extends HTMLElement {
                 </div>
             </div>
         </div>
-        `
+        `;
     }
 
     deleteAttribute() {

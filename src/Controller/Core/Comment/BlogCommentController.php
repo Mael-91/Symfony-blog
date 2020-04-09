@@ -8,7 +8,6 @@ use App\Event\UserActivityEvent;
 use App\Exceptions\UserNotConnectedException;
 use App\Repository\BlogCommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,8 +58,8 @@ class BlogCommentController extends AbstractController {
             throw new UserNotConnectedException();
         }
         if (empty($data['content'])) {
-            $this->addFlash('error', 'The content must not be null');
-            return new JsonResponse(['code' => 400, 'message' => 'The content must not be null'], JsonResponse::HTTP_BAD_REQUEST);
+            //$this->addFlash('error', 'The content must not be null');
+            return new JsonResponse(['message' => 'The content must not be null'], JsonResponse::HTTP_BAD_REQUEST);
         }
         if (!$this->isCsrfTokenValid('comment' . $post->getId(), $data['csrf'])) {
             throw new InvalidCsrfTokenException();
@@ -72,14 +71,17 @@ class BlogCommentController extends AbstractController {
         $this->manager->persist($comment);
         $this->manager->flush();
         $this->dispatcher->dispatch(new UserActivityEvent($user, null, $comment, null));
-        $this->addFlash('success', 'Well done ! Your comment has been sent.');
+        //$this->addFlash('success', 'Well done ! Your comment has been sent.');
         $getNbrComment = $this->repository->count(['post' => $post]);
         return new JsonResponse([
-            'code' => 200,
             'message' => 'commentaire envoyé avec succès',
             'comment' =>  [
                 'id' => $comment->getId(),
-                'author' => $comment->getAuthor()->getUsername(),
+                'author' => [
+                    'id' => $comment->getAuthor()->getId(),
+                    'user' => $comment->getAuthor()->getUsername(),
+                    'avatar' => $comment->getAuthor()->getAvatarFilename()
+                ],
                 'date' => $comment->getCreatedAt()->format(\DateTime::ISO8601),
                 'content' => $comment->getContent()
             ],
@@ -96,7 +98,6 @@ class BlogCommentController extends AbstractController {
      * @ParamConverter("comment", class="App\Entity\BlogComment")
      */
     public function reply(Request $request, Blog $post, BlogComment $comment): JsonResponse {
-        $content = $request->request->get('reply_zone');
         $data = json_decode($request->getContent(), true);
         $user = $this->getUser();
         if (!$user) {
@@ -104,11 +105,8 @@ class BlogCommentController extends AbstractController {
             throw $this->createAccessDeniedException();
         }
         if (empty($data['content'])) {
-            $this->addFlash('error', 'The content must not be null');
-            return new JsonResponse(['code' => 400, 'message' => 'The content must not be null'], JsonResponse::HTTP_BAD_REQUEST);
-        }
-        if (!$this->isCsrfTokenValid('reply_comment' . $comment->getId(), $data['csrf'])) {
-            throw new InvalidCsrfTokenException();
+            //$this->addFlash('error', 'The content must not be null');
+            return new JsonResponse(['message' => 'The content must not be null'], JsonResponse::HTTP_BAD_REQUEST);
         }
         $reply = new BlogComment();
         $reply->setAuthor($user)
@@ -118,14 +116,17 @@ class BlogCommentController extends AbstractController {
         $this->manager->persist($reply);
         $this->manager->flush();
         $this->dispatcher->dispatch(new UserActivityEvent($user, null, $reply, null));
-        $this->addFlash('success', 'Well done, you reply has been sent.');
+        //$this->addFlash('success', 'Well done, you reply has been sent.');
         $getNbrComment = $this->repository->count(['post' => $post]);
         return new JsonResponse([
-            'code' => 200,
             'message' => 'réponse envoyée avec succès',
             'reply' => [
                 'parent' => $comment->getId(),
-                'author' => $reply->getAuthor()->getUsername(),
+                'author' => [
+                    'id' => $reply->getAuthor()->getId(),
+                    'user' => $reply->getAuthor()->getUsername(),
+                    'avatar' => $reply->getAuthor()->getAvatarFilename()
+                ],
                 'date' => $reply->getCreatedAt()->format(\DateTime::ISO8601),
                 'content' => $reply->getContent()
             ],

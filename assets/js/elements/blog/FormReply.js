@@ -1,4 +1,5 @@
 import {slideUp, slideDown} from "../../modules/animations";
+import {onSubmitReply} from "../../functions/blog/AjaxComment";
 
 export default class CommentForm extends HTMLElement {
     /**
@@ -52,12 +53,12 @@ export default class CommentForm extends HTMLElement {
         this.alreadyExist();
         this.innerHTML = `
         <div class="comment-form">
-            <form method="${this.method}" action="${this.action}" class="comment-js" id="form-comment">
+            <form method="${this.method}" action="${this.action}" class="reply-js" id="form-reply">
                 <div class="form-group">
                     <label for="comment_zone">${this.labelContent}</label>
-                    <textarea class="form-control comment-zone" id="comment_zone"></textarea>
+                    <textarea class="form-control reply-zone" id="reply_zone"></textarea>
                     <input type="hidden" name="${this.inputName}" value="${this.inputValue}">
-                    <button type="submit" class="${this.btnClass}" comment-id="${this.commentId}">${this.btnContent}</button>
+                    <button type="submit" class="${this.btnClass}" comment-id="${this.commentId}" id="btn-reply">${this.btnContent}</button>
                 </div>
             </form>
         </div>
@@ -66,6 +67,14 @@ export default class CommentForm extends HTMLElement {
         this.div.style.display = 'none';
         window.setTimeout(async () => {
             await slideDown(this.div);
+        });
+        document.querySelector('form.reply-js').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const url = this.action;
+            const textarea = document.querySelector('#reply_zone').value;
+            const commentID = document.querySelector('#btn-reply').getAttribute('comment-id')
+            const nbrComment = document.querySelector('.nbr-comment-js')
+            onSubmitReply([url, textarea, commentID, nbrComment])
         })
     }
 

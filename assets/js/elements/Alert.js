@@ -1,29 +1,36 @@
 import {slideUp, slideDown} from "../modules/animations";
 
-export class FloatingAlert extends HTMLElement {
+export default class FloatingAlert extends HTMLElement {
 
-    constructor() {
+    constructor(type, message, theme, btnClose) {
         super();
-        this.type = this.getAttribute('type');
-        let darkAlert = this.getAttribute('dark');
-        let message = this.getAttribute('message');
-        let btnClose = this.getAttribute('btn-close');
+        this.message = message
         this.alertStyle = 'light';
-        if (!message) {
-            this.message = this.innerHTML;
+        this.btnClose = '';
+        if (type !== undefined) {
+            this.type = type
         } else {
-            this.message = message;
+            this.type = this.getAttribute('type')
         }
-        if (darkAlert === 'true') {
-            this.alertStyle = 'dark';
+        if (!message) {
+            this.message = this.innerHTML
         }
-        if (btnClose === 'true') {
-            this.btnClose = '<button class="close">&times;</button>';
+        if (theme !== undefined) {
+            if (theme === 'dark') {
+                this.alertStyle = 'dark'
+            }
+        } else if (this.getAttribute('theme') === 'dark') {
+            this.alertStyle = 'dark'
+        }
+        if (btnClose !== undefined && btnClose === true) {
+            this.btnClose = '<button class="close">&times;</button>'
+        } else if (this.getAttribute('btn-close') === 'true') {
+            this.btnClose = '<button class="close">&times;</button>'
         } else {
             this.btnClose = ''
         }
         this.removeAttribute('type');
-        this.removeAttribute('dark');
+        this.removeAttribute('theme');
         this.removeAttribute('message');
         this.removeAttribute('btn-close');
     }

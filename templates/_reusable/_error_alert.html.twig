@@ -1,3 +1,3 @@
 {% for message in app.flashes('error') %}
-    <<alert-message type="danger" dark="true">{{ message |nl2br }}</alert-message>
+    <alert-message type="danger" theme="dark">{{ message |nl2br }}</alert-message>
 {% endfor %}

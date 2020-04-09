@@ -45,32 +45,38 @@
                 <form action="{{ path('blog.comment', {id: post.id, slug: post.slug, post: post.id}) }}" method="post" class="form-group comment-js" name="comment_form" id="comment">
                     <label for="comment_text" class="required">Votre commentaire</label>
                     <textarea class="form-control autoExpand comment-zone" id="comment_text" name="comment_zone"></textarea>
-                    <input type="hidden" name="_csrf_token_comment" value="{{ csrf_token('comment' ~ post.id) }}" id="csrf">
+                    <input type="hidden" name="_csrf_token_comment" value="{{ csrf_token('comment' ~ post.id) }}" id="csrf_comment">
                     <button class="btn btn-success comment-btn submit-js" type="submit">Commenter</button>
                 </form>
             </div>
         </div>
-        {% for comment in comments %}
-            <comment-block  author="{{ comment.author }}"
-                            author-avatar="{% if comment.author.avatarFilename is not null %}{{ vich_uploader_asset(comment.author, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %}/test/test_banner.jpg {% endif %}"
-                           author-link="{{ path('profil.index', {id: comment.author.id}) }}"
-                           datetime="{{ comment.createdAt | agoCustomElem('comment-date') }}"
-                           comment-id="{{ comment.id }}">
-                {{ comment.content }}
-            </comment-block>
-            {% if comment.children is not empty %}
-                {% for commentChild in comment.children %}
-                    <comment-block author="{{ commentChild.author }}"
-                                   author-avatar="{% if commentChild.author.avatarFilename is not null %}{{ vich_uploader_asset(commentChild.author, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %}/test/test_banner.jpg{% endif %}"
-                                   author-link="{{ path('profil.index', {id: commentChild.author.id}) }}"
-                                   datetime="{{ commentChild.createdAt | agoCustomElem('comment-date') }}"
-                                   isReply="true"
-                                   parent-id="{{ commentChild.parent.id }}">
-                        {{ commentChild.content }}
-                    </comment-block>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
+        <div class="comment-block">
+            {% for comment in comments %}
+                <comment-block  author="{{ comment.author }}"
+                                author-avatar="{% if comment.author.avatarFilename is not null %}{{ vich_uploader_asset(comment.author, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %}/test/test_banner.jpg {% endif %}"
+                                author-link="{{ path('profil.index', {id: comment.author.id}) }}"
+                                datetime="{{ comment.createdAt | agoCustomElem('comment-date') }}"
+                                content="{{ comment.content }}"
+                                btn-reply-name="Répondre"
+                                comment-id="{{ comment.id }}">
+                </comment-block>
+                <div id="reply-{{ comment.id }}">
+                    {% if comment.children is not empty %}
+                        {% for commentChild in comment.children %}
+                            <comment-block author="{{ commentChild.author }}"
+                                           author-avatar="{% if commentChild.author.avatarFilename is not null %}{{ vich_uploader_asset(commentChild.author, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %}/test/test_banner.jpg{% endif %}"
+                                           author-link="{{ path('profil.index', {id: commentChild.author.id}) }}"
+                                           datetime="{{ commentChild.createdAt | agoCustomElem('comment-date') }}"
+                                           content="{{ commentChild.content }}"
+                                           isReply="true"
+                                           btn-reply-name="Répondre"
+                                           parent-id="{{ commentChild.parent.id }}">
+                            </comment-block>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
         <div class="pagination mt-2">
             {{ knp_pagination_render(comments) }}
         </div>

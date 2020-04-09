@@ -5,9 +5,12 @@ namespace App\Service;
 use App\Entity\PasswordToken;
 use App\Entity\User;
 use App\Event\RequestChangePasswordEvent;
+use App\Exceptions\OAuthPasswordException;
 use App\Exceptions\TokenExpiredException;
 use App\Repository\PasswordTokenRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use MongoDB\Driver\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -34,10 +37,15 @@ class PasswordService {
      * @var EventDispatcherInterface
      */
     private $dispatcher;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     public function __construct(
         EntityManagerInterface $manager,
         PasswordTokenRepository $tokenRepository,
+        UserRepository $userRepository,
         UserPasswordEncoderInterface $encoder,
         TokenGeneratorService $generatorService,
         EventDispatcherInterface $dispatcher) {
@@ -46,6 +54,7 @@ class PasswordService {
         $this->encoder = $encoder;
         $this->generatorService = $generatorService;
         $this->dispatcher = $dispatcher;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -55,6 +64,10 @@ class PasswordService {
      */
     public function resetPassword(User $user): void {
         $token = $this->tokenRepository->findOneBy(['user' => $user]);
+        $isOAuth = $this->userRepository->findOneBy(['id' => $user]);
+        if ($isOAuth->getOauth() === true) {
+            throw new OAuthPasswordException();
+        }
         if ($token !== null && !$this->isExpired($token)) {
             throw new TokenExpiredException();
         }

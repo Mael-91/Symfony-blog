@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class ChangePassword extends AbstractController {
 
@@ -62,7 +63,7 @@ class ChangePassword extends AbstractController {
             if ($user) {
                 $this->service->resetPassword($user);
                 $this->addFlash('success', 'An email has been sent to you to change your password');
-                return $this->redirectToRoute('login', [], 301);
+                //return $this->redirectToRoute('login', [], 301);
             } else {
                 $this->addFlash('error', 'Email does not exist');
             }

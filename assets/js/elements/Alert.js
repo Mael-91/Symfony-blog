@@ -34,7 +34,7 @@ export class FloatingAlert extends HTMLElement {
             <span class="alert-text">${this.message}</span>
             ${this.btnClose}
         </div>`;
-        this.querySelector('.alert').addEventListener('click', (e) => {
+        this.querySelector('.alert-element').addEventListener('click', (e) => {
             e.preventDefault();
             this.closeOnClick()
         });

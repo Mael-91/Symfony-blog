@@ -40,7 +40,6 @@ class AppFixtures extends Fixture
             ->setLastName('Constantin')
             ->setSexe('1')
             ->setRoles(['ROLE_SUPER_ADMIN'])
-            ->setCreatedAt(new \DateTime())
             ->setEnabled(true);
         $manager->persist($user);
 
@@ -56,8 +55,45 @@ class AppFixtures extends Fixture
                 ->setLastName($faker->lastName)
                 ->setSexe(rand(1, 2))
                 ->setRoles(['ROLE_USER'])
-                ->setCreatedAt(new \DateTime())
-                ->setEnabled(true);
+                ->setEnabled(true)
+                ->setAvatarFilename('avatar.png')
+                ->setBannerFilename('test_banner.jpg');
+            $manager->persist($user);
+            $users[] = $user;
+        }
+
+        // Création d'utilisateur connecté via un service oauth
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $user->setUsername($faker->userName)
+                ->setEmail($faker->email)
+                ->setPassword($this->encoder->encodePassword($user, $faker->password))
+                ->setFirstName($faker->firstName)
+                ->setLastName($faker->lastName)
+                ->setSexe(rand(1, 2))
+                ->setRoles(['ROLE_USER'])
+                ->setEnabled(true)
+                ->setOauth(true)
+                ->setAvatarFilename('avatar.png')
+                ->setBannerFilename('test_banner.jpg');
+            $manager->persist($user);
+            $users[] = $user;
+        }
+
+        // Création d'utilisateur non vérifié
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $user->setUsername($faker->userName)
+                ->setEmail($faker->email)
+                ->setPassword($this->encoder->encodePassword($user, $faker->password))
+                ->setFirstName($faker->firstName)
+                ->setLastName($faker->lastName)
+                ->setSexe(rand(1, 2))
+                ->setRoles(['ROLE_USER'])
+                ->setEnabled(true)
+                ->setEnabled(false)
+                ->setAvatarFilename('avatar.png')
+                ->setBannerFilename('test_banner.jpg');
             $manager->persist($user);
             $users[] = $user;
         }
@@ -71,31 +107,28 @@ class AppFixtures extends Fixture
         }
 
         // Création d'articles aléatoire
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $post = new Blog();
             $post->setTitle($faker->sentence)
-                ->setContent($faker->paragraph(5))
+                ->setContent($faker->paragraph(15))
                 ->setAuthor($faker->randomElement($users))
-                ->setPictureFilename('5e754250eaa58935050116.jpg')
-                ->setBannerFilename('5e75f4178c33c367527604.jpg')
-                ->setCategory($faker->randomElement($categories))
-                ->setCreatedAt(new \DateTime())
-                ->setActive(true);
+                ->setPictureFilename('5e7caf4628a43110309176.jpg')
+                ->setBannerFilename('5e7cb6cc40cda350914190.jpg')
+                ->setCategory($faker->randomElement($categories));
             $manager->persist($post);
             $posts[] = $post;
 
-            // Création de commentaires parents aléatoire
+            // Création des commentaires parents aléatoire
             for ($c = 0; $c < 5; $c++) {
                 $comment = new BlogComment();
                 $comment->setPost($faker->randomElement($posts))
                     ->setAuthor($faker->randomElement($users))
-                    ->setContent($faker->paragraph)
-                    ->setVisible(true)
-                    ->setCreatedAt(new \DateTime());
+                    ->setContent($faker->paragraph);
                 $manager->persist($comment);
                 $parents[] = $comment;
             }
 
+            // Création des commentaires enfants
             for ($r = 0; $r < 5; $r++) {
                 $reply = new BlogComment();
                 $reply->setPost($faker->randomElement($posts))

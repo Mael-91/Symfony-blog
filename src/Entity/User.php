@@ -88,7 +88,7 @@ class User implements UserInterface, \Serializable
     private $created_at;
 
     /**
-     * @ORM\Column(type="datetime", columnDefinition="DATETIME on update CURRENT_TIMESTAMP", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $edited_at;
 

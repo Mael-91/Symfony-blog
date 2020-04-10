@@ -14,18 +14,18 @@ class BlogCategoryTest extends KernelTestCase {
     use AssertTrait;
 
     public function testValidEntity() {
-        $this->assertHasError($this->getEntity(), 0);
+        $this->assertValidatorErrors($this->getEntity(), 0);
     }
 
     public function testBlankCategoryName() {
-        $this->assertHasError($this->getEntity()->setName(''), 1);
+        $this->assertValidatorErrors($this->getEntity()->setName(''), 1);
     }
 
     public function testCategoryNameAlreadyExist() {
         $this->loadFixtureFiles([
             dirname(__DIR__, 1) . '/fixtures/BlogCategory.yaml'
         ]);
-        $this->assertHasError($this->getEntity()->setName('première catégorie'), 1);
+        $this->assertValidatorErrors($this->getEntity()->setName('première catégorie'), 1);
     }
 
     private function getEntity(): BlogCategory {

@@ -14,11 +14,11 @@ class BlogCommentTest extends KernelTestCase {
     use AssertTrait;
 
     public function testValidEntity() {
-        $this->assertHasError($this->getEntity(), 0);
+        $this->assertValidatorErrors($this->getEntity(), 0);
     }
 
     public function testBlankContent() {
-        $this->assertHasError($this->getEntity()->setContent(''), 1);
+        $this->assertValidatorErrors($this->getEntity()->setContent(''), 1);
     }
 
     private function getEntity(): BlogComment {

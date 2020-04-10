@@ -48,7 +48,6 @@ class Blog
     /**
      * @var string|null
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
      */
     private $pictureFilename;
 

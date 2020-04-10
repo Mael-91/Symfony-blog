@@ -8,6 +8,7 @@ use App\Entity\User;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\ConstraintViolation;
 
 class BlogTest extends KernelTestCase {
@@ -32,14 +33,6 @@ class BlogTest extends KernelTestCase {
 
     public function testInvalidBlankContentEntity() {
         $this->assertValidatorErrors($this->getEntity()->setContent(''), 1);
-    }
-
-    public function testBlankPictureFile() {
-        $this->assertValidatorErrors($this->getEntity()->setPictureFilename(''), 1);
-    }
-
-    public function testAcceptBlankBanner() {
-        $this->assertValidatorErrors($this->getEntity()->setBannerFilename(''), 0);
     }
 
     private function getEntity(): Blog {

@@ -29,6 +29,7 @@ class UserActivity
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BlogComment", inversedBy="userActivities")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $blog_comment;
 

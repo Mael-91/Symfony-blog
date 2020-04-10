@@ -47,6 +47,7 @@ class BlogComment
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\BlogComment", inversedBy="children")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $parent;
 

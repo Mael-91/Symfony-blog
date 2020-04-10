@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,6 +16,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogRepository")
  * @Vich\Uploadable()
+ * @UniqueEntity("title")
  */
 class Blog
 {
@@ -46,6 +48,7 @@ class Blog
     /**
      * @var string|null
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $pictureFilename;
 

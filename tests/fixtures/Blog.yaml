@@ -1,0 +1,19 @@
+App\Entity\Blog:
+  article1:
+    title: 'test'
+    content: 'mon contenu'
+    pictureFilename: 'picture.jpg'
+    bannerFilename: 'banner.jpg'
+    author: '@user1'
+
+App\Entity\User:
+  user1:
+    username: '<username()>'
+    roles:
+      - 'ROLE_SUPER_ADMIN'
+    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$F3JG29Imj3W9Nz0paHcxHA\$OpYmPkCOhiA3/r7ilr00SOYLbfP9ZfcUCz60GLxVmH0'
+    email: 'email.<email()>\@mail.com'
+    first_name: '<name()>'
+    last_name: '<name()>'
+    birthday: '<datetime(24-09-2003)>'
+    sexe: 1

@@ -7,10 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogCategoryRepository")
+ * @UniqueEntity("name")
  */
 class BlogCategory
 {
@@ -22,8 +24,8 @@ class BlogCategory
     private $id;
 
     /**
-     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
      */
     private $name;
 

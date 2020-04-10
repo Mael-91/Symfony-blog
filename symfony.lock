@@ -26,14 +26,45 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v5.1.1"
     },
+    "liip/test-fixtures-bundle": {
+        "version": "1.7.0"
+    },
     "mael/recaptcha-bundle": {
-        "version": "dev-master"
+        "version": "v0.2"
     },
     "michelf/php-markdown": {
         "version": "1.9.0"
     },
+    "myclabs/deep-copy": {
+        "version": "1.9.5"
+    },
+    "nelmio/alice": {
+        "version": "3.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.2",
+            "ref": "0b9900ece737bec7752e4155c0164639dd9b0cb0"
+        },
+        "files": [
+            "config/packages/dev/nelmio_alice.yaml",
+            "config/packages/test/nelmio_alice.yaml"
+        ]
+    },
     "php": {
         "version": "7.3"
+    },
+    "sebastian/comparator": {
+        "version": "4.0.0"
+    },
+    "sebastian/diff": {
+        "version": "4.0.0"
+    },
+    "sebastian/exporter": {
+        "version": "4.0.0"
+    },
+    "sebastian/recursion-context": {
+        "version": "4.0.0"
     },
     "symfony/webpack-encore-bundle": {
         "version": "1.6",

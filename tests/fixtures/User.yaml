@@ -1,0 +1,28 @@
+App\Entity\User:
+  usernameAlreadyTaken:
+    username: 'Test1'
+    roles:
+      - 'ROLE_USER'
+    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$jQIrFZLkbUPsdzeWlup4Sw\$GRifpLVpD4T15RQDqkvvLi+AcvA6kO8f4KGVteaob7Y'
+    email: 'email.<email()>\@gmail.com'
+    first_name: 'Test'
+    last_name: 'Unit'
+    birthday: '<datetime(5-08-2010)>'
+    sexe: 1
+    enabled: true
+    avatarFilename: 'avatar.jpg'
+    bannerFilename: 'banner.jpg'
+
+  emailAlreadyTaken:
+    username: '<username()>'
+    roles:
+      - 'ROLE_USER'
+    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$jQIrFZLkbUPsdzeWlup4Sw\$GRifpLVpD4T15RQDqkvvLi+AcvA6kO8f4KGVteaob7Y'
+    email: 'used@email.com'
+    first_name: 'Test'
+    last_name: 'Unit'
+    birthday: '<datetime(5-08-2010)>'
+    sexe: 1
+    enabled: true
+    avatarFilename: 'avatar.jpg'
+    bannerFilename: 'banner.jpg'

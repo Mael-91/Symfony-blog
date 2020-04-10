@@ -23,7 +23,6 @@ function onSubmitComment(event) {
         nbrComment.textContent = response.data.nbrComment;
         textarea.value = '';
         appendComment(response.data.comment)
-        alert('ok')
         const successAlert = new FloatingAlert('success', 'Well done, your comment has been sent', 'dark')
         document.querySelector('.container').insertBefore(successAlert, document.querySelector('.post-banner'))
     }).catch(function (error) {

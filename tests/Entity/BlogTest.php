@@ -8,8 +8,6 @@ use App\Entity\User;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Validator\ConstraintViolation;
 
 class BlogTest extends KernelTestCase {
 

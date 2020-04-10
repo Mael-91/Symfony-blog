@@ -28,7 +28,7 @@
                     <td>{{ comment.author }}</td>
                     <td>{{ comment.createdAt | date("H:i d/m/Y") }}</td>
                     <td><a href="{{ path('admin.blog.comment.edit', {id: comment.id}) }}" id="edit" data-toggle="tooltip" data-placement="top" title="Éditer"><i class="far fa-edit"></i></a>
-                        <form method="post" action="{{ path('admin.blog.comment.delete', {id: comment.id}) }}) }}" class="d-inline-block">
+                        <form method="post" action="{{ path('admin.blog.comment.delete', {id: comment.id}) }}" class="d-inline-block">
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
                             <button id="delete" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="far fa-trash-alt"></i></button>

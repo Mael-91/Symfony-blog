@@ -8,6 +8,7 @@
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
+!/var/cache/test/test.db
 /vendor/
 /assets/js/timeago.locales.min.js
 /assets/js/timeago.min.js

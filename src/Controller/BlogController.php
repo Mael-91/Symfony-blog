@@ -71,7 +71,7 @@ class BlogController extends AbstractController {
      * @return Response
      */
     public function index(PaginatorInterface $paginator, Request $request): Response {
-        $post = $paginator->paginate($this->postRepository->findAllVisibleQuery(),
+        $post = $paginator->paginate($this->postRepository->findBy(['visible' => true], ['created_at' => 'DESC']),
             $request->query->getInt('page', 1), 20);
         $category = $this->categoryRepository->findAll();
         $keyPost = $this->postRepository->countPost();

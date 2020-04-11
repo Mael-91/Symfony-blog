@@ -34,9 +34,4 @@ class BlogCommentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    private function findActiveQuery(): QueryBuilder {
-        return $this->createQueryBuilder('c')
-            ->where('c.visible = true');
-    }
 }

@@ -21,14 +21,6 @@ class BlogRepository extends ServiceEntityRepository
         parent::__construct($registry, Blog::class);
     }
 
-    /**
-     * @return Query
-     */
-    public function findAllVisibleQuery(): Query {
-        return $this->findVisibleQuery()
-            ->getQuery();
-    }
-
     public function findLastArticle(int $maxResult = 5): array {
         return $this->createQueryBuilder('p')
             ->orderBy('p.created_at', 'DESC')
@@ -42,10 +34,5 @@ class BlogRepository extends ServiceEntityRepository
             ->select('COUNT(p)')
             ->getQuery()
             ->getSingleScalarResult();
-    }
-
-    private function findVisibleQuery(): QueryBuilder {
-        return $this->createQueryBuilder('p')
-            ->where('p.visible = true');
     }
 }

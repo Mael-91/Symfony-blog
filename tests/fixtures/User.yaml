@@ -58,7 +58,7 @@ App\Entity\User:
 
   default:
     username: 'Mael'
-    role:
+    roles:
       - 'ROLE_SUPER_ADMIN'
     password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$jQIrFZLkbUPsdzeWlup4Sw\$GRifpLVpD4T15RQDqkvvLi+AcvA6kO8f4KGVteaob7Y'
     email: 'mael\@gmail.com'

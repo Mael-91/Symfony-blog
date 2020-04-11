@@ -13,7 +13,7 @@ class UserRepositoryTest extends KernelTestCase {
     use AssertTrait;
 
     public function testCountUser() {
-        $this->assertEqualsMethodRepo('countUser', 17, 'User', UserRepository::class);
+        $this->assertEqualsMethodRepo('countUser', 18, 'User', UserRepository::class);
     }
 
     public function testCountWithOAuth() {

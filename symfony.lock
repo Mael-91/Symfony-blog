@@ -85,6 +85,15 @@
             "webpack.config.js"
         ]
     },
+    "theofidry/alice-data-fixtures": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "fe5a50faf580eb58f08ada2abe8afbd2d4941e05"
+        }
+    },
     "vich/uploader-bundle": {
         "version": "1.5",
         "recipe": {

@@ -1,4 +1,6 @@
 {
+    "name": "Symfony Project Blog",
+    "description": "Simpler project to learn symfony framework",
     "type": "project",
     "license": "proprietary",
     "require": {

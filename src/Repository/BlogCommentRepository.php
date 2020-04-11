@@ -27,10 +27,10 @@ class BlogCommentRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function findLastComment(): array {
+    public function findLastComment($maxResult = 5): array {
         return $this->createQueryBuilder('c')
             ->orderBy('c.created_at', 'DESC')
-            ->setMaxResults(5)
+            ->setMaxResults($maxResult)
             ->getQuery()
             ->getResult();
     }

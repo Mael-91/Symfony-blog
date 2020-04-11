@@ -29,10 +29,10 @@ class BlogRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-    public function findlastArticle(): array {
+    public function findLastArticle(int $maxResult = 5): array {
         return $this->createQueryBuilder('p')
             ->orderBy('p.created_at', 'DESC')
-            ->setMaxResults(5)
+            ->setMaxResults($maxResult)
             ->getQuery()
             ->getResult();
     }

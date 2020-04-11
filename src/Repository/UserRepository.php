@@ -56,10 +56,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getSingleScalarResult();
     }
 
-    public function findLastUser(): array {
+    public function findLastUser(int $maxResult = 5): array {
         return $this->createQueryBuilder('u')
             ->orderBy('u.created_at', 'DESC')
-            ->setMaxResults(5)
+            ->setMaxResults($maxResult)
             ->getQuery()
             ->getResult();
     }

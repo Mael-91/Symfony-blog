@@ -51,7 +51,7 @@ class DashboardController extends AbstractController {
      */
     public function dashboard(): Response {
         $nbrPost = $this->blogRepository->countPost();
-        $lastPost = $this->blogRepository->findlastArticle();
+        $lastPost = $this->blogRepository->findLastArticle();
         $nbrCategory = $this->categoryRepository->countCategory();
         $nbrComment = $this->commentRepository->countComment();
         $lastComment = $this->commentRepository->findLastComment();

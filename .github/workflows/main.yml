@@ -32,7 +32,7 @@ jobs:
       - name: Install Composer and Dependencies
         uses: php-actions/composer@v1
         with:
-          command: composer install --prefer-dist --no-suggest
+          command: composer update --no-interaction --prefer-dist
       - name: PHPUnit tests
         uses: php-actions/phpunit@v1
         with:

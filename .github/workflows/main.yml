@@ -1,0 +1,86 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Mael Workflows Build and Tests
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: PHPUnit test
+    runs-on: [ubuntu-latest]
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ['7.2', '7.3', '7.4']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up PHP
+        uses: shivammathur/setup-php@1.7.0
+        with:
+          php-version: ${{ matrix.php }}
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Cache PHP Dependencies
+        uses: actions/cache@v1
+        with:
+          path: vendor
+          key: ${{ runner.OS }}-test-${{ hashFiles('**/composer.lock') }}
+      - name: Install Composer and Dependencies
+        uses: php-actions/composer@v1
+        with:
+          command: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install NPM Dependencies
+        run: npm install
+      - name: NPM Build
+        run: npm run build
+      - name: PHPUnit tests
+        uses: php-actions/phpunit@v1
+        with:
+          config: phpunit.xml.dist
+          bootstrap: tests/bootstrap.php
+  build: 
+    name: Build project
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ['7.2', '7.3', '7.4']
+        node: ['12.16.2', '13.12.0']
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up PHP
+        uses: shivammathur/setup-php@1.7.0
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Cache PHP Dependencies
+        uses: actions/cache@v1
+        with:
+          path: vendor
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+      - name: Install Composer and Dependencies
+        uses: php-actions/composer@v1
+        with:
+          command: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install NPM Dependencies
+        run: npm install
+      - name: NPM Build
+        run: npm run build
+      - name: PHPUnit tests
+        uses: php-actions/phpunit@v1
+        with:
+          config: phpunit.xml.dist
+          bootstrap: tests/bootstrap.php

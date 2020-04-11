@@ -1,0 +1,8 @@
+include:
+  - ./User.yaml
+  - ./Blog.yaml
+
+App\Entity\BlogLike:
+  like{1..5}:
+    post: '@article1'
+    user: '@user1'

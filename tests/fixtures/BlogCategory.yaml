@@ -1,3 +1,6 @@
 App\Entity\BlogCategory:
-  category1:
+  categoryAlreadyExist:
     name: "première catégorie"
+
+  category{1..5}:
+    name: '<name()>'

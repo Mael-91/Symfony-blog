@@ -1,0 +1,9 @@
+include:
+  - ./User.yaml
+  - ./Blog.yaml
+
+App\Entity\BlogComment:
+  comment{1..10}:
+    post: '@article9'
+    author: '@user5'
+    content: '<sentence()>'

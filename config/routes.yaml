@@ -83,42 +83,42 @@ admin.blog.post.edit:
   methods: [GET|POST]
 
 admin.blog.post.delete:
-  path: /admin/blog/post/post/{id}
+  path: /admin/blog/post/{id}
   controller: App\Controller\Admin\Blog\BlogController::delete
   methods: [DELETE]
 
 admin.blog.manage.categories:
-  path: /admin/blog/post/categories
+  path: /admin/blog/categories
   controller: App\Controller\Admin\Blog\BlogCategoriesController::index
   methods: [GET]
 
 admin.blog.categories.create:
-  path: /admin/blog/post/categories/create
+  path: /admin/blog/categories/create
   controller: App\Controller\Admin\Blog\BlogCategoriesController::create
   methods: [GET|POST]
 
 admin.blog.categories.edit:
-  path: /admin/blog/post/categories/edit/{id}
+  path: /admin/blog/categories/edit/{id}
   controller: App\Controller\Admin\Blog\BlogCategoriesController::edit
   methods: [GET|POST]
 
 admin.blog.categories.delete:
-  path: /admin/blog/post/categories/{id}
+  path: /admin/blog/categories/{id}
   controller: App\Controller\Admin\Blog\BlogCategoriesController::delete
   methods: [DELETE]
 
 admin.blog.manage.comment:
-  path: /admin/blog/post/comments
+  path: /admin/blog/comments
   controller: App\Controller\Admin\Blog\BlogCommentsController::comments
   methods: [GET|POST]
 
 admin.blog.comment.edit:
-  path: /admin/blog/post/comments/edit/{id}
+  path: /admin/blog/comments/edit/{id}
   controller: App\Controller\Admin\Blog\BlogCommentsController::edit
   methods: [GET|POST]
 
 admin.blog.comment.delete:
-  path: /admin/blog/post/comments/{id}
+  path: /admin/blog/comments/{id}
   controller: App\Controller\Admin\Blog\BlogCommentsController::delete
   methods: [DELETE]
 

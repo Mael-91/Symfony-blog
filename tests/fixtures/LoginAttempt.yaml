@@ -1,0 +1,18 @@
+App\Entity\User:
+  user_attempt:
+    username: 'aeazeaze'
+    roles:
+      - 'ROLE_USER'
+    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$jQIrFZLkbUPsdzeWlup4Sw\$GRifpLVpD4T15RQDqkvvLi+AcvA6kO8f4KGVteaob7Y'
+    email: 'maeleee\@gmail.com'
+    first_name: 'Maeeel'
+    last_name: 'Conseetantin'
+    birthday: '<datetime(24-09-2003)>'
+    sexe: 1
+    enabled: true
+    avatarFilename: 'avatar.jpg'
+    bannerFilename: 'banner.jpg'
+
+App\Entity\LoginAttempt:
+  attempt{1..5}:
+    user: '@user_attempt'

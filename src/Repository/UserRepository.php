@@ -63,4 +63,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Permet de logger un utilisateur via l'email ou le nom d'utilisateur
+     * @param string $username
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findUserByUsernameOrEmail(string $username): ?User {
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :username')
+            ->orWhere('u.email = :username')
+            ->setMaxResults(1)
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

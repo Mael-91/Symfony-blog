@@ -12,11 +12,8 @@
 /vendor/
 /assets/js/timeago.locales.min.js
 /assets/js/timeago.min.js
-/tests/Controller/Admin/
-/tests/Controller/Auth/
-/tests/Controller/Core/
-/tests/Controller/Profil/ProfilControllerTest.php
-/tests/Controller/Security/
+/tests/Controller/
+/public/build/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

@@ -60,7 +60,7 @@ App\Entity\User:
     username: 'Mael'
     roles:
       - 'ROLE_SUPER_ADMIN'
-    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$jQIrFZLkbUPsdzeWlup4Sw\$GRifpLVpD4T15RQDqkvvLi+AcvA6kO8f4KGVteaob7Y'
+    password: '\$argon2id\$v=19\$m=65536,t=4,p=1\$IaB+foTUZ8vx1uLuV6PCnQ\$TGIdgQ4qzuJTU2f03+NU0vBRSyVhN8Ttmk1EMZvEq0w'
     email: 'mael\@gmail.com'
     first_name: 'Mael'
     last_name: 'Constantin'

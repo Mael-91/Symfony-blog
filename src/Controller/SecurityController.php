@@ -68,7 +68,8 @@ class SecurityController extends AbstractController {
      * @throws \Exception
      */
     public function register(Request $request): Response {
-        if ($this->getUser()) {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY') ||
+            $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $error = $this->addFlash('error', 'Your are already connected');
             return $this->redirectToRoute('home', [ 'error-is-connected' => $error ], 301);
         }
@@ -88,7 +89,7 @@ class SecurityController extends AbstractController {
             $this->addFlash('success', 'Well done, your account has been created !'); // Mettre erreur spéciale dans le _success_alert (voir carte -> Frontend)
             $this->dispatcher->dispatch(new SecurityRegistrationEvent($user, $token));
             $this->dispatcher->dispatch(new LoginAfterRegistrationEvent($user));
-            return $this->redirectToRoute('home', [], 301);
+            return $this->redirectToRoute('home', [], Response::HTTP_FOUND);
         }
 
         return $this->render('security/signup.html.twig', [
@@ -104,9 +105,9 @@ class SecurityController extends AbstractController {
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
-         if ($this->getUser()) {
+    public function login(AuthenticationUtils $authenticationUtils): Response {
+         if ($this->isGranted('IS_AUTHENTICATED_FULLY') ||
+             $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
              $this->addFlash('error', 'Your are already connected');
              return $this->redirectToRoute('home', [], 301);
          }

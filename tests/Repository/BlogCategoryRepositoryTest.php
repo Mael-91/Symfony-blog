@@ -13,6 +13,6 @@ class BlogCategoryRepositoryTest extends KernelTestCase {
     use AssertTrait;
 
     public function testcountCategory() {
-        $this->assertEqualsMethodRepo('countCategory', 6, 'BlogCategory', BlogCategoryRepository::class);
+        $this->assertEqualsMethodRepo('countCategory', 7, 'BlogCategory', BlogCategoryRepository::class);
     }
 }

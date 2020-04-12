@@ -13,7 +13,7 @@ class BlogCommentRepositoryTest extends KernelTestCase {
     use AssertTrait;
 
     public function testCountComment() {
-        $this->assertEqualsMethodRepo('countComment', 10, 'BlogComment', BlogCommentRepository::class);
+        $this->assertEqualsMethodRepo('countComment', 11, 'BlogComment', BlogCommentRepository::class);
     }
 
     public function testFindLastComment() {

@@ -17,6 +17,6 @@ class BlogRepositoryTest extends KernelTestCase {
     }
 
     public function testCountPost() {
-        $this->assertEqualsMethodRepo('countPost', 11, 'Blog', BlogRepository::class);
+        $this->assertEqualsMethodRepo('countPost', 12, 'Blog', BlogRepository::class);
     }
 }

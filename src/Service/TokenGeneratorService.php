@@ -10,13 +10,12 @@ class TokenGeneratorService {
 
     /**
      * Génère un token de taille aléatoire
-     * @param int $lenght
+     * @param int $length
      * @return string
      * @throws \Exception
      */
-    public function generateToken(int $lenght = 20): string {
-        $replace = ['+', '=', '/'];
-        return rtrim(substr(str_replace($replace, '', bin2hex(random_bytes((int)ceil($lenght / 2)))), 2, $lenght));
+    public function generateToken(int $length = 20): string {
+        return rtrim(substr(bin2hex(random_bytes((int)ceil($length / 2))), 0, $length));
     }
 
     /**

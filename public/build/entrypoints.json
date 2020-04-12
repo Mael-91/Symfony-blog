@@ -1,0 +1,119 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/vendors~app~blogAction~blogComment~blogLike.js",
+        "http://localhost:8080/build/vendors~app~blogAction~blogComment.js",
+        "http://localhost:8080/build/vendors~app~textareaResize.js",
+        "http://localhost:8080/build/vendors~app.js",
+        "http://localhost:8080/build/app~blogAction~blogComment.js",
+        "http://localhost:8080/build/app.js"
+      ],
+      "css": [
+        "http://localhost:8080/build/vendors~app.css",
+        "http://localhost:8080/build/app.css"
+      ]
+    },
+    "textareaResize": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/vendors~app~textareaResize.js",
+        "http://localhost:8080/build/textareaResize.js"
+      ]
+    },
+    "blogLike": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/vendors~app~blogAction~blogComment~blogLike.js",
+        "http://localhost:8080/build/vendors~blogAction~blogComment~blogLike.js",
+        "http://localhost:8080/build/blogLike.js"
+      ]
+    },
+    "blogComment": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/vendors~app~blogAction~blogComment~blogLike.js",
+        "http://localhost:8080/build/vendors~app~blogAction~blogComment.js",
+        "http://localhost:8080/build/vendors~blogAction~blogComment~blogLike.js",
+        "http://localhost:8080/build/app~blogAction~blogComment.js",
+        "http://localhost:8080/build/blogComment.js"
+      ]
+    },
+    "blogAction": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/vendors~app~blogAction~blogComment~blogLike.js",
+        "http://localhost:8080/build/vendors~app~blogAction~blogComment.js",
+        "http://localhost:8080/build/vendors~blogAction~blogComment~blogLike.js",
+        "http://localhost:8080/build/app~blogAction~blogComment.js",
+        "http://localhost:8080/build/blogAction.js"
+      ]
+    },
+    "dashboard": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/dashboard.js"
+      ],
+      "css": [
+        "http://localhost:8080/build/dashboard.css"
+      ]
+    },
+    "markdown": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/markdown.js"
+      ],
+      "css": [
+        "http://localhost:8080/build/markdown.css"
+      ]
+    },
+    "GuideMarkdown": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/GuideMarkdown.js"
+      ],
+      "css": [
+        "http://localhost:8080/build/GuideMarkdown.css"
+      ]
+    },
+    "admin": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/admin.js"
+      ],
+      "css": [
+        "http://localhost:8080/build/admin.css"
+      ]
+    },
+    "blog": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/blog.js"
+      ],
+      "css": [
+        "http://localhost:8080/build/blog.css"
+      ]
+    },
+    "profil": {
+      "js": [
+        "http://localhost:8080/build/runtime.js",
+        "http://localhost:8080/build/vendors~GuideMarkdown~admin~app~blog~blogAction~blogComment~blogLike~dashboard~markdown~profil~textareaResize.js",
+        "http://localhost:8080/build/profil.js"
+      ],
+      "css": [
+        "http://localhost:8080/build/profil.css"
+      ]
+    }
+  }
+}

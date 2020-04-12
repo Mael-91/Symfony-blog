@@ -7,3 +7,8 @@ App\Entity\BlogComment:
     post: '@article9'
     author: '@user5'
     content: '<sentence()>'
+
+  commentTest:
+    post: '@article5'
+    author: '@user2'
+    content: '<sentence()>'

@@ -4,3 +4,6 @@ App\Entity\BlogCategory:
 
   category{1..5}:
     name: '<name()>'
+
+  categoryTest:
+    name: 'category de teste'

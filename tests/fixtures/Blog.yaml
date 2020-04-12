@@ -17,3 +17,11 @@ App\Entity\Blog:
     pictureFilename: 'picture.jpg'
     bannerFilename: 'banner.jpg'
     author: '@user2'
+
+  articleTest:
+    title: 'Article de teste'
+    content: '<sentence()>'
+    category: '@categoryTest'
+    pictureFilename: 'picture.jpg'
+    bannerFilename: 'banner.jpg'
+    author: '@user2'

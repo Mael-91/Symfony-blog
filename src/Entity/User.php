@@ -175,6 +175,11 @@ class User implements UserInterface, \Serializable
      */
     private $confirmationToken;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\AvatarGenerator", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $defaultAvatar;
+
     public function __construct() {
         $this->author = new ArrayCollection();
         $this->blogLikes = new ArrayCollection();
@@ -652,5 +657,22 @@ class User implements UserInterface, \Serializable
 
     public function __toString() {
         return (string)$this->username;
+    }
+
+    public function getDefaultAvatar(): ?AvatarGenerator
+    {
+        return $this->defaultAvatar;
+    }
+
+    public function setDefaultAvatar(AvatarGenerator $defaultAvatar): self
+    {
+        $this->defaultAvatar = $defaultAvatar;
+
+        // set the owning side of the relation if necessary
+        if ($defaultAvatar->getUser() !== $this) {
+            $defaultAvatar->setUser($this);
+        }
+
+        return $this;
     }
 }

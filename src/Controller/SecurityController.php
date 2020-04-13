@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ConfirmationToken;
 use App\Entity\User;
+use App\Event\GenerateAvatarEvent;
 use App\Event\LoginAfterRegistrationEvent;
 use App\Event\SecurityLoginEvent;
 use App\Event\SecurityRegistrationEvent;
@@ -89,6 +90,7 @@ class SecurityController extends AbstractController {
             $this->addFlash('success', 'Well done, your account has been created !'); // Mettre erreur spéciale dans le _success_alert (voir carte -> Frontend)
             $this->dispatcher->dispatch(new SecurityRegistrationEvent($user, $token));
             $this->dispatcher->dispatch(new LoginAfterRegistrationEvent($user));
+            $this->dispatcher->dispatch(new GenerateAvatarEvent($user));
             return $this->redirectToRoute('home', [], Response::HTTP_FOUND);
         }
 

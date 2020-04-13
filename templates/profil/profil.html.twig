@@ -11,8 +11,29 @@
         </div>
     </div>
     <div class="container">
-        <img src="{% if user.avatarFilename is not null %} {{ vich_uploader_asset(user, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }} {% else %} /test/avatar.png {% endif %}" alt="Avatar de {{ user.username }}" class="rounded-circle profil-picture">
+        {% if user.avatarFilename is not null %}
+            <img src="{{ vich_uploader_asset(user, 'avatarFile') | cloud_image('symfony-project-blog', 'user/avatar') }}" alt="Avatar de {{ user.username }}" class="rounded-circle profil-picture">
+        {% else %}
+            <div class="identity">
+                <div class="default-avatar">
+                    <span class="user-avatar" style="background: rgb({{ user.defaultAvatar.color|join(', ') }});">D</span>
+                </div>
+            </div>
+        {% endif %}
         <!-- Mettre nom du profil  à la droite de l'image en hauteur -->
+        <!-- Faire une extension pour récupérer la première lettre de l'utilisateur -->
+        {#<div class="userCard-profil">
+            <h2 class="userCard-identity">
+                <a href="Lien vers le profil utilisateur">
+                    <div class="default-avatar">
+                        <span class="user-avatar" style="background: rgb({{ user.defaultAvatar.color|join(', ') }});"><!-- Initial de l'utilisateur --></span>
+                    </div>
+                    <span class="username"><!-- Nom de l'utilisateur--></span>
+                </a>
+            </h2>
+            <ul class="userCard-badges"><!-- liste des badges de l'utilisateur --></ul>
+            <ul class="userCard-info"><!-- Utilisateur en ligne ??? Dernière visite --></ul>
+        </div>#}
         <span class="profil-username">{{ user.username }}</span>
         <div class="row">
             <div class="col-3">

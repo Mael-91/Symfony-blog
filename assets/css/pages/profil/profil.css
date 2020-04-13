@@ -16,6 +16,23 @@ img.profil-banner {
     height: 132px;
 }
 
+.default-avatar .user-avatar {
+    position: relative;
+    border-radius: 96px;
+    width: 96px;
+    height: 96px;
+    font-size: 48px;
+    border: 4px solid #FFFFFF;
+    line-height: 96px;
+}
+
+.user-avatar {
+    display: inline-block;
+    box-sizing: content-box;
+    color: rgb(255, 255, 255);
+    text-align: center;
+}
+
 .profil-username {
 
 }

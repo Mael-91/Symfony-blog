@@ -4,91 +4,60 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimal-ui"/>
-        <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
         {{ encore_entry_link_tags('app') }}
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% if is_dashboard is defined and is_dashboard == 'false' %}
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <img src="" alt="">
-                <a class="navbar-brand" href="{{ path('home') }}">Symfony Blog</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'home' %}active{% endif %}" href="{{ path('home') }}">Accueil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'blog' %}active{% endif %}" href="{{ path('blog.index') }}">Blog</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'guide' %}active{% endif %}" href="{{ path('guide') }}">Guide</a>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-nav">
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" id="profilDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profil</a>
-                                <div class="dropdown-menu dropdown-left" aria-labelledby="profilDropdown">
-                                    <a href="{{ path('profil.index', {id: app.user.id}) }}" class="dropdown-item {% if current_menu is defined and current_menu == 'profil' %} active {% endif %}">Profil</a>
-                                    {% if is_granted('ROLE_SUPPORT') or is_granted('ROLE_MODERATEUR') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-                                        <a href="{{ path('admin.home') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'dashboard' %} active {% endif %}">Administration</a>
-                                    {% endif %}
-                                    <div class="dropdown-divider"></div>
-                                    <a href="{{ path('profil.security', {id: app.user.id}) }}" class="dropdown-item {% if current_menu is defined and current_menu == 'profil-security' %} active {% endif %}">Sécurité du compte</a>
-                                    <a href="{{ path('profil.details', {id: app.user.id}) }}" class="dropdown-item {% if current_menu is defined and current_menu == 'profil-details' %} active {% endif %}">Détails du compte</a>
-                                    <div class="dropdown-divider"></div>
-                                    {% if is_granted('ROLE_USER') %}
-                                        <a href="{{ path('logout') }}" class="dropdown-item">Déconnexion</a>
-                                    {% endif %}
-                                </div>
-                            </li>
-                        {% endif %}
-                        {% if not is_granted('ROLE_USER') %}
-                            <li class="nav-item">
-                                <a class="nav-link {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" href="{{ path('login') }}">Connexion</a>
-                            </li>
-                        {% endif %}
-                        {% if not is_granted('ROLE_USER') %}
-                            <li class="nav-item">
-                                <a href="{{ path('register') }}" class="nav-link {% if current_menu is defined and current_menu == 'register' %}active{% endif %}">Inscription</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </nav>
-        {% endif %}
-        {% if is_dashboard is defined and is_dashboard == 'true' %}
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <img src="" alt="">
-                <a class="navbar-brand" href="{{ path('home') }}">Symfony Blog</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('admin.home') }}">Panneau d'administration</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'dashboard-users' %}active{% endif %}" href="{{ path('admin.users') }}">Utilisateurs</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="gestionBlogDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion du Blog</a>
-                            <div class="dropdown-menu" aria-labelledby="gestionBlogDropdown">
-                                <a href="{{ path('admin.blog') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'dashboard-blog' %}active{% endif %}">Statistique du blog</a>
-                                <a href="{{ path('admin.blog.manage.post') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'blog-posts-manage' %}active{% endif %}">Gestion des articles</a>
-                                <a href="{{ path('admin.blog.manage.categories') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'blog-categories-manage' %}active{% endif %}">Gestion des catégories</a>
-                                <a href="{{ path('admin.blog.manage.comment') }}" class="dropdown-item {% if current_menu is defined and current_menu == 'blog-comments-manage' %}active{% endif %}">Gestion des commentaires</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        {% endif %}
+        <header class="container-navbar">
+            <div class="topbar">
+                <a class="navbar-brand" href="{{ path('home') }}">
+                    <img src="{{ asset('build/images/icon_pop_framework.png') }}" alt="Favicon" class="favicon">
+                </a>
+                <nav class="menu-icon-sm hamburger-btn" id="sidebar">
+                    <i class="fas fa-bars hamburger-btn"></i>
+                    <div class="menu-content" id="sidebarMenu">
+                        <div class="sidebar-body"></div>
+                        <div class="sidebar-content"></div>
+                    </div>
+                </nav>
+                <nav class="nav-left">
+                    <a class="text-lightBlue no-style borderB-lb-hover {% if current_menu is defined and current_menu == 'home' %} active {% endif %}" href="{{ path('home') }}">Accueil</a>
+                    <a class="text-lightBlue no-style borderB-lb-hover {% if current_menu is defined and current_menu == 'blog' %} active {% endif %}" href="{{ path('blog.index') }}">Blog</a>
+                    <a class="text-lightBlue no-style borderB-lb-hover {% if current_menu is defined and current_menu == 'guide' %} active {% endif %}" href="{{ path('guide') }}">Guide</a>
+                </nav>
+                <nav class="nav-right">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <span class="search-icon"><i class="fas fa-search"></i></span>
+                        <span class="notif-info"><i class="far fa-bell"></i></span>
+                        <span class="profil-sidebar" id="btn-sidebar-profil"><img src="{{ asset('build/images/avatar_navbar.jpg') }}" class="profil-avatar avatar-btn"></span>
+                    {% else %}
+                        <a class="no-style" href="{{ path('register') }}">
+                            <button type="button" class="btn btn-outline btn-outline-lightBlue btn-lightBlue_notFilled">S'inscrire</button>
+                        </a>
+                        <a class="no-style" href="{{ path('login') }}">
+                            <button type="button" class="btn btn-lightBlue btn-lightBlue_filled">Se connecter</button>
+                        </a>
+                    {% endif %}
+                </nav>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <nav class="menu-profil" id="sidebarProfil">
+                        <div class="sidebar-p-body">
+                            <span class="sidebar-profil"><img src="{{ asset('build/images/avatar_navbar.jpg') }}" class="sidebar-avatar"></span>
+                        </div>
+                        <div class="sidebar-p-content">
+                            <span class="profil-u"><a class="sidebar-profil-name no-style" href="{{ path('profil.index', {id: app.user.id}) }}">Mael</a></span>
+                            <a class="no-style" href="{{ path('profil.index', {id: app.user.id}) }}"><i class="sidebar-icon-account"></i>Mon profil</a>
+                            <a class="no-style" href="{{ path('profil.details', {id: app.user.id}) }}"><i class="sidebar-icon-accountDetails"></i>Détails du compte</a>
+                            <a class="no-style" href="{{ path('profil.security', {id: app.user.id}) }}"><i class="sidebar-icon-accountSecurity"></i>Sécurité du compte</a>
+                            {% if is_granted('ROLE_SUPPORT') %}
+                            <a class="no-style sidebar-p-adminPanel" href="{{ path('admin.home') }}"><i class="sidebar-icon-panelAdmin"></i>Administration</a>
+                            {% endif %}
+                            <a class="sidebar-p-logout no-style" href="{{ path('logout') }}"><i class="sidebar-icon-logout"></i>Se deconnecter</a>
+                        </div>
+                    </nav>
+                {% endif %}
+            </div>
+        </header>
         {% block body %}{% endblock %}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}

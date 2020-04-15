@@ -1,9 +1,112 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap');
 
 body {
     /*background-color: #100020;*/
     background-color: transparent;
 }
+
+/*==========================================================================
+  Override default css style
+  ==========================================================================*/
+
+a.no-style, a.no-style:hover {
+    text-decoration: none!important;
+}
+
+/* ==========================================================================
+   Text Color
+   ========================================================================== */
+
+.text-lightBlue {
+    color: #096FF4;
+}
+
+/* ==========================================================================
+   Button
+   ========================================================================== */
+
+.btn {
+    padding: .375rem .9375rem!important;
+    border: 2px solid transparent!important;
+    border-radius: 0.25rem;
+    color: #FFF!important;
+    font-size: 14px!important;
+    font-weight: 700!important;
+    font-family: 'Roboto', 'sans-serif'!important;
+    letter-spacing: .031rem;
+}
+
+.btn-lightBlue {
+    background: #096FF4!important;
+}
+
+.btn-outline {
+    background: transparent;
+}
+
+.btn-outline-lightBlue {
+    color: #096FF4!important;
+    border: 2px solid #096FF4!important;
+}
+
+.btn-lightBlue_filled:hover {
+    color: #096FF4!important;
+    background: transparent!important;
+    border: 2px solid #096FF4!important;
+}
+
+.btn-lightBlue_notFilled:hover {
+    color: #FFF!important;
+    background: #096FF4;
+    transition: .3s ease-out;
+}
+
+/* ==========================================================================
+   Background Color
+   ========================================================================== */
+
+.bg-lightBlue {
+    background-color: #096FF4;
+}
+
+/* ==========================================================================
+   Border
+   ========================================================================== */
+
+/* Border bottom light Blue - Hover */
+.borderB-lb-hover:hover {
+    border-bottom: 3px solid #096FF4;
+}
+
+/* ==========================================================================
+   Animation
+   ========================================================================== */
+
+@keyframes leftRightBell {
+    0% {
+        transform: rotateZ(0);
+    }
+    50% {
+        transform: rotateZ(15deg);
+    }
+    75% {
+        transform: rotateZ(-15deg);
+    }
+    100% {
+        transform: rotateZ(0);
+    }
+}
+
+/* ==========================================================================
+   Browser Upgrade Prompt
+   ========================================================================== */
+
+/*.browserupgrade {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}*/
 
 div.pagination > nav {
     margin-left: auto!important;
@@ -55,3 +158,5 @@ button.reply-btn, button.comment-btn {
 @import "./elements/comment.css";
 @import "./elements/form_comment.css";
 @import "./elements/alert.css";
+@import "navbar.css";
+@import "normalize.css";

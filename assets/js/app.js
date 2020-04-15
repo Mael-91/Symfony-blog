@@ -6,6 +6,7 @@ import 'flatpickr';
 import { French } from 'flatpickr/dist/l10n/fr.js';
 import "./elements/blog/Comment.js"
 import "./elements/Alert"
+import './actions/sidebar.js'
 
 require('@fortawesome/fontawesome-free/css/all.min.css');
 require('@fortawesome/fontawesome-free/js/all.js');

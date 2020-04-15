@@ -1,0 +1,293 @@
+/*==========================================================================
+  Navigation bar
+  ==========================================================================*/
+
+header.container-navbar {
+    position: relative; /*/ Passer en fixed + anim pour cacher lors du scroll */
+    width: 100%;
+    height: 56px;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: .5rem 1rem;
+    background: #ffffff;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+div.menu-content {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    padding-top: 15px;
+    z-index: 50;
+    background-color: #FFF;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    transform: translateX(-220px);
+    transition: transform .3s;
+}
+
+.has-sidebar #sidebarMenu {
+    transform: translateX(0);
+}
+
+.has-sidebar .sidebar-body span,
+.has-sidebar .sidebar-body a,
+.has-sidebar .sidebar-content a,
+.has-sidebar .sidebar-content span {
+    transform: translateX(-190px);
+}
+
+img.favicon {
+    width: 32px;
+    margin-right: 15px;
+}
+
+nav.menu-icon-sm {
+    display: none;
+}
+
+svg.close-icon {
+    display: none;
+    margin: 8px 8px;
+}
+
+div.topbar > nav > a.active {
+    color: #0D1E9B; /* #0C49DC */
+    padding-bottom: 16px;
+    border-bottom: 3px solid #0D1E9B;
+}
+
+nav.nav-left > a:hover {
+    color: #0D1E9B;
+    padding-bottom: 16px;
+    box-sizing: border-box;
+}
+
+nav.nav-left {
+    display: inline-block;
+    word-spacing: 0.8rem;
+}
+
+nav.nav-right {
+    float: right;
+    padding: 2px;
+    word-spacing: 0.4rem;
+}
+
+span.profil-sidebar > img.profil-avatar {
+    width: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+img.profil-avatar:hover {
+    transform: scale(1.2);
+    transition: transform .3s;
+}
+
+span.notif-info, span.search-icon {
+    position: relative;
+    top: 6px;
+}
+
+span.notif-info > .fa-bell, span.search-icon > .fa-search {
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.search-icon:after, .notif-info:after {
+    content: '';
+    padding-right: 20px;
+}
+
+.fa-bell:hover {
+    animation: leftRightBell .5s;
+}
+
+/* Sidebar profile */
+
+nav.menu-profil {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 190px;
+    padding-top: 35px;
+    z-index: 50;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: #323a44;
+    transform: translateX(190px);
+    transition: transform .3s;
+}
+
+.has-profil-sidebar #sidebarProfil {
+    transform: translateX(0);
+}
+
+.has-profil-sidebar .sidebar-p-body span,
+.has-profil-sidebar .sidebar-p-content a,
+.has-profil-sidebar .sidebar-p-content span {
+    transform: translateX(190px);
+}
+
+.sidebar-p-body > span {
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-avatar {
+    width: 92px;
+    height: 92px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    border: 4px solid #29313b;
+}
+
+.sidebar-p-content > span, .sidebar-p-content > a {
+    display: block;
+}
+
+.profil-u {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.sidebar-profil-name, a.sidebar-profil-name:hover {
+    color: #FFF;
+    font-size: 15px;
+    font-weight: initial;
+}
+
+div.sidebar-p-content > a {
+    box-sizing: border-box;
+    padding: 8px;
+    border-top: 1px solid hsla(0,0%,100%,.05); /*#2b333c */
+    border-bottom: 1px solid #2b333c;
+    color: #939faf;
+    font-size: 12px;
+    font-weight: initial;
+}
+
+div.sidebar-p-content > a:hover {
+    color: #FFF!important;
+    background-color: #485361;
+}
+
+.sidebar-p-adminPanel {
+    position: absolute;
+    bottom: 42px;
+    width: 100%;
+    background: #2b333c;
+}
+
+.sidebar-p-logout {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #2b333c;
+}
+
+.sidebar-icon-account:before {
+    content: '\f007';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-style: normal;
+    padding: 0 15px 0 5px;
+}
+
+.sidebar-icon-accountDetails:before {
+    content: '\f4fe';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-style: normal;
+    padding: 0 15px 0 5px;
+}
+
+.sidebar-icon-accountSecurity:before {
+    content: '\f3ed';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-style: normal;
+    padding: 0 15px 0 5px;
+}
+
+.sidebar-icon-panelAdmin:before {
+    content: '\f7d9';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-style: normal;
+    padding: 0 15px 0 5px;
+}
+
+.sidebar-icon-logout:before {
+    content: '\f2f5';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-style: normal;
+    padding: 0 15px 0 5px;
+    color: #c0392b;
+}
+
+@media screen and (max-width: 991.9px) {
+    nav.nav-left {
+        display: none;
+    }
+
+    nav.nav-right {
+        display: block;
+        margin: 4px 0;
+    }
+
+    .nav-right > a > button {
+        padding: .08rem .6375rem!important;
+    }
+
+    nav.menu-icon-sm {
+        display: block;
+        position: absolute;
+        top: 15px;
+        left: -13px;
+        float: left;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    svg.close-icon {
+        display: block;
+    }
+
+    img.favicon {
+        width: 32px;
+        margin-right: 15px;
+    }
+
+    div.sidebar-content {
+        text-align: center;
+    }
+
+    div.sidebar-content a {
+        float: none;
+        display: block;
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    a.active {
+        margin-left: 15px;
+        margin-right: 15px;
+        color: #FFF!important;
+        background-color: #1C8377;
+        border-radius: 5px;
+    }
+
+    .has-sidebar div.menu-content {
+        transform: translateX(0);
+    }
+}

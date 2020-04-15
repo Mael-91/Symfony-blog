@@ -2,7 +2,9 @@
     "devDependencies": {
         "@symfony/webpack-encore": "^0.28.2",
         "core-js": "^3.0.0",
+        "node-sass": "^4.13.1",
         "regenerator-runtime": "^0.13.2",
+        "sass-loader": "^8.0.2",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -17,6 +19,7 @@
         "@fortawesome/fontawesome-free": "^5.12.1",
         "axios": "^0.19.2",
         "bootstrap": "^4.4.1",
+        "dynamics.js": "^1.1.5",
         "flatpickr": "^4.6.3",
         "jquery": "^3.4.1",
         "moment": "^2.24.0",

@@ -36,6 +36,12 @@ Encore
     .addEntry('blog', './assets/css/pages/blog/blog.css')
     .addEntry('profil', './assets/css/pages/profil/profil.css')
 
+    // Copy files from assets/images to build/images
+    .copyFiles({
+        from: './assets/images',
+        to: './images/[name].[ext]'
+    })
+
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

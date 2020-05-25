@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4972ac3cf215ae5e98ebb4b991560e56",
+    "content-hash": "4c08f573c08d305f065b21a697dfb73b",
     "packages": [
         {
             "name": "antishov/doctrine-extensions-bundle",
@@ -1954,33 +1954,32 @@
         },
         {
             "name": "mael/recaptcha-bundle",
-            "version": "v0.2",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mael-91/MaelRecaptchaBundle.git",
-                "reference": "388c369197e1cb14bc416fa28f8dbd3b4ba15d96"
+                "reference": "46f3b8945451f9551f6e73cb6e38c8203c49cb1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mael-91/MaelRecaptchaBundle/zipball/388c369197e1cb14bc416fa28f8dbd3b4ba15d96",
-                "reference": "388c369197e1cb14bc416fa28f8dbd3b4ba15d96",
+                "url": "https://api.github.com/repos/Mael-91/MaelRecaptchaBundle/zipball/46f3b8945451f9551f6e73cb6e38c8203c49cb1a",
+                "reference": "46f3b8945451f9551f6e73cb6e38c8203c49cb1a",
                 "shasum": ""
             },
             "require": {
                 "google/recaptcha": "^1.2",
-                "php": "^7.3",
+                "php": "^7.1",
                 "symfony/config": "^4.4|^5.0",
                 "symfony/dependency-injection": "^4.4|^5.0",
                 "symfony/form": "^4.4|^5.0",
-                "symfony/http-foundation": "^4.4|^5.0",
+                "symfony/http-foundation": "^4.4|^5.0.7",
                 "symfony/http-kernel": "^4.4|^5.0",
                 "symfony/options-resolver": "^4.4|^5.0",
                 "symfony/twig-pack": "*",
                 "symfony/validator": "^4.4|^5.0"
             },
-            "suggest": {
-                "symfony/console": "For validating YAML files using the lint command",
-                "symfony/yaml": "To use YAML mapping"
+            "require-dev": {
+                "phpunit/phpunit": "^9.1"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -1994,17 +1993,19 @@
             ],
             "authors": [
                 {
-                    "name": "Mael"
+                    "name": "Mael",
+                    "homepage": "https://github.com/Mael-91"
                 },
                 {
                     "name": "Community Contributions",
                     "homepage": "https://github.com/Mael-91/MaelRecaptchaBundle/contributors"
                 }
             ],
-            "description": "Google recaptcha bundle for twig",
+            "description": "Google Recaptcha integration for Symfony and Twig (easy integration with Symfony Form)",
             "homepage": "https://github.com/Mael-91",
             "keywords": [
                 "Abuse",
+                "antispam",
                 "captcha",
                 "google",
                 "no-robot",
@@ -2013,7 +2014,7 @@
                 "symfony",
                 "twig"
             ],
-            "time": "2020-03-30T13:35:40+00:00"
+            "time": "2020-05-23T19:56:41+00:00"
         },
         {
             "name": "michelf/php-markdown",
